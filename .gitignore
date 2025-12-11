@@ -1,0 +1,16 @@
+# Compiled code
+target/
+
+# IDE settings (IntelliJ)
+.idea/
+*.iml
+
+# IDE settings (Eclipse/VS Code)
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
