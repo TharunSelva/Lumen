@@ -2,6 +2,8 @@
 
 ## How to Use This Repo
 
+### Cloning
+
 You will want to clone in to this Gitlab repository on your own machines using IntelliJ. The best way to do this is inside the IntelliJ Idea application itself.
 
 **Steps:**
@@ -11,3 +13,41 @@ You will want to clone in to this Gitlab repository on your own machines using I
 3. You will now see a screen asking for a token. Press the generate button, which will take you to the Soton Gitlab site. Create a token, ensuring `api` and `read_user` options are ticked.
 4. Copy the token that is given to you, and save it somewhere as you can't access it later. Paste that token into the box in the IntelliJ window.
 5. Hit trust project, and you should be done! Try running the project to ensure everything worked properly.
+
+### FXML Ground Rules
+This section outlines some basic ground rules for creating FXML UI blueprints in SceneBuilder. This is **crucial**, because will ensure we don't hit hard to debug Null errors later.
+
+#### Directory Structure
+To ensure Java can find the files it needs, stick to this structure:
+
+- **Java Controllers**: `src/main/java/com/energyapp/controller/`
+- **FXML Views**: `src/main/resources/com/energyapp/view/`
+- **Images and Assets**: `src/main/resources/com/images/`
+    - **Note for images**: *NEVER* use local absolute paths when adding images into the UI of the app. Always save the image to the above path first, and then use it.
+
+#### Setting `fx:id`
+
+It is important to do this so we can reference FXML elements when we write the Java logic for them. In SceneBuilder:
+
+1. Expand the "Code" drop-down, located on the right of the SceneBuilder window
+2. Locate the `fx:id` attribute. *Make sure you are not editing the CSS ID which is in Properties*.
+3. Change this field to a sensible, descriptive name.
+
+#### Setting Controller Class Paths
+
+This is needed to make sure the FXML files know what Java class controls them. **ONLY do this to the root element of the file you are working on in SceneBuilder**. Do not do this on any other element.
+
+1. Expand the "Controller" drop-down, located in the bottom left of the SceneBuilder window.
+2. Locate the `Controller class` attribute. This is normally right at the top.
+3. Change this field to `com.energyapp.controller.[AssociatedControllerClassNameGoesHere]`
+
+#### Refreshing Controllers
+
+If you happen to add or rename an `fx:id` in SceneBuilder or manually in the FXML file, you need to update the Java Controller file to make sure it has the correct reference to the element you changed.
+
+Imagine you changed a `Button` to have `fx:id="submitButton"`. Go to the associated controller class, and make sure you have this code:
+
+```java
+@FXML
+private Button submitButton; // Name must be an exact match to the fx:id
+```
