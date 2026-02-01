@@ -1,5 +1,7 @@
 package com.energyapp;
 
+import com.energyapp.controller.DashboardController;
+import com.energyapp.service.SimulationService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,12 +10,32 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
+    private final SimulationService simulationService = new SimulationService();
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/com/energyapp/view/Devices.fxml"));
-        primaryStage.setTitle("Devices");
-        primaryStage.setScene(new Scene(root));
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/Dashboard.fxml"));
+        Parent root = loader.load();
+
+
+        simulationService.loadData("/com/simulation_data.csv");
+        simulationService.startSimulation();
+
+        DashboardController controller = loader.getController();
+        controller.setSimService(simulationService);
+
+        primaryStage.setTitle("Dashboard");
+        primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
+    }
+
+    // overridden stop() method to kill simulation when app is closed via Close Window.
+    @Override
+    public void stop() throws Exception {
+        if (simulationService != null) {
+            simulationService.shutdown();
+        }
+        super.stop();
     }
 
     public static void main(String[] args) {

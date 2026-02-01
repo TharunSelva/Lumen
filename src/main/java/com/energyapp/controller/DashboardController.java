@@ -1,5 +1,6 @@
 package com.energyapp.controller;
 
+import com.energyapp.service.SimulationService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -33,18 +34,29 @@ public class DashboardController {
     @FXML private GridPane dashboardQuickRecGridPane;
     @FXML private Label dashboardQuickRecTitleLabel;
     @FXML private VBox dashboardSidebarVBox;
-    @FXML private Label dashboardUsageInsightLeftLabel;
-    @FXML private VBox dashboardUsageInsightLeftVBox;
     @FXML private Label dashboardUsageInsightRightLabel;
     @FXML private VBox dashboardUsageInsightRightVBox;
     @FXML private GridPane dashboardUsageInsightsGridPane;
     @FXML private LineChart<?, ?> dashboardUsageLineChart;
     @FXML private Label dashboardUsageTitleLabel;
+    @FXML private CostCardController weeklyCostCardController;
+
+    private double weeklyCostAccumulator = 0.0;
 
     @FXML
     public void initialize() {
         System.out.println("DashboardController loaded successfully.");
     }
 
+    public void setSimService (SimulationService simulationService) {
+        simulationService.getCurrentEnergyRecord().addListener((observable, oldRecord, newRecord) -> {
+            double importKwh = newRecord.getGridImport();
+            double price = newRecord.getPricePerKwh();
+            double cost = (importKwh * price) / 100;
+
+            weeklyCostAccumulator = weeklyCostAccumulator + cost;
+            weeklyCostCardController.setCost(weeklyCostAccumulator);
+        });
+    }
 }
 

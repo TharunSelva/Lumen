@@ -45,28 +45,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="dashboardBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DashboardController">
+<BorderPane fx:id="dashboardBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DashboardController">
    <left>
       <VBox fx:id="dashboardSidebarVBox" prefHeight="400.0" prefWidth="121.0" BorderPane.alignment="CENTER" />
    </left>
    <center>
-      <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" minHeight="0.0" minWidth="0.0" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER">
          <content>
-            <VBox prefHeight="398.0" prefWidth="479.0">
+            <VBox minHeight="700.0" minWidth="1000.0" prefHeight="398.0" prefWidth="479.0">
                <children>
                   <Label fx:id="dashboardGreetingLabel" prefHeight="59.0" prefWidth="483.0" text="Good Afternoon, Richard!">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
-                  <GridPane fx:id="dashboardMainGridPane" prefHeight="325.0" prefWidth="457.0">
+                  <GridPane fx:id="dashboardMainGridPane" prefHeight="325.0" prefWidth="457.0" VBox.vgrow="ALWAYS">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                     </rowConstraints>
                      <children>
                         <VBox fx:id="dashboard00VBox" prefHeight="200.0" prefWidth="100.0">
@@ -81,15 +81,7 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <VBox fx:id="dashboardUsageInsightLeftVBox" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black;">
-                                       <children>
-                                          <Label fx:id="dashboardUsageInsightLeftLabel" alignment="CENTER" prefHeight="44.0" prefWidth="121.0" text="10 kWh so far today...">
-                                             <font>
-                                                <Font size="9.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
+                                     <fx:include source="CostCard.fxml" fx:id="weeklyCostCard" />
                                     <VBox fx:id="dashboardUsageInsightRightVBox" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black;" GridPane.columnIndex="1">
                                        <children>
                                           <Label fx:id="dashboardUsageInsightRightLabel" alignment="CENTER" prefHeight="41.0" prefWidth="118.0" text="£5 spend projected today...">
@@ -101,7 +93,7 @@
                                     </VBox>
                                  </children>
                               </GridPane>
-                              <LineChart fx:id="dashboardUsageLineChart" prefHeight="55.0" prefWidth="240.0">
+                              <LineChart fx:id="dashboardUsageLineChart" prefHeight="55.0" prefWidth="240.0" VBox.vgrow="ALWAYS">
                                 <xAxis>
                                  <NumberAxis autoRanging="false" label="Time (Hours)" lowerBound="0" side="BOTTOM" tickUnit="4" upperBound="24" />
                                 </xAxis>
