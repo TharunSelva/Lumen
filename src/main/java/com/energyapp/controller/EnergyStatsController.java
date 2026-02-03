@@ -43,6 +43,13 @@ public class EnergyStatsController {
     // window: last hour default, -1 means "all time"
     private long windowSeconds = 60 * 60;
 
+    private enum ViewMode { REAL_TIME, LAST_1_HOUR, LAST_24_HOURS, ALL_TIME }
+    private ViewMode viewMode = ViewMode.REAL_TIME;
+
+    // When user switches to a static mode, we freeze the end time here
+    private long frozenEndEpochSec = Long.MIN_VALUE;
+
+
     private final List<Row> rows = new ArrayList<>();
     private int rowIndex = 0;
 
@@ -66,7 +73,7 @@ public class EnergyStatsController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialise() {
         // overlay toggling
         graphOverlay.setVisible(false);
         graphOverlay.setManaged(false);
@@ -82,8 +89,14 @@ public class EnergyStatsController {
         setupTimeAxis(usageLargeXAxis);
 
         // overlay range controls
-        timeRangeCombo.getItems().addAll("Last 60 mins", "Last 24 hours", "All time");
-        timeRangeCombo.getSelectionModel().select(0);
+        // Time range dropdown
+        timeRangeCombo.getItems().setAll(
+                "Real time",
+                "Last 1 hour",
+                "Last 24 hours",
+                "All time"
+        );
+        timeRangeCombo.getSelectionModel().select("Real time");
         timeRangeCombo.setOnAction(e -> {
             String sel = timeRangeCombo.getSelectionModel().getSelectedItem();
             if ("Last 60 mins".equals(sel)) windowSeconds = 60 * 60;
@@ -96,6 +109,41 @@ public class EnergyStatsController {
         loadCsvFromResources("/com/simulation_data.csv");
         startLiveUpdates();
     }
+
+    // Handler for switching bweteen the drop down menu options
+    private void onTimeRangeChanged() {
+        String sel = timeRangeCombo.getSelectionModel().getSelectedItem();
+        if (sel == null) return;
+
+        switch (sel) {
+            case "Real time" -> {
+                viewMode = ViewMode.REAL_TIME;
+                // resume live updates
+                if (timeline != null) timeline.play();
+                // Real time shows last hour window (matches user story)
+                windowSeconds = 60 * 60;
+            }
+            case "Last 1 hour" -> {
+                viewMode = ViewMode.LAST_1_HOUR;
+                freezeNow();
+                windowSeconds = 60 * 60;
+            }
+            case "Last 24 hours" -> {
+                viewMode = ViewMode.LAST_24_HOURS;
+                freezeNow();
+                windowSeconds = 24 * 60 * 60;
+            }
+            case "All time" -> {
+                viewMode = ViewMode.ALL_TIME;
+                freezeNow();
+                windowSeconds = -1; // special: all time
+            }
+        }
+
+        // Apply the selected view to the charts
+        applyViewToCharts();
+    }
+
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
