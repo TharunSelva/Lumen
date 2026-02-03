@@ -19,6 +19,8 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
 <StackPane xmlns="http://javafx.com/javafx/21"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -214,4 +216,5 @@
     </center>
 
 </BorderPane>
+
 </StackPane>
