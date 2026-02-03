@@ -93,7 +93,7 @@ public class EnergyStatsController {
         });
 
         // load + start streaming
-        loadCsvFromResources("/com/energyapp/view/simulation.csv");
+        loadCsvFromResources("/com/simulation_data.csv");
         startLiveUpdates();
     }
 
