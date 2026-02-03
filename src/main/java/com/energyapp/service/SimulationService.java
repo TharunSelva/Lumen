@@ -26,6 +26,7 @@ public class SimulationService {
     // controllers can react when simulation time updates.
     private final ObjectProperty<EnergyRecord> currentEnergyRecord = new SimpleObjectProperty<>();
     private ScheduledExecutorService scheduler;
+    private double totalAccumulatedCost = 0.0;
 
     public void loadData(String filepath) {
 
@@ -54,6 +55,8 @@ public class SimulationService {
     private void advanceSimulation() {
         if (currentDataIndex < simulationData.size()) {
             EnergyRecord record = simulationData.get(currentDataIndex);
+            double costOnThisInterval = (record.getGridImport() * record.getPricePerKwh()) / 100;
+            totalAccumulatedCost += costOnThisInterval;
             // timer runs on a background thread. need to use runLater to safely do the update on the JavaFX main thread.
             Platform.runLater(() -> {
                 currentEnergyRecord.set(record);
@@ -71,6 +74,10 @@ public class SimulationService {
             scheduler.shutdown();
             System.out.println("Simulation stopped.");
         }
+    }
+
+    public double getTotalAccumulatedCost() {
+        return totalAccumulatedCost;
     }
 
 }
