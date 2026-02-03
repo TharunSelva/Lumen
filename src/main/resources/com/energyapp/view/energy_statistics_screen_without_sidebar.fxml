@@ -83,10 +83,23 @@
                         <Label style="-fx-font-weight: bold;" text="Hour-by-Hour Usage" />
 
                         <!-- Smaller fixed height so everything is more likely to fit initially -->
-                        <BarChart animated="false" legendVisible="false" maxHeight="170" prefHeight="170" title="">
-                            <xAxis><CategoryAxis label="" /></xAxis>
-                            <yAxis><NumberAxis label="" /></yAxis>
-                        </BarChart>
+<!--                        <BarChart animated="false" legendVisible="false" maxHeight="170" prefHeight="170" title="">-->
+<!--                            <xAxis><CategoryAxis label="" /></xAxis>-->
+<!--                            <yAxis><NumberAxis label="" /></yAxis>-->
+<!--                        </BarChart>-->
+                        <LineChart fx:id="usageChartSmall"
+                                   animated="false"
+                                   legendVisible="false"
+                                   createSymbols="true"
+                                   prefHeight="170" maxHeight="170"
+                                   style="-fx-background-color: transparent;">
+                            <xAxis>
+                                <NumberAxis fx:id="usageSmallXAxis" label="" autoRanging="false"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="usageSmallYAxis" label="Watts" autoRanging="true"/>
+                            </yAxis>
+                        </LineChart>
                     </VBox>
 
                     <!-- LOWER GRID: Costs | Device breakdown | Right column -->
