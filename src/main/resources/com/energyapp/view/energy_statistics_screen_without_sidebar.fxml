@@ -244,6 +244,30 @@
                     <ComboBox fx:id="timeRangeCombo" prefWidth="160"/>
                 </HBox>
             </top>
+
+            <center>
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="16" right="16" bottom="16" left="16"/>
+                    </padding>
+
+                    <Label text="House Total Power Draw"
+                           style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+                    <LineChart fx:id="usageChartLarge"
+                               animated="false"
+                               legendVisible="false"
+                               createSymbols="true"
+                               VBox.vgrow="ALWAYS">
+                        <xAxis>
+                            <NumberAxis fx:id="usageLargeXAxis" label="Time" autoRanging="false"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="usageLargeYAxis" label="Watts" autoRanging="true"/>
+                        </yAxis>
+                    </LineChart>
+                </VBox>
+            </center>
         </BorderPane>
     </AnchorPane>
 
