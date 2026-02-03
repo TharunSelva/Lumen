@@ -11,11 +11,10 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+
 
     <!-- LEFT SIDEBAR -->
-    <left>
-        <VBox prefWidth="230" spacing="18" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 0 1 0 0;">
+        <VBox fx:controller="com.energyapp.controller.SideBarController" fx:id="sideBarContainer" prefWidth="230" spacing="18" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 0 1 0 0; ">
             <padding>
                 <Insets bottom="18" left="16" right="16" top="18" />
             </padding>
@@ -38,17 +37,17 @@
             </HBox>
 
             <VBox spacing="8">
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+                <Button onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                     <graphic><Label style="-fx-font-size: 16;" text="🏠" /></graphic>
                     <text>Home</text>
                 </Button>
 
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #EEF2FF; -fx-font-size: 14; -fx-alignment: CENTER_LEFT; -fx-background-radius: 10;">
+                <Button onAction="#handleShowStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #EEF2FF; -fx-font-size: 14; -fx-alignment: CENTER_LEFT; -fx-background-radius: 10;">
                     <graphic><Label style="-fx-font-size: 16;" text="📊" /></graphic>
                     <text>Statistics</text>
                 </Button>
 
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+                <Button onAction="#handleShowDevices" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                     <graphic><Label style="-fx-font-size: 16;" text="📱" /></graphic>
                     <text>Devices</text>
                 </Button>
@@ -73,11 +72,9 @@
 
             <Separator />
 
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+            <Button onAction="#handleShowSettings" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                 <graphic><Label style="-fx-font-size: 16;" text="⚙" /></graphic>
                 <text>Settings</text>
             </Button>
         </VBox>
-    </left>
 
-</BorderPane>
