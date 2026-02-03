@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+
+    <!-- CENTER CONTENT -->
+    <center>
+        <!-- fitToHeight=true helps ensure the content starts “flush” in the viewport.
+             The IMPORTANT fix for the cut-off is removing the GridPane RowConstraints (done below). -->
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" vbarPolicy="AS_NEEDED">
+            <content>
+                <VBox spacing="14" style="-fx-background-color: transparent;">
+                    <padding>
+                        <Insets bottom="16" left="16" right="16" top="16" />
+                    </padding>
+
+                    <!-- Header row -->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 32; -fx-font-weight: bold;" text="Your energy statistics..." />
+                            <Label style="-fx-text-fill: #6B7280;" text="Today • Updated 3 mins ago" />
+                        </VBox>
+
+                        <ComboBox prefWidth="90" promptText="Day" />
+
+                        <Button mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10;">
+                            <graphic><Label style="-fx-font-size: 16;" text="⚙" /></graphic>
+                        </Button>
+                    </HBox>
+
+                    <!-- TOP STATS CARD -->
+                    <HBox spacing="16" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                        <padding>
+                            <Insets bottom="14" left="16" right="16" top="14" />
+                        </padding>
+
+                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="9.2 kWh Total Energy" />
+                            <Label style="-fx-text-fill: #6B7280;" text="Total household consumption today" />
+                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="3.1 kg CO₂ Emissions" />
+                            <Label style="-fx-text-fill: #6B7280;" text="Includes grid + battery sources" />
+                        </VBox>
+
+                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="£3.40 Total Cost" />
+                            <Label style="-fx-text-fill: #6B7280;" text="Based on your time-of-use tariff" />
+                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="44% solar • 22% battery • 34% grid" />
+                            <Label style="-fx-text-fill: #6B7280;" text="Solar/Battery Contribution" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- USAGE CARD -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                        <padding>
+                            <Insets bottom="14" left="16" right="16" top="14" />
+                        </padding>
+
+                        <Label style="-fx-font-size: 26; -fx-font-weight: bold;" text="Usage" />
+                        <Label style="-fx-font-weight: bold;" text="Hour-by-Hour Usage" />
+
+                        <!-- Smaller fixed height so everything is more likely to fit initially -->
+                        <BarChart animated="false" legendVisible="false" maxHeight="170" prefHeight="170" title="">
+                            <xAxis><CategoryAxis label="" /></xAxis>
+                            <yAxis><NumberAxis label="" /></yAxis>
+                        </BarChart>
+                    </VBox>
+
+                    <!-- LOWER GRID: Costs | Device breakdown | Right column -->
+                    <!-- IMPORTANT: no RowConstraints -> prevents the “cut off” you saw -->
+                    <GridPane hgap="16" vgap="16">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="44" />
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="36" />
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
+                        </columnConstraints>
+
+                        <!-- COSTS PANEL -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="0">
+                            <padding>
+                                <Insets bottom="14" left="16" right="16" top="14" />
+                            </padding>
+
+                            <Label style="-fx-font-size: 26; -fx-font-weight: bold;" text="Costs" />
+
+                            <BarChart animated="false" legendVisible="false" maxHeight="150" prefHeight="150" title="">
+                                <xAxis><CategoryAxis label="" /></xAxis>
+                                <yAxis><NumberAxis label="" /></yAxis>
+                            </BarChart>
+
+                            <VBox spacing="6" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                <padding>
+                                    <Insets bottom="10" left="10" right="10" top="10" />
+                                </padding>
+                                <HBox>
+                                    <Label text="Total Cost Today:" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label style="-fx-font-weight: bold;" text="£3.40" />
+                                </HBox>
+                                <HBox>
+                                    <Label text="Projected daily cost:" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label style="-fx-font-weight: bold;" text="£4.10" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+
+                        <!-- DEVICE-LEVEL BREAKDOWN -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="1">
+                            <padding>
+                                <Insets bottom="14" left="16" right="16" top="14" />
+                            </padding>
+
+                            <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="Device-level breakdown" />
+
+                            <VBox spacing="10">
+                                <VBox spacing="4" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+                                    <Label style="-fx-font-weight: bold;" text="🔌 EV Charger:" />
+                                    <Label text="3.5 kWh • £0.90 • 1.2 kg CO₂" />
+                                    <Label style="-fx-text-fill: #6B7280;" text="Source bar: 70% S / 30% G" />
+                                </VBox>
+
+                                <VBox spacing="4" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+                                    <Label style="-fx-font-weight: bold;" text="🌀 Tumble Dryer:" />
+                                    <Label text="1.4 kWh • £0.48" />
+                                    <Label style="-fx-text-fill: #6B7280;" text="Ran during high price period ⚠️" />
+                                </VBox>
+
+                                <VBox spacing="4" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+                                    <Label style="-fx-font-weight: bold;" text="🔥 Heat Pump:" />
+                                    <Label text="2.1 kWh • £0.62" />
+                                    <Label style="-fx-text-fill: #6B7280;" text="Used during neutral tariff times" />
+                                </VBox>
+                            </VBox>
+
+                            <!-- dots (kept near bottom by adding a small spacer) -->
+                            <Region prefHeight="6" />
+                            <HBox alignment="CENTER" spacing="10">
+                                <Circle radius="6" style="-fx-fill: #111827;" />
+                                <Circle radius="6" style="-fx-fill: #D1D5DB;" />
+                                <Circle radius="6" style="-fx-fill: #D1D5DB;" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- RIGHT COLUMN: source mix + assistant card -->
+                        <VBox spacing="12" GridPane.columnIndex="2">
+                            <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                <padding><Insets bottom="12" left="12" right="12" top="12" /></padding>
+                                <Label style="-fx-font-weight: bold;" text="Source Mix (Last 4 Hours)" />
+                                <StackPane maxHeight="150" prefHeight="150" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                    <Label style="-fx-text-fill: #6B7280;" text="(chart placeholder)" />
+                                </StackPane>
+                            </VBox>
+
+                            <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                <padding><Insets bottom="12" left="12" right="12" top="12" /></padding>
+                                <Label style="-fx-font-weight: bold;" text="Lumen can help..." />
+                                <Label style="-fx-text-fill: #6B7280;" text="Chat to our energy-focused AI assistant, it's free." wrapText="true" />
+
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Button style="-fx-background-color: #111827; -fx-text-fill: white; -fx-background-radius: 10;" text="Chat Now" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label style="-fx-font-size: 22;" text="💬" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                  <rowConstraints>
+                     <RowConstraints />
+                  </rowConstraints>
+
+                    </GridPane>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
