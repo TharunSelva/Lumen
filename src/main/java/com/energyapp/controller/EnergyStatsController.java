@@ -60,20 +60,36 @@ public class EnergyStatsController {
 
     private static class Row {
         final long epochSec;
-        final double watts;
+
+        final double totalLoadKwh;
         final double pricePPerKwh;
         final double carbon;
+        final double solarGenKwh;
+        final double gridImportKwh;
 
-        Row(long epochSec, double watts, double pricePPerKwh, double carbon) {
+        final double watts;
+
+        Row(long epochSec,
+            double totalLoadKwh,
+            double pricePPerKwh,
+            double carbon,
+            double solarGenKwh,
+            double gridImportKwh) {
+
             this.epochSec = epochSec;
-            this.watts = watts;
+            this.totalLoadKwh = totalLoadKwh;
             this.pricePPerKwh = pricePPerKwh;
             this.carbon = carbon;
+            this.solarGenKwh = solarGenKwh;
+            this.gridImportKwh = gridImportKwh;
+
+            this.watts = totalLoadKwh * 2000.0; // kWh per 30 mins -> watts
         }
     }
 
+
     @FXML
-    public void initialise() {
+    public void initialize() {
         // overlay toggling
         graphOverlay.setVisible(false);
         graphOverlay.setManaged(false);
@@ -192,8 +208,15 @@ public class EnergyStatsController {
             if (r.epochSec < startEpochSec) continue;
             if (r.epochSec > endEpochSec) break;
 
-            smallSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
-            largeSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
+            XYChart.Data<Number, Number> ds = new XYChart.Data<>(r.epochSec, r.watts);
+            XYChart.Data<Number, Number> dl = new XYChart.Data<>(r.epochSec, r.watts);
+
+            smallSeries.getData().add(ds);
+            largeSeries.getData().add(dl);
+
+            installTooltipWhenNodeReady(ds, r);
+            installTooltipWhenNodeReady(dl, r);
+
         }
     }
 
@@ -233,14 +256,23 @@ public class EnergyStatsController {
                 LocalDateTime ldt = LocalDateTime.parse(parts[0].trim(), CSV_TS);
                 long epochSec = ldt.atZone(ZoneId.systemDefault()).toEpochSecond();
 
+//                double priceP = Double.parseDouble(parts[2].trim());
+//                double carbon = Double.parseDouble(parts[3].trim());
+//                double totalLoadKwh = Double.parseDouble(parts[4].trim());
+//
+//                // kWh per 30 mins -> watts
+//                double watts = totalLoadKwh * 2000.0;
+//                rows.add(new Row(epochSec, watts, priceP, carbon));
+
                 double priceP = Double.parseDouble(parts[2].trim());
                 double carbon = Double.parseDouble(parts[3].trim());
                 double totalLoadKwh = Double.parseDouble(parts[4].trim());
+                double solarGenKwh = Double.parseDouble(parts[5].trim());
+                double gridImportKwh = Double.parseDouble(parts[7].trim());
 
-                // kWh per 30 mins -> watts
-                double watts = totalLoadKwh * 2000.0;
+                rows.add(new Row(epochSec, totalLoadKwh, priceP, carbon, solarGenKwh, gridImportKwh));
 
-                rows.add(new Row(epochSec, watts, priceP, carbon));
+
             }
 
         } catch (Exception ex) {
@@ -283,22 +315,48 @@ public class EnergyStatsController {
             Node node = d.getNode();
             if (node == null) return;
 
+            // Time label
             String time = Instant.ofEpochSecond(r.epochSec)
                     .atZone(ZoneId.systemDefault())
                     .toLocalTime().toString().substring(0, 5);
 
-            Tooltip tip = new Tooltip(
+            // Cost (£) from totalLoadKwh and price (p/kWh)
+            double costPence = r.totalLoadKwh * r.pricePPerKwh;
+            double costPounds = costPence / 100.0;
+
+            // Contribution breakdown
+            double total = Math.max(r.totalLoadKwh, 0.000001);
+
+            double solarUsed = Math.min(r.solarGenKwh, r.totalLoadKwh);
+            double remainingAfterSolar = Math.max(r.totalLoadKwh - solarUsed, 0);
+
+            double gridUsed = Math.min(r.gridImportKwh, remainingAfterSolar);
+            double batteryUsed = Math.max(r.totalLoadKwh - solarUsed - gridUsed, 0);
+
+            int solarPct = (int) Math.round((solarUsed / total) * 100);
+            int batteryPct = (int) Math.round((batteryUsed / total) * 100);
+
+            // Simple CO2 label (tweak thresholds if you want)
+            String co2Label;
+            if (r.carbon <= 150) co2Label = "Low CO₂";
+            else if (r.carbon <= 250) co2Label = "Medium CO₂";
+            else co2Label = "High CO₂";
+
+            // Tooltip text (matches the style in your screenshot)
+            String tipText =
                     time + "\n" +
-                            String.format("%.0f W", r.watts) + "\n" +
-                            String.format("Price: %.2f p/kWh", r.pricePPerKwh) + "\n" +
-                            String.format("CO₂: %.0f g/kWh", r.carbon)
-            );
+                            String.format("%.2f kWh • £%.2f • %d%%", r.totalLoadKwh, costPounds, solarPct) + "\n" +
+                            String.format("Price: %.2f p/kWh • Total load: %.0f W", r.pricePPerKwh, r.watts) + "\n" +
+                            String.format("Solar, %d%% Battery • %s", batteryPct, co2Label);
+
+            Tooltip tip = new Tooltip(tipText);
             Tooltip.install(node, tip);
 
-            // clicking a point also opens overlay
+            // Click point -> open overlay (nice UX)
             node.setOnMouseClicked(ev -> showOverlay());
         });
     }
+
 
     private void refreshAxisWindow() {
         long now = getLatestEpoch();
