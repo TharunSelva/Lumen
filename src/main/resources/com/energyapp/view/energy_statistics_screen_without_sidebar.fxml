@@ -83,7 +83,7 @@
 
                         <Label style="-fx-font-size: 26; -fx-font-weight: bold;" text="Usage" />
                         <Label style="-fx-font-weight: bold;" text="Hour-by-Hour Usage" />
-                        <Label text="Tip: Click the graph to expand (Live • Last hour • Last 24 hours • All time)."
+                        <Label text="Tip: Click the graph to expand. Use Time Range for Real time, Last 1 hour, Last 24 hours, or All time."
                                style="-fx-text-fill: #6B7280; -fx-font-size: 12;"/>
 
 

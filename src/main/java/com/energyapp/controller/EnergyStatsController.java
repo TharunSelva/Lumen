@@ -104,13 +104,14 @@ public class EnergyStatsController {
             else windowSeconds = -1;
             refreshAxisWindow();
         });
+        timeRangeCombo.setOnAction(e -> onTimeRangeChanged());
 
         // load + start streaming
         loadCsvFromResources("/com/simulation_data.csv");
         startLiveUpdates();
     }
 
-    // Handler for switching bweteen the drop down menu options
+    // Handler for switching between the dropdown menu options
     private void onTimeRangeChanged() {
         String sel = timeRangeCombo.getSelectionModel().getSelectedItem();
         if (sel == null) return;
@@ -143,6 +144,59 @@ public class EnergyStatsController {
         // Apply the selected view to the charts
         applyViewToCharts();
     }
+
+    private void freezeNow() {
+        // stop live movement
+        if (timeline != null) timeline.pause();
+
+        // freeze at the latest point currently shown; fallback to latest CSV row if needed
+        long latest = getLatestEpoch();
+        if (latest != Long.MIN_VALUE) {
+            frozenEndEpochSec = latest;
+        } else if (!rows.isEmpty()) {
+            frozenEndEpochSec = rows.get(rows.size() - 1).epochSec;
+        }
+    }
+
+    private void applyViewToCharts() {
+        if (rows.isEmpty()) return;
+
+        long end = (viewMode == ViewMode.REAL_TIME) ? getLatestEpoch() : frozenEndEpochSec;
+        if (end == Long.MIN_VALUE) end = rows.get(0).epochSec;
+
+        long start;
+        if (viewMode == ViewMode.ALL_TIME) {
+            start = rows.get(0).epochSec;
+        } else {
+            start = end - windowSeconds;
+        }
+
+        // IMPORTANT: rebuild series for static views so it stops “sliding”
+        if (viewMode != ViewMode.REAL_TIME) {
+            rebuildSeriesForRange(start, end);
+        }
+
+        // Set fixed axis bounds (static) OR moving bounds (real time)
+        usageSmallXAxis.setLowerBound(start);
+        usageSmallXAxis.setUpperBound(end);
+
+        usageLargeXAxis.setLowerBound(start);
+        usageLargeXAxis.setUpperBound(end);
+    }
+
+    private void rebuildSeriesForRange(long startEpochSec, long endEpochSec) {
+        smallSeries.getData().clear();
+        largeSeries.getData().clear();
+
+        for (Row r : rows) {
+            if (r.epochSec < startEpochSec) continue;
+            if (r.epochSec > endEpochSec) break;
+
+            smallSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
+            largeSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
+        }
+    }
+
 
 
     private void setupTimeAxis(NumberAxis axis) {
@@ -216,9 +270,12 @@ public class EnergyStatsController {
         installTooltipWhenNodeReady(dSmall, r);
         installTooltipWhenNodeReady(dLarge, r);
 
-        refreshAxisWindow();
-        trimToWindow(smallSeries);
-        trimToWindow(largeSeries);
+        if (viewMode == ViewMode.REAL_TIME) {
+            refreshAxisWindow();
+            trimToWindow(smallSeries);
+            trimToWindow(largeSeries);
+        }
+
     }
 
     private void installTooltipWhenNodeReady(XYChart.Data<Number, Number> d, Row r) {
