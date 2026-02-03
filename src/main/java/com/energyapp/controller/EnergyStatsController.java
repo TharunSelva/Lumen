@@ -9,9 +9,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnergyStatsController {
 
@@ -30,6 +34,26 @@ public class EnergyStatsController {
     private final XYChart.Series<Number, Number> smallSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> largeSeries = new XYChart.Series<>();
 
+    private final List<Row> rows = new ArrayList<>();
+    private int rowIndex = 0;
+
+    private static final DateTimeFormatter CSV_TS =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private static class Row {
+        final long epochSec;
+        final double watts;
+        final double pricePPerKwh; // column 3
+        final double carbon;       // column 4
+
+        Row(long epochSec, double watts, double pricePPerKwh, double carbon) {
+            this.epochSec = epochSec;
+            this.watts = watts;
+            this.pricePPerKwh = pricePPerKwh;
+            this.carbon = carbon;
+        }
+    }
+
     @FXML
     public void initialize() {
         // overlay toggling
@@ -42,16 +66,17 @@ public class EnergyStatsController {
         usageChartSmall.getData().add(smallSeries);
         usageChartLarge.getData().add(largeSeries);
 
-        // axis formatting: epoch seconds -> HH:mm
+        // axis formatting
         setupTimeAxis(usageSmallXAxis);
         setupTimeAxis(usageLargeXAxis);
+
+        // load simulation csv
+        loadCsvFromResources("/com/energyapp/view/simulation.csv");
     }
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
         axis.setForceZeroInRange(false);
-
-        // default tick every 10 mins
         axis.setTickUnit(10 * 60);
 
         axis.setTickLabelFormatter(new StringConverter<Number>() {
@@ -60,10 +85,45 @@ public class EnergyStatsController {
                 LocalTime t = Instant.ofEpochSecond(sec)
                         .atZone(ZoneId.systemDefault())
                         .toLocalTime();
-                return t.toString().substring(0, 5); // HH:mm
+                return t.toString().substring(0, 5);
             }
             @Override public Number fromString(String string) { return 0; }
         });
+    }
+
+    private void loadCsvFromResources(String resourcePath) {
+        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                System.err.println("CSV not found on classpath: " + resourcePath);
+                return;
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            br.readLine(); // skip header
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Timestamp,Time_Label,Price_p_kWh,Carbon_gCO2_kWh,Total_Load_kWh,...
+                String[] parts = line.split(",", -1);
+
+                LocalDateTime ldt = LocalDateTime.parse(parts[0].trim(), CSV_TS);
+                long epochSec = ldt.atZone(ZoneId.systemDefault()).toEpochSecond();
+
+                double priceP = Double.parseDouble(parts[2].trim());
+                double carbon = Double.parseDouble(parts[3].trim());
+                double totalLoadKwh = Double.parseDouble(parts[4].trim());
+
+                // Convert kWh per 30 min to watts:
+                // kW = kWh / 0.5h => kWh * 2
+                // W  = kW * 1000  => kWh * 2000
+                double watts = totalLoadKwh * 2000.0;
+
+                rows.add(new Row(epochSec, watts, priceP, carbon));
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void showOverlay() {
