@@ -1,5 +1,7 @@
 package com.energyapp;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -7,6 +9,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import java.io.BufferedReader;
@@ -34,8 +37,13 @@ public class EnergyStatsController {
     private final XYChart.Series<Number, Number> smallSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> largeSeries = new XYChart.Series<>();
 
+    // default last hour
+    private long windowSeconds = 60 * 60;
+
     private final List<Row> rows = new ArrayList<>();
     private int rowIndex = 0;
+
+    private Timeline timeline;
 
     private static final DateTimeFormatter CSV_TS =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -43,8 +51,8 @@ public class EnergyStatsController {
     private static class Row {
         final long epochSec;
         final double watts;
-        final double pricePPerKwh; // column 3
-        final double carbon;       // column 4
+        final double pricePPerKwh;
+        final double carbon;
 
         Row(long epochSec, double watts, double pricePPerKwh, double carbon) {
             this.epochSec = epochSec;
@@ -70,8 +78,9 @@ public class EnergyStatsController {
         setupTimeAxis(usageSmallXAxis);
         setupTimeAxis(usageLargeXAxis);
 
-        // load simulation csv
+        // load + start streaming
         loadCsvFromResources("/com/energyapp/view/simulation.csv");
+        startLiveUpdates();
     }
 
     private void setupTimeAxis(NumberAxis axis) {
@@ -99,11 +108,10 @@ public class EnergyStatsController {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            br.readLine(); // skip header
+            br.readLine(); // header
 
             String line;
             while ((line = br.readLine()) != null) {
-                // Timestamp,Time_Label,Price_p_kWh,Carbon_gCO2_kWh,Total_Load_kWh,...
                 String[] parts = line.split(",", -1);
 
                 LocalDateTime ldt = LocalDateTime.parse(parts[0].trim(), CSV_TS);
@@ -113,9 +121,6 @@ public class EnergyStatsController {
                 double carbon = Double.parseDouble(parts[3].trim());
                 double totalLoadKwh = Double.parseDouble(parts[4].trim());
 
-                // Convert kWh per 30 min to watts:
-                // kW = kWh / 0.5h => kWh * 2
-                // W  = kW * 1000  => kWh * 2000
                 double watts = totalLoadKwh * 2000.0;
 
                 rows.add(new Row(epochSec, watts, priceP, carbon));
@@ -124,6 +129,59 @@ public class EnergyStatsController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void startLiveUpdates() {
+        if (rows.isEmpty()) return;
+
+        rowIndex = 0;
+
+        // 1 point per second simulation
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> addNextPoint()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void addNextPoint() {
+        Row r = rows.get(rowIndex);
+        rowIndex = (rowIndex + 1) % rows.size();
+
+        smallSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
+        largeSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
+
+        refreshAxisWindow();
+        trimToWindow(smallSeries);
+        trimToWindow(largeSeries);
+    }
+
+    private void refreshAxisWindow() {
+        long now = getLatestEpoch();
+        if (now == Long.MIN_VALUE) return;
+
+        long lower = now - windowSeconds;
+
+        usageSmallXAxis.setLowerBound(lower);
+        usageSmallXAxis.setUpperBound(now);
+
+        usageLargeXAxis.setLowerBound(lower);
+        usageLargeXAxis.setUpperBound(now);
+    }
+
+    private void trimToWindow(XYChart.Series<Number, Number> series) {
+        long now = getLatestEpoch();
+        if (now == Long.MIN_VALUE) return;
+        long lower = now - windowSeconds;
+
+        while (!series.getData().isEmpty()) {
+            long t = series.getData().get(0).getXValue().longValue();
+            if (t >= lower) break;
+            series.getData().remove(0);
+        }
+    }
+
+    private long getLatestEpoch() {
+        if (largeSeries.getData().isEmpty()) return Long.MIN_VALUE;
+        return largeSeries.getData().get(largeSeries.getData().size() - 1).getXValue().longValue();
     }
 
     private void showOverlay() {
