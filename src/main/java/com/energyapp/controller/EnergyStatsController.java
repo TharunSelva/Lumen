@@ -2,12 +2,15 @@ package com.energyapp;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -37,7 +40,7 @@ public class EnergyStatsController {
     private final XYChart.Series<Number, Number> smallSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> largeSeries = new XYChart.Series<>();
 
-    // default last hour
+    // window: last hour default, -1 means "all time"
     private long windowSeconds = 60 * 60;
 
     private final List<Row> rows = new ArrayList<>();
@@ -77,6 +80,17 @@ public class EnergyStatsController {
         // axis formatting
         setupTimeAxis(usageSmallXAxis);
         setupTimeAxis(usageLargeXAxis);
+
+        // overlay range controls
+        timeRangeCombo.getItems().addAll("Last 60 mins", "Last 24 hours", "All time");
+        timeRangeCombo.getSelectionModel().select(0);
+        timeRangeCombo.setOnAction(e -> {
+            String sel = timeRangeCombo.getSelectionModel().getSelectedItem();
+            if ("Last 60 mins".equals(sel)) windowSeconds = 60 * 60;
+            else if ("Last 24 hours".equals(sel)) windowSeconds = 24 * 60 * 60;
+            else windowSeconds = -1;
+            refreshAxisWindow();
+        });
 
         // load + start streaming
         loadCsvFromResources("/com/energyapp/view/simulation.csv");
@@ -121,6 +135,7 @@ public class EnergyStatsController {
                 double carbon = Double.parseDouble(parts[3].trim());
                 double totalLoadKwh = Double.parseDouble(parts[4].trim());
 
+                // kWh per 30 mins -> watts
                 double watts = totalLoadKwh * 2000.0;
 
                 rows.add(new Row(epochSec, watts, priceP, carbon));
@@ -135,8 +150,6 @@ public class EnergyStatsController {
         if (rows.isEmpty()) return;
 
         rowIndex = 0;
-
-        // 1 point per second simulation
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> addNextPoint()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -146,17 +159,58 @@ public class EnergyStatsController {
         Row r = rows.get(rowIndex);
         rowIndex = (rowIndex + 1) % rows.size();
 
-        smallSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
-        largeSeries.getData().add(new XYChart.Data<>(r.epochSec, r.watts));
+        XYChart.Data<Number, Number> dSmall = new XYChart.Data<>(r.epochSec, r.watts);
+        XYChart.Data<Number, Number> dLarge = new XYChart.Data<>(r.epochSec, r.watts);
+
+        smallSeries.getData().add(dSmall);
+        largeSeries.getData().add(dLarge);
+
+        installTooltipWhenNodeReady(dSmall, r);
+        installTooltipWhenNodeReady(dLarge, r);
 
         refreshAxisWindow();
         trimToWindow(smallSeries);
         trimToWindow(largeSeries);
     }
 
+    private void installTooltipWhenNodeReady(XYChart.Data<Number, Number> d, Row r) {
+        Platform.runLater(() -> {
+            Node node = d.getNode();
+            if (node == null) return;
+
+            String time = Instant.ofEpochSecond(r.epochSec)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalTime().toString().substring(0, 5);
+
+            Tooltip tip = new Tooltip(
+                    time + "\n" +
+                            String.format("%.0f W", r.watts) + "\n" +
+                            String.format("Price: %.2f p/kWh", r.pricePPerKwh) + "\n" +
+                            String.format("CO₂: %.0f g/kWh", r.carbon)
+            );
+            Tooltip.install(node, tip);
+
+            // clicking a point also opens overlay
+            node.setOnMouseClicked(ev -> showOverlay());
+        });
+    }
+
     private void refreshAxisWindow() {
         long now = getLatestEpoch();
         if (now == Long.MIN_VALUE) return;
+
+        if (windowSeconds < 0) {
+            // all time
+            long earliest = getEarliestEpoch();
+            if (earliest != Long.MIN_VALUE) {
+                usageSmallXAxis.setLowerBound(Math.max(now - 3600, earliest));
+                usageSmallXAxis.setUpperBound(now);
+
+                usageLargeXAxis.setLowerBound(earliest);
+                usageLargeXAxis.setUpperBound(now);
+            }
+            return;
+        }
 
         long lower = now - windowSeconds;
 
@@ -168,6 +222,8 @@ public class EnergyStatsController {
     }
 
     private void trimToWindow(XYChart.Series<Number, Number> series) {
+        if (windowSeconds < 0) return;
+
         long now = getLatestEpoch();
         if (now == Long.MIN_VALUE) return;
         long lower = now - windowSeconds;
@@ -182,6 +238,11 @@ public class EnergyStatsController {
     private long getLatestEpoch() {
         if (largeSeries.getData().isEmpty()) return Long.MIN_VALUE;
         return largeSeries.getData().get(largeSeries.getData().size() - 1).getXValue().longValue();
+    }
+
+    private long getEarliestEpoch() {
+        if (largeSeries.getData().isEmpty()) return Long.MIN_VALUE;
+        return largeSeries.getData().get(0).getXValue().longValue();
     }
 
     private void showOverlay() {
