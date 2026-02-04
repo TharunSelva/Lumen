@@ -17,8 +17,17 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.energyapp.EnergyStatsController"
+           style="-fx-background-color: #F6F7F9;"
+           prefWidth="1200" prefHeight="800">
+    <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
 
     <!-- CENTER CONTENT -->
     <center>
@@ -74,12 +83,28 @@
 
                         <Label style="-fx-font-size: 26; -fx-font-weight: bold;" text="Usage" />
                         <Label style="-fx-font-weight: bold;" text="Hour-by-Hour Usage" />
+                        <Label text="Tip: Click the graph to expand. Use Time Range for Real time, Last 1 hour, Last 24 hours, or All time."
+                               style="-fx-text-fill: #6B7280; -fx-font-size: 12;"/>
+
 
                         <!-- Smaller fixed height so everything is more likely to fit initially -->
-                        <BarChart animated="false" legendVisible="false" maxHeight="170" prefHeight="170" title="">
-                            <xAxis><CategoryAxis label="" /></xAxis>
-                            <yAxis><NumberAxis label="" /></yAxis>
-                        </BarChart>
+<!--                        <BarChart animated="false" legendVisible="false" maxHeight="170" prefHeight="170" title="">-->
+<!--                            <xAxis><CategoryAxis label="" /></xAxis>-->
+<!--                            <yAxis><NumberAxis label="" /></yAxis>-->
+<!--                        </BarChart>-->
+                        <LineChart fx:id="usageChartSmall"
+                                   animated="false"
+                                   legendVisible="false"
+                                   createSymbols="true"
+                                   prefHeight="170" maxHeight="170"
+                                   style="-fx-background-color: transparent;">
+                            <xAxis>
+                                <NumberAxis fx:id="usageSmallXAxis" label="" autoRanging="false"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="usageSmallYAxis" label="Watts" autoRanging="true"/>
+                            </yAxis>
+                        </LineChart>
                     </VBox>
 
                     <!-- LOWER GRID: Costs | Device breakdown | Right column -->
@@ -194,3 +219,60 @@
     </center>
 
 </BorderPane>
+
+    <?import javafx.scene.layout.AnchorPane?>
+    <?import javafx.scene.layout.BorderPane?>
+
+    <AnchorPane fx:id="graphOverlay"
+                visible="false" managed="false"
+                style="-fx-background-color: rgba(17,24,39,0.25);">
+        <BorderPane AnchorPane.topAnchor="24" AnchorPane.rightAnchor="24"
+                    AnchorPane.bottomAnchor="24" AnchorPane.leftAnchor="24"
+                    style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #E5E7EB;">
+            <top>
+                <HBox spacing="12" alignment="CENTER_LEFT"
+                      style="-fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
+                    <padding>
+                        <Insets top="12" right="16" bottom="12" left="16"/>
+                    </padding>
+
+                    <Button fx:id="backButton" text="← Back"
+                            style="-fx-background-color: #111827; -fx-text-fill: white; -fx-background-radius: 10;"/>
+
+                    <Label text="Usage" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <Label text="Time Range" style="-fx-text-fill: #6B7280;"/>
+                    <ComboBox fx:id="timeRangeCombo" prefWidth="160"/>
+                </HBox>
+            </top>
+
+            <center>
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="16" right="16" bottom="16" left="16"/>
+                    </padding>
+
+                    <Label text="House Total Power Draw"
+                           style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+                    <LineChart fx:id="usageChartLarge"
+                               animated="false"
+                               legendVisible="false"
+                               createSymbols="true"
+                               VBox.vgrow="ALWAYS">
+                        <xAxis>
+                            <NumberAxis fx:id="usageLargeXAxis" label="Time" autoRanging="false"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="usageLargeYAxis" label="Watts" autoRanging="true"/>
+                        </yAxis>
+                    </LineChart>
+                </VBox>
+            </center>
+        </BorderPane>
+    </AnchorPane>
+
+
+</StackPane>
