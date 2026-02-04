@@ -41,21 +41,21 @@ public class DashboardController {
     @FXML private Label dashboardUsageTitleLabel;
     @FXML private CostCardController weeklyCostCardController;
 
-    private double weeklyCostAccumulator = 0.0;
-
     @FXML
     public void initialize() {
         System.out.println("DashboardController loaded successfully.");
     }
 
     public void setSimService (SimulationService simulationService) {
-        simulationService.getCurrentEnergyRecord().addListener((observable, oldRecord, newRecord) -> {
-            double importKwh = newRecord.getGridImport();
-            double price = newRecord.getPricePerKwh();
-            double cost = (importKwh * price) / 100;
+        if (weeklyCostCardController != null) {
+            weeklyCostCardController.setCost(simulationService.getTotalAccumulatedCost());
+        }
 
-            weeklyCostAccumulator = weeklyCostAccumulator + cost;
-            weeklyCostCardController.setCost(weeklyCostAccumulator);
+        simulationService.getCurrentEnergyRecord().addListener((observable, oldRecord, newRecord) -> {
+            if (newRecord != null && weeklyCostCardController != null) {
+                double newTotal = simulationService.getTotalAccumulatedCost();
+                weeklyCostCardController.setCost(newTotal);
+            }
         });
     }
 }

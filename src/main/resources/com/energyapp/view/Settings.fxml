@@ -11,130 +11,120 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SettingsController">
-   <left>
-      <VBox prefHeight="200.0" prefWidth="121.0" style="-fx-background-color: #f4f4f4;" BorderPane.alignment="CENTER" />
-   </left>
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SettingsController">
    <center>
-      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="settingsMainVBox" spacing="10.0" style="-fx-padding: 20;">
+            <VBox fx:id="settingsMainVBox" spacing="20.0" style="-fx-padding: 30;">
                <children>
                   <Label fx:id="settingsGreetingLabel" text="What's wrong Richard? :(">
                      <font>
-                        <Font size="30.0" /> 
+                        <Font size="30.0" />
                      </font>
                   </Label>
-                  
-                  <GridPane fx:id="settingsMainGridPane" hgap="10.0" maxWidth="Infinity" vgap="10.0" VBox.vgrow="ALWAYS">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" /> 
-                      <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" /> 
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" percentHeight="33.33" vgrow="ALWAYS" />
-                      <RowConstraints minHeight="10.0" percentHeight="33.33" vgrow="ALWAYS" />
-                      <RowConstraints minHeight="10.0" percentHeight="33.33" vgrow="ALWAYS" />
-                    </rowConstraints>
+
+                  <GridPane fx:id="settingsMainGridPane" hgap="30.0" vgap="30.0" VBox.vgrow="ALWAYS">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                        
-                        <VBox fx:id="settingsAccountVBox" spacing="5.0">
+
+                        <VBox fx:id="settingsAccountVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                            <children>
                               <Label fx:id="settingsAccountTitleLabel" text="Account">
                                  <font>
-                                     <Font name="System Bold" size="16.0" />
+                                    <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <VBox fx:id="settingsAccountContentsVBox" spacing="5.0">
+                              <VBox spacing="5.0">
                                  <children>
-                                    <CheckBox fx:id="settingsAccountSetting1" mnemonicParsing="false" text="Setting1" /> 
-                                    <CheckBox fx:id="settingsAccountSetting2" mnemonicParsing="false" text="Setting2" /> 
-                                    <CheckBox fx:id="settingsAccountSetting3" mnemonicParsing="false" text="Setting3" /> 
+                                    <CheckBox fx:id="settingsAccountSetting1" mnemonicParsing="false" text="Edit Profile" />
+                                    <CheckBox fx:id="settingsAccountSetting2" mnemonicParsing="false" text="Change Password" />
+                                    <CheckBox fx:id="settingsAccountSetting3" mnemonicParsing="false" text="Notifications" />
                                  </children>
                               </VBox>
                            </children>
                         </VBox>
-                        
-                        <VBox fx:id="settingsAccessibilityVBox" spacing="5.0" GridPane.columnIndex="1">
+
+                        <VBox fx:id="settingsAccessibilityVBox" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                            <children>
                               <Label fx:id="settingsAccessibilityTitleLabel" text="Accessibility">
-                                <font>
-                                     <Font name="System Bold" size="16.0" /> 
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <GridPane fx:id="settingsAccessibilityGridPane" prefHeight="72.0" prefWidth="213.0">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <VBox fx:id="settingsAccessibilitySettingsContentsVBox" prefHeight="200.0" prefWidth="100.0">
-                                       <children>
-                                          <CheckBox fx:id="settingsAccessibilitySetting1" mnemonicParsing="false" text="Setting1" />
-                                          <CheckBox fx:id="settingsAccessibilitySetting2" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Setting2" />
-                                          <CheckBox fx:id="settingsAccessibilitySetting3" layoutX="10.0" layoutY="28.0" mnemonicParsing="false" text="Setting3" />
-                                       </children>
-                                    </VBox>
-                                    <Button fx:id="settingsAccessibilityButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Scalable Text Options..." GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                    </Button>
-                                 </children>
-                              </GridPane>
+                              <VBox spacing="5.0">
+                                 <CheckBox fx:id="settingsAccessibilitySetting1" mnemonicParsing="false" text="High Contrast" />
+                                 <CheckBox fx:id="settingsAccessibilitySetting2" mnemonicParsing="false" text="Screen Reader" />
+                                 <CheckBox fx:id="settingsAccessibilitySetting3" mnemonicParsing="false" text="Large Text" />
+                              </VBox>
+                              <Button fx:id="settingsAccessibilityButton" text="Scalable Text Options..." maxWidth="Infinity"/>
                            </children>
                         </VBox>
-                        <VBox fx:id="settingsPrivacyVBox" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+
+                        <VBox fx:id="settingsPrivacyVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
                            <children>
                               <Label fx:id="settingsPrivacyTitleLabel" text="Privacy and Security">
                                  <font>
-                                    <Font name="System Bold" size="16.0" />
+                                    <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <CheckBox fx:id="settingsPrivacySetting1" mnemonicParsing="false" text="Setting1" />
-                              <CheckBox fx:id="settingsPrivacySetting2" layoutX="10.0" layoutY="30.0" mnemonicParsing="false" text="Setting2" />
-                              <CheckBox fx:id="settingsPrivacySetting3" layoutX="10.0" layoutY="48.0" mnemonicParsing="false" text="Setting3" />
+                              <VBox spacing="5.0">
+                                 <CheckBox fx:id="settingsPrivacySetting1" mnemonicParsing="false" text="Data Sharing" />
+                                 <CheckBox fx:id="settingsPrivacySetting2" mnemonicParsing="false" text="Location Services" />
+                                 <CheckBox fx:id="settingsPrivacySetting3" mnemonicParsing="false" text="Two-Factor Auth" />
+                              </VBox>
                            </children>
                         </VBox>
-                        <VBox fx:id="settingsHelpVBox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+
+                        <VBox fx:id="settingsHelpVBox" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
                               <Label fx:id="settingsHelpTitleLabel" text="Help and Support">
                                  <font>
-                                    <Font name="System Bold" size="16.0" />
+                                    <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <CheckBox fx:id="settingsHelpSetting1" mnemonicParsing="false" text="Setting1" />
-                              <CheckBox fx:id="settingsHelpSetting2" layoutX="10.0" layoutY="30.0" mnemonicParsing="false" text="Setting2" />
-                              <CheckBox fx:id="settingsHelpSetting3" layoutX="10.0" layoutY="48.0" mnemonicParsing="false" text="Setting3" />
+                              <VBox spacing="5.0">
+                                 <CheckBox fx:id="settingsHelpSetting1" mnemonicParsing="false" text="FAQ" />
+                                 <CheckBox fx:id="settingsHelpSetting2" mnemonicParsing="false" text="Contact Support" />
+                                 <CheckBox fx:id="settingsHelpSetting3" mnemonicParsing="false" text="Report a Bug" />
+                              </VBox>
                            </children>
                         </VBox>
-                        <VBox fx:id="settingsDisplayVBox" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+
+                        <VBox fx:id="settingsDisplayVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
                            <children>
                               <Label fx:id="settingsDisplayTitleLabel" text="Display">
                                  <font>
-                                    <Font name="System Bold" size="16.0" />
+                                    <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <CheckBox fx:id="settingsDisplaySetting1" mnemonicParsing="false" text="Setting1" />
-                              <CheckBox fx:id="settingsDisplaySetting2" layoutX="10.0" layoutY="30.0" mnemonicParsing="false" text="Setting2" />
-                              <CheckBox fx:id="settingsDisplaySetting3" layoutX="10.0" layoutY="48.0" mnemonicParsing="false" text="Setting3" />
+                              <VBox spacing="5.0">
+                                 <CheckBox fx:id="settingsDisplaySetting1" mnemonicParsing="false" text="Dark Mode" />
+                                 <CheckBox fx:id="settingsDisplaySetting2" mnemonicParsing="false" text="Compact View" />
+                                 <CheckBox fx:id="settingsDisplaySetting3" mnemonicParsing="false" text="Show Animations" />
+                              </VBox>
                            </children>
                         </VBox>
-                        <VBox fx:id="settingsLogOutVBox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+
+                        <VBox fx:id="settingsLogOutVBox" spacing="10.0" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
                               <Label fx:id="settingsLogOutTitleLabel" text="Log Out" textFill="RED">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="settingsLogOutMessageLabel" text="You can log in again soon. See ya later!" />
-                              <Button fx:id="settingsLogOutProceedButton" mnemonicParsing="false" text="Proceed" />
+                              <Label fx:id="settingsLogOutMessageLabel" text="You can log in again soon. See ya later!" wrapText="true"/>
+                              <Button fx:id="settingsLogOutProceedButton" mnemonicParsing="false" text="Proceed" style="-fx-base: #ffcccc;"/>
                            </children>
                         </VBox>
-                        
+
                      </children>
                   </GridPane>
                </children>

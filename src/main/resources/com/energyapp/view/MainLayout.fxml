@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rootLayout" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.energyapp.controller.MainLayoutController">
+
+    <!-- SIDEBAR -->
+    <left>
+        <fx:include source="SideBar.fxml" fx:id="mainSideBar" />
+    </left>
+
+    <!-- CENTER (Content Area) -->
+    <center>
+        <!-- This will be replaced by code, but you can put a default view here -->
+    </center>
+
+</BorderPane>

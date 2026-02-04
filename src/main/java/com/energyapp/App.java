@@ -1,6 +1,7 @@
 package com.energyapp;
 
 import com.energyapp.controller.DashboardController;
+import com.energyapp.controller.MainLayoutController;
 import com.energyapp.service.SimulationService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,17 +15,17 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/Dashboard.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/MainLayout.fxml"));
         Parent root = loader.load();
-
 
         simulationService.loadData("/com/simulation_data.csv");
         simulationService.startSimulation();
 
-        DashboardController controller = loader.getController();
-        controller.setSimService(simulationService);
+        MainLayoutController mainController = loader.getController();
+        mainController.setSimService(simulationService);
+        mainController.handleShowDashboard();
 
-        primaryStage.setTitle("Dashboard");
+        primaryStage.setTitle("Home Energy Manager");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
     }
