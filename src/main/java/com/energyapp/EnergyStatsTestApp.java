@@ -1,4 +1,4 @@
-package com.energyapp.controller;
+package com.energyapp;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +12,8 @@ public class EnergyStatsTestApp extends Application {
     public void start(Stage stage) throws Exception {
         // IMPORTANT: path is from /resources
         Parent root = FXMLLoader.load(
-                getClass().getResource("/com/energyapp/view/energy_statistics_screen_without_sidebar.fxml")
+                getClass().getResource("/com/energyapp/view/EnergyStatistics.fxml")
+//                getClass().getResource("/com/energyapp/view/energy_statistics_screen_without_sidebar.fxml")
         );
 
         Scene scene = new Scene(root, 1200, 800);
