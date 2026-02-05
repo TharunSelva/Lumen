@@ -56,6 +56,6 @@ private Button submitButton; // Name must be an exact match to the fx:id
 
 ### Using `App.java` for Test Runs
 
-When you modify `App.java` to test run a feature you have created, make sure you DON'T push your changes to `App.java` to main. Later we will have a root fxml view that is loaded initially, but for now, the version of `App.java` in the main branch should always load the Dashboard.
+When you modify `App.java` to test run a feature you have created, make sure you DON'T push your changes to `App.java` to main. The version of `App.java` on main is build specifically to load the main layout and start the time simulation - don't change this unless you are specifically making changes to `App.java`
 
 Therefore, when you modify this file in your own branch, make sure you **do not tick `App.java` when you commit and push**.
