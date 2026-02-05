@@ -1,4 +1,4 @@
-package com.energyapp;
+package com.energyapp.controller;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
