@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="800.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <HBox alignment="CENTER_LEFT">
+         <children>
+            <VBox>
+               <children>
+                  <Label text="Forecasting">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Label>
+                  <Label text="Updated x ago" textFill="#a1a1a1">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" style="-fx-background-radius: 10;" text="↺" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+
+      <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox spacing="10.0" style="-fx-border-color: #333333; -fx-border-radius: 5; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Today's Energy Cost Forecast">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <LineChart>
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </LineChart>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox prefWidth="300.0" spacing="15.0" style="-fx-background-color: #efefef; -fx-background-radius: 5; -fx-padding: 15;">
+               <children>
+                  <Label text="Forecast Insights">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <HBox spacing="10.0">
+                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTBLUE" height="20.0" stroke="BLACK" width="20.0" />
+                     <Label text="Placeholder text" wrapText="true" />
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+
+      <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10;" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Solar Forecast Panel">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <LineChart createSymbols="false" legendVisible="false" prefHeight="150.0">
+                    <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                    <yAxis><NumberAxis side="LEFT" /></yAxis>
+                  </LineChart>
+               </children>
+            </VBox>
+            <VBox style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10;" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Battery &amp; Storage Panel">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <LineChart prefHeight="150.0">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </children>
+            </VBox>
+            <VBox prefWidth="400.0" spacing="5.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10;">
+               <children>
+                  <Label text="Tomorrow at a Glance">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>
