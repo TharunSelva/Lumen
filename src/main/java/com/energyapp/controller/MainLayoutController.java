@@ -67,4 +67,8 @@ public class MainLayoutController {
         this.simulationService = simulationService;
     }
 
+    public void handleShowForecasting() {
+        switchView(ViewType.FORECASTING);
+    }
+
 }

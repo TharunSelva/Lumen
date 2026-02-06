@@ -37,5 +37,11 @@ public class SideBarController {
             mainController.handleShowSettings();
         }
     }
+    @FXML
+    public void handleShowForecasting() {
+        if (mainController != null) {
+            mainController.handleShowForecasting();
+        }
+    }
 
 }

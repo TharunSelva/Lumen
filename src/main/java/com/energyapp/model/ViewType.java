@@ -5,7 +5,8 @@ public enum ViewType {
     DASHBOARD("/com/energyapp/view/Dashboard.fxml"),
     DEVICES("/com/energyapp/view/Devices.fxml"),
     SETTINGS("/com/energyapp/view/Settings.fxml"),
-    ENERGYSTATISTICS("/com/energyapp/view/EnergyStatistics.fxml");
+    ENERGYSTATISTICS("/com/energyapp/view/EnergyStatistics.fxml"),
+    FORECASTING("/com/energyapp/view/Forecasting.fxml");
 
     private final String fxmlPath;
 
