@@ -35,6 +35,8 @@ public class MainLayoutController {
 
             if (controller instanceof DashboardController) {
                 ((DashboardController) controller).setSimService(this.simulationService);
+            } else if (controller instanceof EnergyStatsController) {
+                ((EnergyStatsController) controller).setSimulationService(this.simulationService);
             }
 
             rootLayout.setCenter(root);

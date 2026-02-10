@@ -41,6 +41,9 @@ public class EnergyRecord {
     public double getSolarGenKwh() {
         return this.solarGenKwh;
     }
+    public double getWatts() {
+        return this.watts;
+    }
 
     public double calculateEnergyCost() {
         return this.gridImport * this.pricePerKwh;

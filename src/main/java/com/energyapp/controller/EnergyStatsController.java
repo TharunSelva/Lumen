@@ -1,7 +1,5 @@
 package com.energyapp.controller;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,16 +10,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+
+import com.energyapp.model.EnergyRecord;
+import com.energyapp.service.SimulationService;
 
 public class EnergyStatsController {
 
@@ -37,56 +32,17 @@ public class EnergyStatsController {
     @FXML private NumberAxis usageLargeXAxis;
     @FXML private NumberAxis usageLargeYAxis;
 
+    private SimulationService simulationService;
+
     private final XYChart.Series<Number, Number> smallSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> largeSeries = new XYChart.Series<>();
 
     // window: last hour default, -1 means "all time"
     private long windowSeconds = 60 * 60;
+    private long latestEpochSec = 0;
 
     private enum ViewMode { REAL_TIME, LAST_1_HOUR, LAST_24_HOURS, ALL_TIME }
     private ViewMode viewMode = ViewMode.REAL_TIME;
-
-    // When user switches to a static mode, we freeze the end time here
-    private long frozenEndEpochSec = Long.MIN_VALUE;
-
-
-    private final List<Row> rows = new ArrayList<>();
-    private int rowIndex = 0;
-
-    private Timeline timeline;
-
-    private static final DateTimeFormatter CSV_TS =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    private static class Row {
-        final long epochSec;
-
-        final double totalLoadKwh;
-        final double pricePPerKwh;
-        final double carbon;
-        final double solarGenKwh;
-        final double gridImportKwh;
-
-        final double watts;
-
-        Row(long epochSec,
-            double totalLoadKwh,
-            double pricePPerKwh,
-            double carbon,
-            double solarGenKwh,
-            double gridImportKwh) {
-
-            this.epochSec = epochSec;
-            this.totalLoadKwh = totalLoadKwh;
-            this.pricePPerKwh = pricePPerKwh;
-            this.carbon = carbon;
-            this.solarGenKwh = solarGenKwh;
-            this.gridImportKwh = gridImportKwh;
-
-            this.watts = totalLoadKwh * 2000.0; // kWh per 30 mins -> watts
-        }
-    }
-
 
     @FXML
     public void initialize() {
@@ -113,18 +69,7 @@ public class EnergyStatsController {
                 "All time"
         );
         timeRangeCombo.getSelectionModel().select("Real time");
-        timeRangeCombo.setOnAction(e -> {
-            String sel = timeRangeCombo.getSelectionModel().getSelectedItem();
-            if ("Last 60 mins".equals(sel)) windowSeconds = 60 * 60;
-            else if ("Last 24 hours".equals(sel)) windowSeconds = 24 * 60 * 60;
-            else windowSeconds = -1;
-            refreshAxisWindow();
-        });
         timeRangeCombo.setOnAction(e -> onTimeRangeChanged());
-
-        // load + start streaming
-        loadCsvFromResources("/com/simulation_data.csv");
-        startLiveUpdates();
     }
 
     // Handler for switching between the dropdown menu options
@@ -135,24 +80,18 @@ public class EnergyStatsController {
         switch (sel) {
             case "Real time" -> {
                 viewMode = ViewMode.REAL_TIME;
-                // resume live updates
-                if (timeline != null) timeline.play();
-                // Real time shows last hour window (matches user story)
                 windowSeconds = 60 * 60;
             }
             case "Last 1 hour" -> {
                 viewMode = ViewMode.LAST_1_HOUR;
-                freezeNow();
                 windowSeconds = 60 * 60;
             }
             case "Last 24 hours" -> {
                 viewMode = ViewMode.LAST_24_HOURS;
-                freezeNow();
                 windowSeconds = 24 * 60 * 60;
             }
             case "All time" -> {
                 viewMode = ViewMode.ALL_TIME;
-                freezeNow();
                 windowSeconds = -1; // special: all time
             }
         }
@@ -161,66 +100,51 @@ public class EnergyStatsController {
         applyViewToCharts();
     }
 
-    private void freezeNow() {
-        // stop live movement
-        if (timeline != null) timeline.pause();
-
-        // freeze at the latest point currently shown; fallback to latest CSV row if needed
-        long latest = getLatestEpoch();
-        if (latest != Long.MIN_VALUE) {
-            frozenEndEpochSec = latest;
-        } else if (!rows.isEmpty()) {
-            frozenEndEpochSec = rows.get(rows.size() - 1).epochSec;
-        }
-    }
-
     private void applyViewToCharts() {
-        if (rows.isEmpty()) return;
+        List<EnergyRecord> history = simulationService.getEnergyStatsSessionHistory();
+        if (history.isEmpty()) return;
 
-        long end = (viewMode == ViewMode.REAL_TIME) ? getLatestEpoch() : frozenEndEpochSec;
-        if (end == Long.MIN_VALUE) end = rows.get(0).epochSec;
+        long end = toEpochSec(history.get(history.size() - 1).getTimestamp());
 
         long start;
-        if (viewMode == ViewMode.ALL_TIME) {
-            start = rows.get(0).epochSec;
+        if (windowSeconds < 0) {
+            start = toEpochSec(history.get(0).getTimestamp());
         } else {
             start = end - windowSeconds;
         }
 
-        // IMPORTANT: rebuild series for static views so it stops “sliding”
-        if (viewMode != ViewMode.REAL_TIME) {
-            rebuildSeriesForRange(start, end);
-        }
+        rebuildSeriesForRange(start, end);
 
-        // Set fixed axis bounds (static) OR moving bounds (real time)
         usageSmallXAxis.setLowerBound(start);
         usageSmallXAxis.setUpperBound(end);
 
         usageLargeXAxis.setLowerBound(start);
         usageLargeXAxis.setUpperBound(end);
+
     }
 
     private void rebuildSeriesForRange(long startEpochSec, long endEpochSec) {
         smallSeries.getData().clear();
         largeSeries.getData().clear();
 
-        for (Row r : rows) {
-            if (r.epochSec < startEpochSec) continue;
-            if (r.epochSec > endEpochSec) break;
+        List<EnergyRecord> history = simulationService.getEnergyStatsSessionHistory();
 
-            XYChart.Data<Number, Number> ds = new XYChart.Data<>(r.epochSec, r.watts);
-            XYChart.Data<Number, Number> dl = new XYChart.Data<>(r.epochSec, r.watts);
+        for (EnergyRecord rec : history) {
+            long t = toEpochSec(rec.getTimestamp());
+
+            if (t < startEpochSec) continue;
+            if (t > endEpochSec) break;
+
+            XYChart.Data<Number, Number> ds = new XYChart.Data<>(t, rec.getWatts());
+            XYChart.Data<Number, Number> dl = new XYChart.Data<>(t, rec.getWatts());
 
             smallSeries.getData().add(ds);
             largeSeries.getData().add(dl);
 
-            installTooltipWhenNodeReady(ds, r);
-            installTooltipWhenNodeReady(dl, r);
-
+            installTooltipWhenNodeReady(ds, rec);
+            installTooltipWhenNodeReady(dl, rec);
         }
     }
-
-
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
@@ -239,114 +163,40 @@ public class EnergyStatsController {
         });
     }
 
-    private void loadCsvFromResources(String resourcePath) {
-        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
-            if (is == null) {
-                System.err.println("CSV not found on classpath: " + resourcePath);
-                return;
-            }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            br.readLine(); // header
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",", -1);
-
-                LocalDateTime ldt = LocalDateTime.parse(parts[0].trim(), CSV_TS);
-                long epochSec = ldt.atZone(ZoneId.systemDefault()).toEpochSecond();
-
-//                double priceP = Double.parseDouble(parts[2].trim());
-//                double carbon = Double.parseDouble(parts[3].trim());
-//                double totalLoadKwh = Double.parseDouble(parts[4].trim());
-//
-//                // kWh per 30 mins -> watts
-//                double watts = totalLoadKwh * 2000.0;
-//                rows.add(new Row(epochSec, watts, priceP, carbon));
-
-                double priceP = Double.parseDouble(parts[2].trim());
-                double carbon = Double.parseDouble(parts[3].trim());
-                double totalLoadKwh = Double.parseDouble(parts[4].trim());
-                double solarGenKwh = Double.parseDouble(parts[5].trim());
-                double gridImportKwh = Double.parseDouble(parts[7].trim());
-
-                rows.add(new Row(epochSec, totalLoadKwh, priceP, carbon, solarGenKwh, gridImportKwh));
-
-
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void startLiveUpdates() {
-        if (rows.isEmpty()) return;
-
-        rowIndex = 0;
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> addNextPoint()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
-
-    private void addNextPoint() {
-        Row r = rows.get(rowIndex);
-        rowIndex = (rowIndex + 1) % rows.size();
-
-        XYChart.Data<Number, Number> dSmall = new XYChart.Data<>(r.epochSec, r.watts);
-        XYChart.Data<Number, Number> dLarge = new XYChart.Data<>(r.epochSec, r.watts);
-
-        smallSeries.getData().add(dSmall);
-        largeSeries.getData().add(dLarge);
-
-        installTooltipWhenNodeReady(dSmall, r);
-        installTooltipWhenNodeReady(dLarge, r);
-
-        if (viewMode == ViewMode.REAL_TIME) {
-            refreshAxisWindow();
-            trimToWindow(smallSeries);
-            trimToWindow(largeSeries);
-        }
-
-    }
-
-    private void installTooltipWhenNodeReady(XYChart.Data<Number, Number> d, Row r) {
+    private void installTooltipWhenNodeReady(XYChart.Data<Number, Number> d, EnergyRecord rec) {
         Platform.runLater(() -> {
             Node node = d.getNode();
             if (node == null) return;
 
-            // Time label
-            String time = Instant.ofEpochSecond(r.epochSec)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalTime().toString().substring(0, 5);
+            String time = rec.getTimestamp().toLocalTime().toString().substring(0, 5);
 
             // Cost (£) from totalLoadKwh and price (p/kWh)
-            double costPence = r.totalLoadKwh * r.pricePPerKwh;
+            double costPence = rec.getTotalLoadKwh() * rec.getPricePerKwh();
             double costPounds = costPence / 100.0;
 
             // Contribution breakdown
-            double total = Math.max(r.totalLoadKwh, 0.000001);
+            double total = Math.max(rec.getTotalLoadKwh(), 0.000001);
 
-            double solarUsed = Math.min(r.solarGenKwh, r.totalLoadKwh);
-            double remainingAfterSolar = Math.max(r.totalLoadKwh - solarUsed, 0);
+            double solarUsed = Math.min(rec.getSolarGenKwh(), rec.getTotalLoadKwh());
+            double remainingAfterSolar = Math.max(rec.getTotalLoadKwh() - solarUsed, 0);
 
-            double gridUsed = Math.min(r.gridImportKwh, remainingAfterSolar);
-            double batteryUsed = Math.max(r.totalLoadKwh - solarUsed - gridUsed, 0);
+            double gridUsed = Math.min(rec.getGridImport(), remainingAfterSolar);
+            double batteryUsed = Math.max(rec.getTotalLoadKwh() - solarUsed - gridUsed, 0);
 
             int solarPct = (int) Math.round((solarUsed / total) * 100);
             int batteryPct = (int) Math.round((batteryUsed / total) * 100);
 
             // Simple CO2 label (tweak thresholds if you want)
             String co2Label;
-            if (r.carbon <= 150) co2Label = "Low CO₂";
-            else if (r.carbon <= 250) co2Label = "Medium CO₂";
+            if (rec.getCarbon() <= 150) co2Label = "Low CO₂";
+            else if (rec.getCarbon() <= 250) co2Label = "Medium CO₂";
             else co2Label = "High CO₂";
 
             // Tooltip text (matches the style in your screenshot)
             String tipText =
                     time + "\n" +
-                            String.format("%.2f kWh • £%.2f • %d%%", r.totalLoadKwh, costPounds, solarPct) + "\n" +
-                            String.format("Price: %.2f p/kWh • Total load: %.0f W", r.pricePPerKwh, r.watts) + "\n" +
+                            String.format("%.2f kWh • £%.2f • %d%%", rec.getTotalLoadKwh(), costPounds, solarPct) + "\n" +
+                            String.format("Price: %.2f p/kWh • Total load: %.0f W", rec.getPricePerKwh(), rec.getWatts()) + "\n" +
                             String.format("Solar, %d%% Battery • %s", batteryPct, co2Label);
 
             Tooltip tip = new Tooltip(tipText);
@@ -357,43 +207,37 @@ public class EnergyStatsController {
         });
     }
 
+    private void updateAxisBounds() {
+        if (latestEpochSec == 0) return;
 
-    private void refreshAxisWindow() {
-        long now = getLatestEpoch();
-        if (now == Long.MIN_VALUE) return;
+        long ub = latestEpochSec;
+        long lb;
 
-        if (windowSeconds < 0) {
-            // all time
-            long earliest = getEarliestEpoch();
-            if (earliest != Long.MIN_VALUE) {
-                usageSmallXAxis.setLowerBound(Math.max(now - 3600, earliest));
-                usageSmallXAxis.setUpperBound(now);
-
-                usageLargeXAxis.setLowerBound(earliest);
-                usageLargeXAxis.setUpperBound(now);
-            }
-            return;
+        if (windowSeconds == -1) {
+            lb = getEarliestEpoch();
+            if (lb == Long.MIN_VALUE) lb = ub;
+        } else {
+            lb = ub - windowSeconds;
         }
 
-        long lower = now - windowSeconds;
+        usageSmallXAxis.setLowerBound(lb);
+        usageSmallXAxis.setUpperBound(ub);
+        usageLargeXAxis.setLowerBound(lb);
+        usageLargeXAxis.setUpperBound(ub);
 
-        usageSmallXAxis.setLowerBound(lower);
-        usageSmallXAxis.setUpperBound(now);
-
-        usageLargeXAxis.setLowerBound(lower);
-        usageLargeXAxis.setUpperBound(now);
+        if (windowSeconds > 0) {
+            trimToWindow(smallSeries, lb);
+            trimToWindow(largeSeries, lb);
+        }
     }
 
-    private void trimToWindow(XYChart.Series<Number, Number> series) {
+    private void trimToWindow(XYChart.Series<Number, Number> series, long lb) {
         if (windowSeconds < 0) return;
-
-        long now = getLatestEpoch();
-        if (now == Long.MIN_VALUE) return;
-        long lower = now - windowSeconds;
 
         while (!series.getData().isEmpty()) {
             long t = series.getData().get(0).getXValue().longValue();
-            if (t >= lower) break;
+
+            if (t >= lb) break;
             series.getData().remove(0);
         }
     }
@@ -416,5 +260,47 @@ public class EnergyStatsController {
     private void hideOverlay() {
         graphOverlay.setVisible(false);
         graphOverlay.setManaged(false);
+    }
+
+    public void setSimulationService(SimulationService service) {
+        this.simulationService = service;
+        if (this.simulationService != null) {
+            initServiceConnection();
+        }
+    }
+
+    private void initServiceConnection() {
+        List<EnergyRecord> history = simulationService.getEnergyStatsSessionHistory();
+        for (EnergyRecord rec : history) {
+            plotDataPoint(rec);
+        }
+
+        simulationService.getCurrentEnergyRecord().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                plotDataPoint(newVal);
+            }
+        });
+    }
+
+    private long toEpochSec(LocalDateTime time) {
+        return time.atZone(ZoneId.systemDefault()).toEpochSecond();
+    }
+
+    private void plotDataPoint(EnergyRecord rec) {
+        long x = toEpochSec(rec.getTimestamp());
+        double y = rec.getWatts();
+
+        latestEpochSec = x;
+
+        XYChart.Data<Number, Number> dataSmall = new XYChart.Data<>(x, y);
+        XYChart.Data<Number, Number> dataLarge = new XYChart.Data<>(x, y);
+
+        smallSeries.getData().add(dataSmall);
+        largeSeries.getData().add(dataLarge);
+
+        installTooltipWhenNodeReady(dataSmall, rec);
+        installTooltipWhenNodeReady(dataLarge, rec);
+
+        updateAxisBounds();
     }
 }
