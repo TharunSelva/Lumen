@@ -35,7 +35,7 @@ public class MainLayoutController {
 
             if (controller instanceof DashboardController) {
                 DashboardController dc = (DashboardController) controller;
-                dc.setMainController(this);                 // ✅ add this line
+                dc.setMainController(this);
                 dc.setSimService(this.simulationService);
             } else if (controller instanceof EnergyStatsController) {
                 ((EnergyStatsController) controller).setSimulationService(this.simulationService);
