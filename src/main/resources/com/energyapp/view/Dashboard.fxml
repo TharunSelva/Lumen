@@ -5,12 +5,14 @@
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="dashboardBorderPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DashboardController">
@@ -21,7 +23,7 @@
                     <children>
                         <Label fx:id="dashboardGreetingLabel" text="Good Afternoon, Richard!">
                             <font>
-                                <Font size="30.0" />
+                                <Font name="System Bold" size="30.0" />
                             </font>
                         </Label>
 
@@ -31,18 +33,30 @@
                                 <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints vgrow="ALWAYS" percentHeight="50.0" />
-                                <RowConstraints vgrow="ALWAYS" percentHeight="50.0" />
+                                <RowConstraints percentHeight="50.0" vgrow="ALWAYS" />
+                                <RowConstraints percentHeight="50.0" vgrow="ALWAYS" />
                             </rowConstraints>
                             <children>
 
                                 <VBox fx:id="dashboard00VBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                     <children>
-                                        <Label fx:id="dashboardUsageTitleLabel" text="Today's Usage - Statistics" style="-fx-font-weight: bold;"/>
+                              <HBox prefHeight="2.0" prefWidth="621.0">
+                                 <children>
+                                              <Label fx:id="dashboardUsageTitleLabel" prefHeight="18.0" prefWidth="201.0" style="-fx-font-weight: bold;" text="Today's Usage - Statistics" />
+                                    <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="174.0" visible="false" />
+                                    <Label fx:id="priceStatusText" prefHeight="28.0" prefWidth="179.0" text="Price Status">
+                                       <font>
+                                          <Font size="19.0" />
+                                       </font>
+                                    </Label>
+                                    <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="19.0" visible="false" />
+                                    <Circle fx:id="priceIndicator" fill="#bbff9c" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+                                 </children>
+                              </HBox>
                                         <GridPane hgap="10.0">
                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
-                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                                 <RowConstraints vgrow="SOMETIMES" />
@@ -52,12 +66,12 @@
                                                 <fx:include fx:id="weeklyCostCard" source="CostCard.fxml" />
                                                 <VBox alignment="CENTER" style="-fx-border-color: black;" GridPane.columnIndex="1">
                                                     <children>
-                                                        <Label fx:id="dashboardUsageInsightRightLabel" text="£5 spend projected..." wrapText="true"/>
+                                                        <Label fx:id="dashboardUsageInsightRightLabel" text="£5 spend projected..." wrapText="true" />
                                                     </children>
                                                 </VBox>
                                             </children>
                                         </GridPane>
-                                        <LineChart fx:id="dashboardUsageLineChart" VBox.vgrow="ALWAYS" maxHeight="Infinity">
+                                        <LineChart fx:id="dashboardUsageLineChart" maxHeight="Infinity" VBox.vgrow="ALWAYS">
                                             <xAxis>
                                                 <NumberAxis autoRanging="false" label="Time (Hours)" lowerBound="0" side="BOTTOM" tickUnit="4" upperBound="24" />
                                             </xAxis>
@@ -71,35 +85,35 @@
 
                                 <VBox fx:id="dashboard10VBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                     <children>
-                                        <Label fx:id="dashboardQuickRecTitleLabel" text="Quick Recommendations" style="-fx-font-weight: bold;"/>
+                                        <Label fx:id="dashboardQuickRecTitleLabel" style="-fx-font-weight: bold;" text="Quick Recommendations" />
                                         <VBox spacing="10.0" VBox.vgrow="ALWAYS">
-                                            <Label fx:id="dashboardQuickRec1Label" text="1. Turn off the lights in the hallway." wrapText="true"/>
-                                            <Label fx:id="dashboardQuickRec2Label" text="2. Washing machine cycle finished." wrapText="true"/>
-                                            <Label fx:id="dashboardQuickRec3Label" text="3. Solar output is high right now." wrapText="true"/>
+                                            <Label fx:id="dashboardQuickRec1Label" text="1. Turn off the lights in the hallway." wrapText="true" />
+                                            <Label fx:id="dashboardQuickRec2Label" text="2. Washing machine cycle finished." wrapText="true" />
+                                            <Label fx:id="dashboardQuickRec3Label" text="3. Solar output is high right now." wrapText="true" />
                                         </VBox>
                                     </children>
                                 </VBox>
 
                                 <VBox fx:id="dashboardEcoImpactVBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="1">
                                     <children>
-                                        <Label fx:id="dashboardEcoImpactTitleLabel" text="Today's Eco-Impact..." style="-fx-font-weight: bold;"/>
+                                        <Label fx:id="dashboardEcoImpactTitleLabel" style="-fx-font-weight: bold;" text="Today's Eco-Impact..." />
                                         <HBox spacing="10.0" VBox.vgrow="ALWAYS">
 
-                                            <VBox alignment="CENTER_LEFT" spacing="10.0" minWidth="120.0">
-                                                <Label fx:id="dashboardEcoImpactCleanLabel" text="67% CLEAN" style="-fx-font-size: 18; -fx-text-fill: green;"/>
-                                                <Label fx:id="dashboardEcoImpactFossilLabel" text="33% FOSSIL" style="-fx-font-size: 18; -fx-text-fill: grey;"/>
+                                            <VBox alignment="CENTER_LEFT" minWidth="120.0" spacing="10.0">
+                                                <Label fx:id="dashboardEcoImpactCleanLabel" style="-fx-font-size: 18; -fx-text-fill: green;" text="67% CLEAN" />
+                                                <Label fx:id="dashboardEcoImpactFossilLabel" style="-fx-font-size: 18; -fx-text-fill: grey;" text="33% FOSSIL" />
                                             </VBox>
 
-                                            <PieChart fx:id="dashboardEcoImpactPieChart" HBox.hgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity" labelsVisible="false"/>
+                                            <PieChart fx:id="dashboardEcoImpactPieChart" labelsVisible="false" maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                         </HBox>
                                     </children>
                                 </VBox>
 
                                 <VBox fx:id="dashboardQuickForecastVBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <children>
-                                        <Label fx:id="dashboardQuickForecastTitleLabel" text="Quick Forecast - 24 Hrs" style="-fx-font-weight: bold;"/>
-                                        <HBox fx:id="dashboardQuickForecastBarHBox" alignment="CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: #f4f4f4;">
-                                            <Label text="Forecast Chart Placeholder" textFill="#999999"/>
+                                        <Label fx:id="dashboardQuickForecastTitleLabel" style="-fx-font-weight: bold;" text="Quick Forecast - 24 Hrs" />
+                                        <HBox fx:id="dashboardQuickForecastBarHBox" alignment="CENTER" style="-fx-background-color: #f4f4f4;" VBox.vgrow="ALWAYS">
+                                            <Label text="Forecast Chart Placeholder" textFill="#999999" />
                                         </HBox>
                                     </children>
                                 </VBox>
