@@ -1,6 +1,7 @@
 package com.energyapp.controller;
 
 import com.energyapp.service.SimulationService;
+import com.energyapp.service.PriceUpdateService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -9,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 
 public class DashboardController {
 
@@ -40,9 +42,21 @@ public class DashboardController {
     @FXML private LineChart<?, ?> dashboardUsageLineChart;
     @FXML private Label dashboardUsageTitleLabel;
     @FXML private CostCardController weeklyCostCardController;
+    @FXML private Label priceStatusText;
+    @FXML private Circle priceIndicator;
+
+    private PriceIndicatorController indicatorLogic;
+    private PriceUpdateService priceService;
 
     @FXML
     public void initialize() {
+        indicatorLogic = new PriceIndicatorController(priceStatusText, priceIndicator);
+        priceService = new PriceUpdateService();
+        priceService.setOnSucceeded(event -> {
+            Double newPrice = priceService.getValue();
+            indicatorLogic.updateStatus(newPrice);
+        });
+        priceService.start();
         System.out.println("DashboardController loaded successfully.");
     }
 
