@@ -13,10 +13,10 @@ public class PriceIndicatorController {
         this.circle = circle;
     }
 
-    public void updateStatus(double price) {
-        if (price < 0.15) {
+    public void updateIndicatorByCost(double intervalCost) {
+        if (intervalCost < 0.05) {
             updateUI(Color.web("#bbff9c"), "Low Price", Color.GREEN);
-        } else if (price < 0.30) {
+        } else if (intervalCost < 0.15) {
             updateUI(Color.ORANGE, "Standard Price", Color.DARKORANGE);
         } else {
             updateUI(Color.RED, "High Price", Color.DARKRED);

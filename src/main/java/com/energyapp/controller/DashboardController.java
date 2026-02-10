@@ -1,7 +1,6 @@
 package com.energyapp.controller;
 
 import com.energyapp.service.SimulationService;
-import com.energyapp.service.PriceUpdateService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -46,17 +45,10 @@ public class DashboardController {
     @FXML private Circle priceIndicator;
 
     private PriceIndicatorController indicatorLogic;
-    private PriceUpdateService priceService;
 
     @FXML
     public void initialize() {
         indicatorLogic = new PriceIndicatorController(priceStatusText, priceIndicator);
-        priceService = new PriceUpdateService();
-        priceService.setOnSucceeded(event -> {
-            Double newPrice = priceService.getValue();
-            indicatorLogic.updateStatus(newPrice);
-        });
-        priceService.start();
         System.out.println("DashboardController loaded successfully.");
     }
 
@@ -64,6 +56,12 @@ public class DashboardController {
         if (weeklyCostCardController != null) {
             weeklyCostCardController.setCost(simulationService.getTotalAccumulatedCost());
         }
+
+        simulationService.currentIntervalCostProperty().addListener((obs, oldCost, newCost) -> {
+            if (newCost != null) {
+                indicatorLogic.updateIndicatorByCost(newCost.doubleValue());
+            }
+        });
 
         simulationService.getCurrentEnergyRecord().addListener((observable, oldRecord, newRecord) -> {
             if (newRecord != null && weeklyCostCardController != null) {
