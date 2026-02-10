@@ -21,7 +21,7 @@
                     <children>
                         <Label fx:id="dashboardGreetingLabel" text="Good Afternoon, Richard!">
                             <font>
-                                <Font size="30.0" />
+                                <Font name="System Bold" size="30.0" />
                             </font>
                         </Label>
 
@@ -31,18 +31,18 @@
                                 <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints vgrow="ALWAYS" percentHeight="50.0" />
-                                <RowConstraints vgrow="ALWAYS" percentHeight="50.0" />
+                                <RowConstraints percentHeight="50.0" vgrow="ALWAYS" />
+                                <RowConstraints percentHeight="50.0" vgrow="ALWAYS" />
                             </rowConstraints>
                             <children>
 
                                 <VBox fx:id="dashboard00VBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                     <children>
-                                        <Label fx:id="dashboardUsageTitleLabel" text="Today's Usage - Statistics" style="-fx-font-weight: bold;"/>
+                                        <Label fx:id="dashboardUsageTitleLabel" style="-fx-font-weight: bold;" text="Today's Usage - Statistics" />
                                         <GridPane hgap="10.0">
                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
-                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                                 <RowConstraints vgrow="SOMETIMES" />
@@ -52,59 +52,59 @@
                                                 <fx:include fx:id="weeklyCostCard" source="CostCard.fxml" />
                                                 <VBox alignment="CENTER" style="-fx-border-color: black;" GridPane.columnIndex="1">
                                                     <children>
-                                                        <Label fx:id="dashboardUsageInsightRightLabel" text="£5 spend projected..." wrapText="true"/>
+                                                        <Label fx:id="dashboardUsageInsightRightLabel" text="£5 spend projected..." wrapText="true" />
                                                     </children>
                                                 </VBox>
                                             </children>
                                         </GridPane>
-                                        <LineChart fx:id="dashboardUsageLineChart"
-                                                   animated="false"
-                                                   legendVisible="false"
-                                                   createSymbols="true"
-                                                   prefHeight="170" maxHeight="170"
-                                                   style="-fx-background-color: transparent; -fx-cursor: hand;">
+                                        <LineChart fx:id="dashboardUsageLineChart" animated="false" createSymbols="true" legendVisible="false" maxHeight="170" prefHeight="170" style="-fx-background-color: transparent; -fx-cursor: hand;">
                                             <xAxis>
-                                                <NumberAxis fx:id="dashboardUsageXAxis" label="" autoRanging="false"/>
+                                                <NumberAxis fx:id="dashboardUsageXAxis" autoRanging="false" label="" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis fx:id="dashboardUsageYAxis" label="Watts" autoRanging="true"/>
+                                                <NumberAxis fx:id="dashboardUsageYAxis" autoRanging="true" label="Watts" />
                                             </yAxis>
                                         </LineChart>
+                              <Label text="Tip: Click on graph to go to energy statistics page">
+                                 <font>
+                                    <Font name="System Italic" size="12.0" />
+                                 </font>
+                              </Label>
                                     </children>
                                 </VBox>
 
 
                                 <VBox fx:id="dashboard10VBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                     <children>
-                                        <Label fx:id="dashboardQuickRecTitleLabel" text="Quick Recommendations" style="-fx-font-weight: bold;"/>
+                                        <Label fx:id="dashboardQuickRecTitleLabel" style="-fx-font-weight: bold;" text="Quick Recommendations" />
                                         <VBox spacing="10.0" VBox.vgrow="ALWAYS">
-                                            <Label fx:id="dashboardQuickRec1Label" text="1. Turn off the lights in the hallway." wrapText="true"/>
-                                            <Label fx:id="dashboardQuickRec2Label" text="2. Washing machine cycle finished." wrapText="true"/>
-                                            <Label fx:id="dashboardQuickRec3Label" text="3. Solar output is high right now." wrapText="true"/>
+                                            <Label fx:id="dashboardQuickRec1Label" text="1. Turn off the lights in the hallway." wrapText="true" />
+                                            <Label fx:id="dashboardQuickRec2Label" text="2. Washing machine cycle finished." wrapText="true" />
+                                            <Label fx:id="dashboardQuickRec3Label" text="3. Solar output is high right now." wrapText="true" />
                                         </VBox>
                                     </children>
                                 </VBox>
 
                                 <VBox fx:id="dashboardEcoImpactVBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="1">
                                     <children>
-                                        <Label fx:id="dashboardEcoImpactTitleLabel" text="Today's Eco-Impact..." style="-fx-font-weight: bold;"/>
+                                        <Label fx:id="dashboardEcoImpactTitleLabel" style="-fx-font-weight: bold;" text="Today's Eco-Impact..." />
                                         <HBox spacing="10.0" VBox.vgrow="ALWAYS">
 
-                                            <VBox alignment="CENTER_LEFT" spacing="10.0" minWidth="120.0">
-                                                <Label fx:id="dashboardEcoImpactCleanLabel" text="67% CLEAN" style="-fx-font-size: 18; -fx-text-fill: green;"/>
-                                                <Label fx:id="dashboardEcoImpactFossilLabel" text="33% FOSSIL" style="-fx-font-size: 18; -fx-text-fill: grey;"/>
+                                            <VBox alignment="CENTER_LEFT" minWidth="120.0" spacing="10.0">
+                                                <Label fx:id="dashboardEcoImpactCleanLabel" style="-fx-font-size: 18; -fx-text-fill: green;" text="67% CLEAN" />
+                                                <Label fx:id="dashboardEcoImpactFossilLabel" style="-fx-font-size: 18; -fx-text-fill: grey;" text="33% FOSSIL" />
                                             </VBox>
 
-                                            <PieChart fx:id="dashboardEcoImpactPieChart" HBox.hgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity" labelsVisible="false"/>
+                                            <PieChart fx:id="dashboardEcoImpactPieChart" labelsVisible="false" maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                                         </HBox>
                                     </children>
                                 </VBox>
 
                                 <VBox fx:id="dashboardQuickForecastVBox" spacing="10.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <children>
-                                        <Label fx:id="dashboardQuickForecastTitleLabel" text="Quick Forecast - 24 Hrs" style="-fx-font-weight: bold;"/>
-                                        <HBox fx:id="dashboardQuickForecastBarHBox" alignment="CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: #f4f4f4;">
-                                            <Label text="Forecast Chart Placeholder" textFill="#999999"/>
+                                        <Label fx:id="dashboardQuickForecastTitleLabel" style="-fx-font-weight: bold;" text="Quick Forecast - 24 Hrs" />
+                                        <HBox fx:id="dashboardQuickForecastBarHBox" alignment="CENTER" style="-fx-background-color: #f4f4f4;" VBox.vgrow="ALWAYS">
+                                            <Label text="Forecast Chart Placeholder" textFill="#999999" />
                                         </HBox>
                                     </children>
                                 </VBox>
