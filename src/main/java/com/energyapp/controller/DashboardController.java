@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.chart.NumberAxis;
 
 public class DashboardController {
 
@@ -37,16 +38,49 @@ public class DashboardController {
     @FXML private Label dashboardUsageInsightRightLabel;
     @FXML private VBox dashboardUsageInsightRightVBox;
     @FXML private GridPane dashboardUsageInsightsGridPane;
-    @FXML private LineChart<?, ?> dashboardUsageLineChart;
+
+    //@FXML private LineChart<?, ?> dashboardUsageLineChart;
+    @FXML private LineChart<Number, Number> dashboardUsageLineChart;
+    @FXML private NumberAxis dashboardUsageXAxis;
+    @FXML private NumberAxis dashboardUsageYAxis;
+
     @FXML private Label dashboardUsageTitleLabel;
     @FXML private CostCardController weeklyCostCardController;
+    private MainLayoutController mainController;
+    private SimulationService simulationService;
+
+    private final XYChart.Series<Number, Number> series = new XYChart.Series<>();
+
+    private long windowSeconds = 60 * 60;  // last hour
+    private long latestEpochSec = 0;
+    private boolean chartWired = false;
 
     @FXML
     public void initialize() {
         System.out.println("DashboardController loaded successfully.");
+        dashboardUsageLineChart.getData().add(series);
+        setupTimeAxis(dashboardUsageXAxis);
+
+        // click anywhere on chart opens statistics screen
+        //dashboardUsageLineChart.setOnMouseClicked(e -> openEnergyStatistics());
+        dashboardUsageLineChart.setOnMouseClicked(e -> {
+            if (mainController != null) {
+                mainController.handleShowStatistics();
+            }
+        });
+
+
     }
 
+    public void setMainController(MainLayoutController mainController) {
+        this.mainController = mainController;
+    }
+
+
     public void setSimService (SimulationService simulationService) {
+        this.simulationService = simulationService;
+        initUsageMiniChart();
+
         if (weeklyCostCardController != null) {
             weeklyCostCardController.setCost(simulationService.getTotalAccumulatedCost());
         }
@@ -58,5 +92,10 @@ public class DashboardController {
             }
         });
     }
+
+    private void initUsageMiniChart() {
+        // TODO:  will fill this in
+    }
+
 }
 

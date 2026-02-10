@@ -57,12 +57,17 @@
                                                 </VBox>
                                             </children>
                                         </GridPane>
-                                        <LineChart fx:id="dashboardUsageLineChart" VBox.vgrow="ALWAYS" maxHeight="Infinity">
+                                        <LineChart fx:id="dashboardUsageLineChart"
+                                                   animated="false"
+                                                   legendVisible="false"
+                                                   createSymbols="true"
+                                                   prefHeight="170" maxHeight="170"
+                                                   style="-fx-background-color: transparent; -fx-cursor: hand;">
                                             <xAxis>
-                                                <NumberAxis autoRanging="false" label="Time (Hours)" lowerBound="0" side="BOTTOM" tickUnit="4" upperBound="24" />
+                                                <NumberAxis fx:id="dashboardUsageXAxis" label="" autoRanging="false"/>
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis label="Price (£/kWh)" side="LEFT" upperBound="0.6" />
+                                                <NumberAxis fx:id="dashboardUsageYAxis" label="Watts" autoRanging="true"/>
                                             </yAxis>
                                         </LineChart>
                                     </children>
