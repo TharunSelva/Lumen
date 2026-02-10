@@ -27,6 +27,7 @@ public class SimulationService {
     private final ObjectProperty<EnergyRecord> currentEnergyRecord = new SimpleObjectProperty<>();
     private ScheduledExecutorService scheduler;
     private double totalAccumulatedCost = 0.0;
+    private final List<EnergyRecord> energyStatsSessionHistory = new ArrayList<>();
 
     public void loadData(String filepath) {
 
@@ -39,7 +40,12 @@ public class SimulationService {
                 LocalDateTime timestamp = LocalDateTime.parse(values[0], csvDateFormatter);
                 double pricePerKwh = Double.parseDouble(values[2]);
                 double gridImport = Double.parseDouble(values[7]);
-                EnergyRecord energyRecord = new EnergyRecord(timestamp, gridImport, pricePerKwh);
+                double carbon = Double.parseDouble(values[3]);
+                double totalLoadKwh = Double.parseDouble(values[4]);
+                double solarGenKwh = Double.parseDouble(values[5]);
+
+                EnergyRecord energyRecord = new EnergyRecord(timestamp, gridImport, pricePerKwh, carbon, totalLoadKwh,
+                        solarGenKwh);
                 simulationData.add(energyRecord);
             }
         } catch (IOException e) {
@@ -57,6 +63,11 @@ public class SimulationService {
             EnergyRecord record = simulationData.get(currentDataIndex);
             double costOnThisInterval = (record.getGridImport() * record.getPricePerKwh()) / 100;
             totalAccumulatedCost += costOnThisInterval;
+
+            synchronized (energyStatsSessionHistory) {
+                energyStatsSessionHistory.add(record);
+            }
+
             // timer runs on a background thread. need to use runLater to safely do the update on the JavaFX main thread.
             Platform.runLater(() -> {
                 currentEnergyRecord.set(record);
@@ -78,6 +89,12 @@ public class SimulationService {
 
     public double getTotalAccumulatedCost() {
         return totalAccumulatedCost;
+    }
+
+    public List<EnergyRecord> getEnergyStatsSessionHistory() {
+        synchronized (energyStatsSessionHistory) {
+            return new ArrayList<>(energyStatsSessionHistory);
+        }
     }
 
 }
