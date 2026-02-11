@@ -5,17 +5,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<!-- LEFT SIDEBAR -->
 
-
-    <!-- LEFT SIDEBAR -->
-<?import javafx.scene.control.ToggleButton?>
-<VBox fx:controller="com.energyapp.controller.SideBarController" fx:id="sideBarContainer" prefWidth="230" spacing="18" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 0 1 0 0; ">
+<VBox fx:id="sideBarContainer" prefWidth="230" spacing="18" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 0 1 0 0; " xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SideBarController">
             <padding>
                 <Insets bottom="18" left="16" right="16" top="18" />
             </padding>
@@ -38,32 +36,32 @@
             </HBox>
 
             <VBox spacing="8">
-                <ToggleButton onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+                <ToggleButton fx:id="homeButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleShowDashboard" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                     <graphic><Label style="-fx-font-size: 16;" text="🏠" /></graphic>
                     <text>Home</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT; -fx-background-radius: 10;">
+                <ToggleButton fx:id="statisticsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleShowStatistics" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT; -fx-background-radius: 10;">
                     <graphic><Label style="-fx-font-size: 16;" text="📊" /></graphic>
                     <text>Statistics</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowDevices" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+                <ToggleButton fx:id="devicesButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleShowDevices" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                     <graphic><Label style="-fx-font-size: 16;" text="📱" /></graphic>
                     <text>Devices</text>
                 </ToggleButton>
 
-                <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+                <ToggleButton fx:id="recommendationsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                     <graphic><Label style="-fx-font-size: 16;" text="💡" /></graphic>
                     <text>Recommendations</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowForecasting" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+                <ToggleButton fx:id="forecastingButtons" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleShowForecasting" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                     <graphic><Label style="-fx-font-size: 16;" text="📈" /></graphic>
                     <text>Forecasts</text>
                 </ToggleButton>
 
-                <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+                <ToggleButton fx:id="ecostatisticsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                     <graphic><Label style="-fx-font-size: 16;" text="🌿" /></graphic>
                     <text>Eco statistics</text>
                 </ToggleButton>
@@ -73,9 +71,8 @@
 
             <Separator />
 
-            <Button onAction="#handleShowSettings" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
+            <ToggleButton fx:id="settingsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleShowSettings" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-alignment: CENTER_LEFT;">
                 <graphic><Label style="-fx-font-size: 16;" text="⚙" /></graphic>
                 <text>Settings</text>
-            </Button>
+            </ToggleButton>
         </VBox>
-

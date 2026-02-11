@@ -12,7 +12,7 @@ import java.io.IOException;
 public class MainLayoutController {
 
     @FXML private BorderPane rootLayout;
-    @FXML private SideBarController mainSideBarController;
+    @FXML private SideBarController mainSideBarController = new SideBarController();
     @FXML private CostCardController weeklyCostCardController;
 
     private SimulationService simulationService;
