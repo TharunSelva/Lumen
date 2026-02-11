@@ -75,4 +75,10 @@ public class MainLayoutController {
         switchView(ViewType.FORECASTING);
     }
 
+    public void handleShowRecommendations () {
+        switchView(ViewType.RECOMMENDATIONS);
+    }
+    public void handleShowEcoStatistics() {
+        switchView(ViewType.ECOIMPACT);
+    }
 }
