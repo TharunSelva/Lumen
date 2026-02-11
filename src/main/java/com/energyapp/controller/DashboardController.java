@@ -1,14 +1,24 @@
 package com.energyapp.controller;
 
+import com.energyapp.model.EnergyRecord;
 import com.energyapp.service.SimulationService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.List;
 
 public class DashboardController {
 
@@ -37,16 +47,49 @@ public class DashboardController {
     @FXML private Label dashboardUsageInsightRightLabel;
     @FXML private VBox dashboardUsageInsightRightVBox;
     @FXML private GridPane dashboardUsageInsightsGridPane;
-    @FXML private LineChart<?, ?> dashboardUsageLineChart;
+
+    //@FXML private LineChart<?, ?> dashboardUsageLineChart;
+    @FXML private LineChart<Number, Number> dashboardUsageLineChart;
+    @FXML private NumberAxis dashboardUsageXAxis;
+    @FXML private NumberAxis dashboardUsageYAxis;
+
     @FXML private Label dashboardUsageTitleLabel;
     @FXML private CostCardController weeklyCostCardController;
+    private MainLayoutController mainController;
+    private SimulationService simulationService;
+
+    private final XYChart.Series<Number, Number> series = new XYChart.Series<>();
+
+    private long windowSeconds = 60 * 60;  // last hour
+    private long latestEpochSec = 0;
+    private boolean chartWired = false;
 
     @FXML
     public void initialize() {
         System.out.println("DashboardController loaded successfully.");
+        dashboardUsageLineChart.getData().add(series);
+        setupTimeAxis(dashboardUsageXAxis);
+
+        // click anywhere on chart opens statistics screen
+        dashboardUsageLineChart.setOnMouseClicked(e -> openEnergyStatistics());
     }
 
+    private void openEnergyStatistics() {
+        if (mainController != null) {
+            mainController.handleShowStatistics();
+        }
+    }
+
+
+    public void setMainController(MainLayoutController mainController) {
+        this.mainController = mainController;
+    }
+
+
     public void setSimService (SimulationService simulationService) {
+        this.simulationService = simulationService;
+        initUsageMiniChart();
+
         if (weeklyCostCardController != null) {
             weeklyCostCardController.setCost(simulationService.getTotalAccumulatedCost());
         }
@@ -58,5 +101,79 @@ public class DashboardController {
             }
         });
     }
+
+
+    // **MINI CHART WIRING METHODS:**
+    private void initUsageMiniChart() {
+        if (simulationService == null || chartWired) return;
+        chartWired = true;
+
+        // initial history
+        List<EnergyRecord> history = simulationService.getEnergyStatsSessionHistory();
+        for (EnergyRecord rec : history) {
+            plotDataPoint(rec);
+        }
+
+        // live updates
+        simulationService.getCurrentEnergyRecord().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                javafx.application.Platform.runLater(() -> plotDataPoint(newVal));
+            }
+        });
+    }
+
+    private void setupTimeAxis(NumberAxis axis) {
+        axis.setAutoRanging(false);
+        axis.setForceZeroInRange(false);
+        axis.setTickUnit(10 * 60);
+
+        axis.setTickLabelFormatter(new StringConverter<>() {
+            @Override public String toString(Number object) {
+                long sec = object.longValue();
+                LocalTime t = Instant.ofEpochSecond(sec)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalTime();
+                return t.toString().substring(0, 5);
+            }
+            @Override public Number fromString(String string) { return 0; }
+        });
+    }
+
+    private long toEpochSec(LocalDateTime time) {
+        return time.atZone(ZoneId.systemDefault()).toEpochSecond();
+    }
+
+    private void plotDataPoint(EnergyRecord rec) {
+        long x = toEpochSec(rec.getTimestamp());
+        double y = rec.getWatts();
+        latestEpochSec = x;
+
+        XYChart.Data<Number, Number> d = new XYChart.Data<>(x, y);
+        series.getData().add(d);
+
+        updateAxisBounds();
+    }
+
+    private void updateAxisBounds() {
+        if (latestEpochSec == 0) return;
+
+        long ub = latestEpochSec;
+        long lb = ub - windowSeconds;
+
+        dashboardUsageXAxis.setLowerBound(lb);
+        dashboardUsageXAxis.setUpperBound(ub);
+
+        trimToWindow(lb);
+    }
+
+    private void trimToWindow(long lb) {
+        while (!series.getData().isEmpty()) {
+            long t = series.getData().get(0).getXValue().longValue();
+            if (t >= lb) break;
+            series.getData().remove(0);
+        }
+    }
+
+
 }
 
