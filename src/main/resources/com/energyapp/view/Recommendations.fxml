@@ -11,108 +11,112 @@
 <?import javafx.scene.layout.VBox?>
 
 <StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-
-    <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;">
-
-        <!-- CENTER CONTENT -->
-        <center>
-            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" vbarPolicy="AS_NEEDED">
-
-                <content>
-                    <VBox spacing="14" style="-fx-background-color: transparent;">
-                        <padding>
-                            <Insets bottom="16" left="16" right="16" top="16" />
-                        </padding>
-
-                        <!-- Header row (same vibe as your friend's header row) -->
-                        <HBox alignment="CENTER_LEFT" spacing="12">
-                            <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                <Label style="-fx-font-size: 32; -fx-font-weight: bold;" text="Curated Recommendations for you" />
-                                <Label style="-fx-text-fill: #6B7280;" text="We can help." />
-                            </VBox>
-
-                            <!-- Optional little icon button like his settings button -->
-                            <Button mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10;">
-                                <graphic>
-                                    <Label style="-fx-font-size: 16;" text="✨" />
-                                </graphic>
-                            </Button>
-                        </HBox>
-
-                        <!-- Row 1: Left priority card + right lists -->
-                        <HBox spacing="16">
-
-                            <!-- Priority card -->
-                            <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" HBox.hgrow="ALWAYS">
-                                <padding>
-                                    <Insets bottom="14" left="16" right="16" top="14" />
-                                </padding>
-
-                                <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="⚡ Priority Recommendations" />
-
-                                <Label text="Charge your EV between 02:30–04:00 tonight" wrapText="true" />
-
-                                <Label style="-fx-font-weight: bold;" text="Why: lowest tariff + low carbon intensity" wrapText="true" />
-
-                                <Label style="-fx-font-weight: bold;" text="Impact: saves ~£0.70 and 0.4 kg CO₂" wrapText="true" />
-
-                                <Button maxWidth="170" mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10; -fx-font-weight: bold;" text="Schedule charging" />
-                            </VBox>
-
-                            <!-- Right lists column -->
-                            <VBox spacing="14" HBox.hgrow="ALWAYS">
-
-                                <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                                    <padding>
-                                        <Insets bottom="14" left="16" right="16" top="14" />
-                                    </padding>
-
-                                    <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Smart Savings for Tonight" />
-                                    <Label text="☾  Shift dishwasher" />
-                                    <Label text="🔋  Allow battery discharge" />
-                                </VBox>
-
-                                <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                                    <padding>
-                                        <Insets bottom="14" left="16" right="16" top="14" />
-                                    </padding>
-
-                                    <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Solar Opportunities Tomorrow" />
-                                    <Label text="☀  Heat water cylinder" />
-                                    <Label text="🔌  Top up EV" />
-                                </VBox>
-
-                            </VBox>
-                        </HBox>
-
-                        <!-- Tip card 1 -->
-                        <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                            <padding>
-                                <Insets bottom="14" left="16" right="16" top="14" />
-                            </padding>
-
-                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Quick tip: Closing the fridge door saves 11% more electricity than leaving it open" wrapText="true" />
-
-                            <!-- placeholder lines (kept simple like his UI) -->
-                            <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
-                            <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
-                        </VBox>
-
-                        <!-- Tip card 2 -->
-                        <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                            <padding>
-                                <Insets bottom="14" left="16" right="16" top="14" />
-                            </padding>
-
-                            <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="Turning off the lights when you leave the room saves you 43% more electricity" wrapText="true" />
-
-                            <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
-                        </VBox>
-
-                        <Region prefHeight="6" />
-                    </VBox>
-                </content>
-            </ScrollPane>
-        </center>
-    </BorderPane>
+   <ScrollPane prefHeight="200.0" prefWidth="200.0">
+      <content>
+      
+          <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;">
+      
+              <!-- CENTER CONTENT -->
+              <center>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" vbarPolicy="AS_NEEDED">
+      
+                      <content>
+                          <VBox spacing="14" style="-fx-background-color: transparent;">
+                              <padding>
+                                  <Insets bottom="16" left="16" right="16" top="16" />
+                              </padding>
+      
+                              <!-- Header row (same vibe as your friend's header row) -->
+                              <HBox alignment="CENTER_LEFT" spacing="12">
+                                  <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                      <Label style="-fx-font-size: 32; -fx-font-weight: bold;" text="Curated Recommendations for you" />
+                                      <Label style="-fx-text-fill: #6B7280;" text="We can help." />
+                                  </VBox>
+      
+                                  <!-- Optional little icon button like his settings button -->
+                                  <Button mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                      <graphic>
+                                          <Label style="-fx-font-size: 16;" text="✨" />
+                                      </graphic>
+                                  </Button>
+                              </HBox>
+      
+                              <!-- Row 1: Left priority card + right lists -->
+                              <HBox spacing="16">
+      
+                                  <!-- Priority card -->
+                                  <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" HBox.hgrow="ALWAYS">
+                                      <padding>
+                                          <Insets bottom="14" left="16" right="16" top="14" />
+                                      </padding>
+      
+                                      <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="⚡ Priority Recommendations" />
+      
+                                      <Label text="Charge your EV between 02:30–04:00 tonight" wrapText="true" />
+      
+                                      <Label style="-fx-font-weight: bold;" text="Why: lowest tariff + low carbon intensity" wrapText="true" />
+      
+                                      <Label style="-fx-font-weight: bold;" text="Impact: saves ~£0.70 and 0.4 kg CO₂" wrapText="true" />
+      
+                                      <Button maxWidth="170" mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10; -fx-font-weight: bold;" text="Schedule charging" />
+                                  </VBox>
+      
+                                  <!-- Right lists column -->
+                                  <VBox spacing="14" HBox.hgrow="ALWAYS">
+      
+                                      <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                          <padding>
+                                              <Insets bottom="14" left="16" right="16" top="14" />
+                                          </padding>
+      
+                                          <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Smart Savings for Tonight" />
+                                          <Label text="☾  Shift dishwasher" />
+                                          <Label text="🔋  Allow battery discharge" />
+                                      </VBox>
+      
+                                      <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                          <padding>
+                                              <Insets bottom="14" left="16" right="16" top="14" />
+                                          </padding>
+      
+                                          <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Solar Opportunities Tomorrow" />
+                                          <Label text="☀  Heat water cylinder" />
+                                          <Label text="🔌  Top up EV" />
+                                      </VBox>
+      
+                                  </VBox>
+                              </HBox>
+      
+                              <!-- Tip card 1 -->
+                              <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                  <padding>
+                                      <Insets bottom="14" left="16" right="16" top="14" />
+                                  </padding>
+      
+                                  <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Quick tip: Closing the fridge door saves 11% more electricity than leaving it open" wrapText="true" />
+      
+                                  <!-- placeholder lines (kept simple like his UI) -->
+                                  <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
+                                  <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
+                              </VBox>
+      
+                              <!-- Tip card 2 -->
+                              <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                  <padding>
+                                      <Insets bottom="14" left="16" right="16" top="14" />
+                                  </padding>
+      
+                                  <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="Turning off the lights when you leave the room saves you 43% more electricity" wrapText="true" />
+      
+                                  <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
+                              </VBox>
+      
+                              <Region prefHeight="6" />
+                          </VBox>
+                      </content>
+                  </ScrollPane>
+              </center>
+          </BorderPane>
+      </content>
+   </ScrollPane>
 </StackPane>
