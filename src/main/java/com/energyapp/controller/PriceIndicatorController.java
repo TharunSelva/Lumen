@@ -15,11 +15,11 @@ public class PriceIndicatorController {
 
     public void updateIndicatorByCost(double intervalCost) {
         if (intervalCost < 0.05) {
-            updateUI(Color.web("#bbff9c"), "Low Price", Color.GREEN);
+            updateUI(Color.web("#bbff9c"), "Low Usage", Color.GREEN);
         } else if (intervalCost < 0.15) {
-            updateUI(Color.ORANGE, "Standard Price", Color.DARKORANGE);
+            updateUI(Color.ORANGE, "Standard Usage", Color.DARKORANGE);
         } else {
-            updateUI(Color.RED, "High Price", Color.DARKRED);
+            updateUI(Color.RED, "High Usage", Color.DARKRED);
         }
     }
 

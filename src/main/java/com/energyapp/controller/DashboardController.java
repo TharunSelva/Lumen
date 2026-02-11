@@ -96,6 +96,22 @@ public class DashboardController {
         this.simulationService = simulationService;
         initUsageMiniChart();
 
+        if (simulationService.getCurrentEnergyRecord().get() != null) {
+            double currentCost = (simulationService.getCurrentEnergyRecord().get().getGridImport() * simulationService.getCurrentEnergyRecord().get().getPricePerKwh()) / 100;
+            indicatorLogic.updateIndicatorByCost(currentCost);
+
+            if (weeklyCostCardController != null) {
+                weeklyCostCardController.setCost(simulationService.getTotalAccumulatedCost());
+            }
+        }
+
+        // 2. CONTINUE LISTENING: Keep the listeners for future updates
+        simulationService.currentIntervalCostProperty().addListener((obs, oldCost, newCost) -> {
+            if (newCost != null) {
+                indicatorLogic.updateIndicatorByCost(newCost.doubleValue());
+            }
+        });
+
         if (weeklyCostCardController != null) {
             weeklyCostCardController.setCost(simulationService.getTotalAccumulatedCost());
         }

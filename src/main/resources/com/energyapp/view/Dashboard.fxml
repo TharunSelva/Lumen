@@ -44,7 +44,7 @@
                                  <children>
                                               <Label fx:id="dashboardUsageTitleLabel" prefHeight="18.0" prefWidth="201.0" style="-fx-font-weight: bold;" text="Today's Usage - Statistics" />
                                     <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="174.0" visible="false" />
-                                    <Label fx:id="priceStatusText" prefHeight="28.0" prefWidth="179.0" text="Price Status">
+                                    <Label fx:id="priceStatusText" prefHeight="28.0" prefWidth="179.0" text="Usage Status">
                                        <font>
                                           <Font size="19.0" />
                                        </font>
