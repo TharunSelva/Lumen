@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
+import javafx.scene.shape.Circle;
 
 public class DashboardController {
 
@@ -55,6 +56,10 @@ public class DashboardController {
 
     @FXML private Label dashboardUsageTitleLabel;
     @FXML private CostCardController weeklyCostCardController;
+    @FXML private Label priceStatusText;
+    @FXML private Circle priceIndicator;
+
+    private PriceIndicatorController indicatorLogic;
     private MainLayoutController mainController;
     private SimulationService simulationService;
 
@@ -66,6 +71,7 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
+        indicatorLogic = new PriceIndicatorController(priceStatusText, priceIndicator);
         System.out.println("DashboardController loaded successfully.");
         dashboardUsageLineChart.getData().add(series);
         setupTimeAxis(dashboardUsageXAxis);
@@ -93,6 +99,12 @@ public class DashboardController {
         if (weeklyCostCardController != null) {
             weeklyCostCardController.setCost(simulationService.getTotalAccumulatedCost());
         }
+
+        simulationService.currentIntervalCostProperty().addListener((obs, oldCost, newCost) -> {
+            if (newCost != null) {
+                indicatorLogic.updateIndicatorByCost(newCost.doubleValue());
+            }
+        });
 
         simulationService.getCurrentEnergyRecord().addListener((observable, oldRecord, newRecord) -> {
             if (newRecord != null && weeklyCostCardController != null) {
