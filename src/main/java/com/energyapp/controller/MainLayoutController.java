@@ -39,6 +39,8 @@ public class MainLayoutController {
                 dc.setSimService(this.simulationService);
             } else if (controller instanceof EnergyStatsController) {
                 ((EnergyStatsController) controller).setSimulationService(this.simulationService);
+            } else if (controller instanceof ForecastController) {
+                ((ForecastController) controller).setSimulationService(this.simulationService);
             }
 
             rootLayout.setCenter(root);
@@ -78,6 +80,7 @@ public class MainLayoutController {
     public void handleShowRecommendations () {
         switchView(ViewType.RECOMMENDATIONS);
     }
+
     public void handleShowEcoStatistics() {
         switchView(ViewType.ECOIMPACT);
     }
