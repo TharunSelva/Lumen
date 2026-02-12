@@ -4,6 +4,7 @@ import com.energyapp.model.EnergyRecord;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -57,6 +58,38 @@ public final class CsvReadForService {
 
         // return simulationData to be used in the SimulationService.
         return simulationData;
+    }
+
+    public static List<EnergyRecord> loadData(InputStream inputStream) {
+        List<EnergyRecord> records = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            br.readLine();
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+
+                LocalDateTime timestamp = LocalDateTime.parse(values[0], csvDateFormatter);
+                String timeLabel = values[1];
+                double pricePerKwh = Double.parseDouble(values[2]);
+                double carbon = Double.parseDouble(values[3]);
+                double totalLoadKwh = Double.parseDouble(values[4]);
+                double solarGenKwh = Double.parseDouble(values[5]);
+                int batteryLevel = Integer.parseInt(values[6]);
+                double gridImport = Double.parseDouble(values[7]);
+                double evChargerUsageKwh = Double.parseDouble(values[8]);
+                double washingMachineUsageKwh = Double.parseDouble(values[9]);
+                double heatingUsageKwh = Double.parseDouble(values[10]);
+                double baseloadKwh = Double.parseDouble(values[11]);
+
+                records.add(new EnergyRecord(timestamp, timeLabel, gridImport, pricePerKwh, carbon, totalLoadKwh,
+                        solarGenKwh, batteryLevel, evChargerUsageKwh, washingMachineUsageKwh, heatingUsageKwh, baseloadKwh));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return records;
     }
 
 }
