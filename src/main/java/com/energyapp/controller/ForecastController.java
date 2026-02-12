@@ -9,6 +9,9 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class ForecastController {
 
@@ -21,21 +24,22 @@ public class ForecastController {
     @FXML
     private Label lastUpdatedLabel;
 
-
+    private List<EnergyRecord> energyRecords;
 
     public void initialize() {
         SimulationService
     }
 
     public setSimulationService (SimulationService simulationService) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         simulationService.getCurrentEnergyRecord().addListener((obs, oldVal, newVal) -> {
             updateGraph(newVal);
-            lastUpdatedLabel.setText();
+            lastUpdatedLabel.setText(LocalTime.now().format(formatter));
         });
     }
 
     private void updateGraph(EnergyRecord newVal) {
-
+        energyRecords.add(newVal);
     }
 
 }
