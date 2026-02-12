@@ -64,6 +64,31 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>cross-platform</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>21.0.6</version>
+          <classifier>win</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>21.0.6</version>
+          <classifier>linux</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>21.0.6</version>
+          <classifier>mac</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
