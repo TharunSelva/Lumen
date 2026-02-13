@@ -28,7 +28,7 @@ public class ForecastController {
     private XYChart.Series<Number, Number> energyCostSeries = new XYChart.Series<>();
 
     private List<EnergyRecord> energyRecords;
-    private List<EnergyRecord> forcastEnergyRecords;
+    private List<EnergyRecord> forecastEnergyRecords;
 
     @FXML
     public void initialize() {
@@ -45,7 +45,7 @@ public class ForecastController {
 
     private void updateGraph(EnergyRecord newVal) {
         energyRecords.add(newVal);
-        forcastEnergyRecords = predict(energyRecords);
+        forecastEnergyRecords = predict(energyRecords);
         energyCostSeries.getData().clear();
         energyCostSeries = plotData();
 
@@ -72,7 +72,7 @@ public class ForecastController {
     private XYChart.Series<Number, Number> plotData() {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
 
-        for (EnergyRecord energyRecord : forcastEnergyRecords) {
+        for (EnergyRecord energyRecord : forecastEnergyRecords) {
             XYChart.Data<Number, Number> energyData = null;
             if (energyRecord != null) {
                 double x = getTime(energyRecord.getTimestamp());
