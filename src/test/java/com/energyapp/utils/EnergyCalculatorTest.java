@@ -62,4 +62,38 @@ public class EnergyCalculatorTest {
         assertEquals("Medium CO2", EnergyCalculator.determineCo2Label(200));
         assertEquals("High CO2", EnergyCalculator.determineCo2Label(300));
     }
+
+    @Test
+    void testCalculatePercentage_Normal() {
+        assertEquals(50, EnergyCalculator.calculatePercentage(50.0, 100.0));
+        assertEquals(25, EnergyCalculator.calculatePercentage(25.0, 100.0));
+    }
+
+    @Test
+    void testCalculatePercentage_rounding() {
+        assertEquals(33, EnergyCalculator.calculatePercentage(1.0, 3.0));
+        assertEquals(67, EnergyCalculator.calculatePercentage(2.0, 3.0));
+    }
+
+    @Test
+    void testCalculatePercentage_ZeroTotal() {
+        assertEquals(0, EnergyCalculator.calculatePercentage(50.0, 0.0));
+    }
+
+    @Test
+    void testCalculateBatteryUsed_MixedSources() {
+        double totalLoad = 10.0;
+        double solarGen = 3.0;
+        double gridImport = 4.0;
+
+        double result = EnergyCalculator.calculateBatteryUsed(totalLoad, solarGen, gridImport);
+
+        assertEquals(3.0, result, 0.001, "Battery should cover the load not met by Solar or Grid");
+    }
+
+    @Test
+    void testCalculateBatteryUsed_SurplusSolar() {
+        double result = EnergyCalculator.calculateBatteryUsed(5.0, 10.0, 0.0);
+        assertEquals(0.0, result, 0.001);
+    }
 }
