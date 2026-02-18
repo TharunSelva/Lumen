@@ -7,18 +7,10 @@ import com.energyapp.service.SimulationService;
 
 
 public class DatabaseService {
-    Connection conn = null;
+    private static Connection conn = null;
     SimulationService simulationService;
 
     public DatabaseService() {
-        String url = "jbdc:sqlite::memory:";
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {}
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-
 
         simulationService = new SimulationService();
         simulationService.startSimulation();
@@ -30,7 +22,11 @@ public class DatabaseService {
 
     }
 
-    public Connection getConnection() {
+    public static Connection getConnection() throws SQLException {
+        if (conn == null || conn.isClosed()) {
+            String url = "jdbc:h2:./EnergyRecords";
+            conn = DriverManager.getConnection(url);
+        }
         return conn;
     }
 
@@ -38,5 +34,6 @@ public class DatabaseService {
     private void addData(EnergyRecord record) {
 
     }
+
 
 }
