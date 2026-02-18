@@ -68,6 +68,9 @@ Ensure you have the following installed on your machine:
 - **Java Development Kit 17** (or higher)
 - **Maven 3.6.0** (or higher)
 
+### Running via Fat Jar
+We've included a fat jar file that you can find in the project root. You can just double-click this and the project should run!
+
 ### Running via Command Line
 1. Open terminal or cmd
 2. Navigate to root directory of project

@@ -1,11 +1,12 @@
 package com.energyapp.service;
 
 import com.energyapp.model.EnergyRecord;
+import com.energyapp.utils.CsvReadForService;
+import com.energyapp.utils.EnergyCalculator;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
 import java.io.BufferedReader;
@@ -22,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 public class SimulationService {
 
     private List<EnergyRecord> simulationData = new ArrayList<>();
-    private final DateTimeFormatter csvDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private int currentDataIndex = 0;
 
     // ObjectProperty makes the currentEnergyRecord observable by any controllers listening.
@@ -32,28 +32,8 @@ public class SimulationService {
     private double totalAccumulatedCost = 0.0;
     private final List<EnergyRecord> energyStatsSessionHistory = new ArrayList<>();
 
-    public void loadData(String filepath) {
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filepath)))) {
-            br.readLine();
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                LocalDateTime timestamp = LocalDateTime.parse(values[0], csvDateFormatter);
-                double pricePerKwh = Double.parseDouble(values[2]);
-                double gridImport = Double.parseDouble(values[7]);
-                double carbon = Double.parseDouble(values[3]);
-                double totalLoadKwh = Double.parseDouble(values[4]);
-                double solarGenKwh = Double.parseDouble(values[5]);
-
-                EnergyRecord energyRecord = new EnergyRecord(timestamp, gridImport, pricePerKwh, carbon, totalLoadKwh,
-                        solarGenKwh);
-                simulationData.add(energyRecord);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void loadData() {
+        simulationData = CsvReadForService.loadData();
     }
 
     public void startSimulation() {
@@ -64,7 +44,7 @@ public class SimulationService {
     private void advanceSimulation() {
         if (currentDataIndex < simulationData.size()) {
             EnergyRecord record = simulationData.get(currentDataIndex);
-            double costOnThisInterval = (record.getGridImport() * record.getPricePerKwh()) / 100;
+            double costOnThisInterval = EnergyCalculator.calculateCostInPounds(record.getGridImport(), record.getPricePerKwh());
             totalAccumulatedCost += costOnThisInterval;
 
             synchronized (energyStatsSessionHistory) {

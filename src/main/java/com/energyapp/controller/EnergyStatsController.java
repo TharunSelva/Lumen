@@ -1,6 +1,8 @@
 package com.energyapp.controller;
 
+import com.energyapp.utils.EnergyCalculator;
 import javafx.application.Platform;
+import com.energyapp.utils.DateTimeUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
@@ -104,11 +106,11 @@ public class EnergyStatsController {
         List<EnergyRecord> history = simulationService.getEnergyStatsSessionHistory();
         if (history.isEmpty()) return;
 
-        long end = toEpochSec(history.get(history.size() - 1).getTimestamp());
+        long end = DateTimeUtils.toEpochSeconds(history.get(history.size() - 1).getTimestamp());
 
         long start;
         if (windowSeconds < 0) {
-            start = toEpochSec(history.get(0).getTimestamp());
+            start = DateTimeUtils.toEpochSeconds(history.get(0).getTimestamp());
         } else {
             start = end - windowSeconds;
         }
@@ -130,7 +132,7 @@ public class EnergyStatsController {
         List<EnergyRecord> history = simulationService.getEnergyStatsSessionHistory();
 
         for (EnergyRecord rec : history) {
-            long t = toEpochSec(rec.getTimestamp());
+            long t = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
 
             if (t < startEpochSec) continue;
             if (t > endEpochSec) break;
@@ -153,11 +155,7 @@ public class EnergyStatsController {
 
         axis.setTickLabelFormatter(new StringConverter<Number>() {
             @Override public String toString(Number object) {
-                long sec = object.longValue();
-                LocalTime t = Instant.ofEpochSecond(sec)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalTime();
-                return t.toString().substring(0, 5);
+                return DateTimeUtils.formatTimeFromEpoch(object.longValue());
             }
             @Override public Number fromString(String string) { return 0; }
         });
@@ -168,29 +166,21 @@ public class EnergyStatsController {
             Node node = d.getNode();
             if (node == null) return;
 
-            String time = rec.getTimestamp().toLocalTime().toString().substring(0, 5);
+            long epoch = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
+            String time = DateTimeUtils.formatTimeFromEpoch(epoch);
 
             // Cost (£) from totalLoadKwh and price (p/kWh)
-            double costPence = rec.getTotalLoadKwh() * rec.getPricePerKwh();
-            double costPounds = costPence / 100.0;
+            double costPounds = EnergyCalculator.calculateCostInPounds(rec.getTotalLoadKwh(), rec.getPricePerKwh());
 
-            // Contribution breakdown
-            double total = Math.max(rec.getTotalLoadKwh(), 0.000001);
+            double totalLoad = rec.getTotalLoadKwh();
+            double solarUsed = EnergyCalculator.calculateSolarUsed(totalLoad, rec.getSolarGenKwh());
+            double batteryUsed = EnergyCalculator.calculateBatteryUsed(totalLoad, rec.getSolarGenKwh(), rec.getGridImport());
 
-            double solarUsed = Math.min(rec.getSolarGenKwh(), rec.getTotalLoadKwh());
-            double remainingAfterSolar = Math.max(rec.getTotalLoadKwh() - solarUsed, 0);
-
-            double gridUsed = Math.min(rec.getGridImport(), remainingAfterSolar);
-            double batteryUsed = Math.max(rec.getTotalLoadKwh() - solarUsed - gridUsed, 0);
-
-            int solarPct = (int) Math.round((solarUsed / total) * 100);
-            int batteryPct = (int) Math.round((batteryUsed / total) * 100);
+            int solarPct = EnergyCalculator.calculatePercentage(solarUsed, totalLoad);
+            int batteryPct = EnergyCalculator.calculatePercentage(batteryUsed, totalLoad);
 
             // Simple CO2 label (tweak thresholds if you want)
-            String co2Label;
-            if (rec.getCarbon() <= 150) co2Label = "Low CO₂";
-            else if (rec.getCarbon() <= 250) co2Label = "Medium CO₂";
-            else co2Label = "High CO₂";
+            String co2Label = EnergyCalculator.determineCo2Label(rec.getCarbon());
 
             // Tooltip text (matches the style in your screenshot)
             String tipText =
@@ -282,12 +272,8 @@ public class EnergyStatsController {
         });
     }
 
-    private long toEpochSec(LocalDateTime time) {
-        return time.atZone(ZoneId.systemDefault()).toEpochSecond();
-    }
-
     private void plotDataPoint(EnergyRecord rec) {
-        long x = toEpochSec(rec.getTimestamp());
+        long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
         double y = rec.getWatts();
 
         latestEpochSec = x;

@@ -18,7 +18,7 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/MainLayout.fxml"));
         Parent root = loader.load();
 
-        simulationService.loadData("/com/simulation_data.csv");
+        simulationService.loadData();
         simulationService.startSimulation();
 
         MainLayoutController mainController = loader.getController();
