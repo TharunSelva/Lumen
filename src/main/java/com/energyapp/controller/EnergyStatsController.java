@@ -12,7 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
 import javafx.util.StringConverter;
+import java.util.Map;
+import java.util.ArrayList;
 
 import java.time.*;
 import java.util.List;
@@ -35,6 +39,14 @@ public class EnergyStatsController {
     @FXML private NumberAxis usageLargeYAxis;
 
     @FXML private SolarStatusCardController solarStatusCardController;
+
+    @FXML private VBox device1; // The card for the 1st device
+    @FXML private VBox device2; // The card for the 2nd device
+    @FXML private VBox device3; // The card for the 3rd device
+
+    @FXML private Label device1holder, device2holder, device3holder;
+    @FXML private Label device1useage, device2useage, device3useage;
+    @FXML private Label weeklycost1, weeklycost2, weeklycost3;
 
     private SimulationService simulationService;
 
@@ -294,5 +306,30 @@ public class EnergyStatsController {
         installTooltipWhenNodeReady(dataLarge, rec);
 
         updateAxisBounds();
+        updateDeviceBreakdown(rec);
+    }
+
+    public void updateDeviceBreakdown(EnergyRecord currentRec) {
+        if (simulationService == null || currentRec == null) return;
+        Map<String, Double> usageTotals = simulationService.getLiveDeviceTotals(currentRec);
+        Map<String, Double> weeklyCosts = simulationService.getWeeklyProjections(currentRec);
+        List<Map.Entry<String, Double>> sorted = new ArrayList<>(usageTotals.entrySet());
+        sorted.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+        if (sorted.size() >= 3) {
+            String name1 = sorted.get(0).getKey();
+            device1holder.setText(name1);
+            device1useage.setText(String.format("%.2f kWh today", sorted.get(0).getValue()));
+            weeklycost1.setText(String.format("Est. Weekly Cost: £%.2f", weeklyCosts.get(name1)));
+
+            String name2 = sorted.get(1).getKey();
+            device2holder.setText(name2);
+            device2useage.setText(String.format("%.2f kWh today", sorted.get(1).getValue()));
+            weeklycost2.setText(String.format("Est. Weekly Cost: £%.2f", weeklyCosts.get(name2)));
+
+            String name3 = sorted.get(2).getKey();
+            device3holder.setText(name3);
+            device3useage.setText(String.format("%.2f kWh today", sorted.get(2).getValue()));
+            weeklycost3.setText(String.format("Est. Weekly Cost: £%.2f", weeklyCosts.get(name3)));
+        }
     }
 }
