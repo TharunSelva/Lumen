@@ -310,26 +310,27 @@ public class EnergyStatsController {
     }
 
     public void updateDeviceBreakdown(EnergyRecord currentRec) {
-        if (simulationService == null || currentRec == null) return;
-        Map<String, Double> usageTotals = simulationService.getLiveDeviceTotals(currentRec);
-        Map<String, Double> weeklyCosts = simulationService.getWeeklyProjections(currentRec);
-        List<Map.Entry<String, Double>> sorted = new ArrayList<>(usageTotals.entrySet());
+        if (simulationService == null) return;
+        Map<String, Double> weeklyTotals = simulationService.getWeeklyAccumulatedUsage();
+
+        List<Map.Entry<String, Double>> sorted = new ArrayList<>(weeklyTotals.entrySet());
         sorted.sort((a, b) -> b.getValue().compareTo(a.getValue()));
         if (sorted.size() >= 3) {
-            String name1 = sorted.get(0).getKey();
-            device1holder.setText(name1);
-            device1useage.setText(String.format("%.2f kWh today", sorted.get(0).getValue()));
-            weeklycost1.setText(String.format("Est. Weekly Cost: £%.2f", weeklyCosts.get(name1)));
+            device1holder.setText(sorted.get(0).getKey());
+            device1useage.setText(String.format("%.2f kWh this week", sorted.get(0).getValue()));
+            double cost1 = sorted.get(0).getValue() * 0.28;
+            weeklycost1.setText(String.format("Weekly Cost: £%.2f", cost1));
 
-            String name2 = sorted.get(1).getKey();
-            device2holder.setText(name2);
-            device2useage.setText(String.format("%.2f kWh today", sorted.get(1).getValue()));
-            weeklycost2.setText(String.format("Est. Weekly Cost: £%.2f", weeklyCosts.get(name2)));
+            device2holder.setText(sorted.get(1).getKey());
+            device2useage.setText(String.format("%.2f kWh this week", sorted.get(1).getValue()));
+            double cost2 = sorted.get(1).getValue() * 0.28;
+            weeklycost2.setText(String.format("Weekly Cost: £%.2f", cost2));
 
-            String name3 = sorted.get(2).getKey();
-            device3holder.setText(name3);
-            device3useage.setText(String.format("%.2f kWh today", sorted.get(2).getValue()));
-            weeklycost3.setText(String.format("Est. Weekly Cost: £%.2f", weeklyCosts.get(name3)));
+
+            device3holder.setText(sorted.get(2).getKey());
+            device3useage.setText(String.format("%.2f kWh this week", sorted.get(2).getValue()));
+            double cost3 = sorted.get(2).getValue() * 0.28;
+            weeklycost3.setText(String.format("Weekly Cost: £%.2f", cost3));
         }
     }
 }

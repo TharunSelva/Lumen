@@ -54,11 +54,22 @@ public class SimulationService {
         scheduler.scheduleAtFixedRate(this::advanceSimulation, 0, 2, TimeUnit.SECONDS);
     }
     private final DoubleProperty currentIntervalCost = new SimpleDoubleProperty();
+    private int daysElapsed = 0;
+    private double weeklyEvKwh = 0, weeklyWashKwh = 0, weeklyHeatKwh = 0, weeklyBaseKwh = 0;
     private void advanceSimulation() {
         if (currentDataIndex < simulationData.size()) {
             EnergyRecord record = simulationData.get(currentDataIndex);
+            weeklyEvKwh += record.getEvChargerUsageKwh();
+            weeklyWashKwh += record.getWashingMachineUsageKwh();
+            weeklyHeatKwh += record.getHeatingUsageKwh();
+            weeklyBaseKwh += record.getBaseloadKwh();
             double costOnThisInterval = EnergyCalculator.calculateCostInPounds(record.getGridImport(), record.getPricePerKwh());
             totalAccumulatedCost += costOnThisInterval;
+
+            if (currentDataIndex > 0 && currentDataIndex % 336 == 0) {
+                System.out.println("Week 1 Finished. Resetting Breakdown for Week 2.");
+                resetWeeklyCounters();
+            }
 
             synchronized (energyStatsSessionHistory) {
                 energyStatsSessionHistory.add(record);
@@ -70,7 +81,29 @@ public class SimulationService {
                 currentIntervalCost.set(costOnThisInterval);
             });
             currentDataIndex++;
+
+        }else{
+            currentDataIndex = 0;
+            resetWeeklyCounters();
         }
+    }
+
+    private void resetWeeklyCounters() {
+        daysElapsed = 0;
+        weeklyEvKwh = 0;
+        weeklyWashKwh = 0;
+        weeklyHeatKwh = 0;
+        weeklyBaseKwh = 0;
+        System.out.println("New Week Started: Data Reset.");
+    }
+
+    public Map<String, Double> getWeeklyAccumulatedUsage() {
+        Map<String, Double> totals = new HashMap<>();
+        totals.put("EV Charger", weeklyEvKwh);
+        totals.put("Washing Machine", weeklyWashKwh);
+        totals.put("Heating", weeklyHeatKwh);
+        totals.put("Baseload", weeklyBaseKwh);
+        return totals;
     }
 
     public ObjectProperty<EnergyRecord> getCurrentEnergyRecord() {
