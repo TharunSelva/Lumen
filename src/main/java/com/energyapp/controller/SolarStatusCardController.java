@@ -2,10 +2,13 @@ package com.energyapp.controller;
 
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.service.SimulationService;
+import com.energyapp.utils.EnergyCalculator;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.paint.Color;
 
 public class SolarStatusCardController {
 
@@ -37,6 +40,27 @@ public class SolarStatusCardController {
     }
 
     private void updateUI(EnergyRecord currentRecord) {
-        // ui update will go here to change generation rate and progress
+        Platform.runLater(() -> {
+            double currentGen = EnergyCalculator.solarStatusCalc(currentRecord, MAX_SOLAR_CAPACITY).get(0);
+            double progressBarValue = EnergyCalculator.solarStatusCalc(currentRecord, MAX_SOLAR_CAPACITY).get(1);
+            generationProgressBar.setProgress(progressBarValue);
+            solarGenerationLabel.setText(String.format("%.2f / %.1f kW", currentGen, MAX_SOLAR_CAPACITY));
+
+            String solarStatus = EnergyCalculator.determineSolarGenLevel(currentRecord, progressBarValue);
+            if (isSolarFaultActive) {
+                solarStatusLabel.setText("Status: CRITICAL ERROR");
+                solarStatusLabel.setTextFill(Color.RED);
+            } else {
+                switch (solarStatus) {
+                    case "Status: Underperforming":
+                        solarStatusLabel.setText(solarStatus);
+                        solarStatusLabel.setTextFill(Color.ORANGE);
+
+                    case "Status: Optimal":
+                        solarStatusLabel.setText(solarStatus);
+                        solarStatusLabel.setTextFill(Color.GREEN);
+                }
+            }
+        });
     }
 }
