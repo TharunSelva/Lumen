@@ -34,6 +34,8 @@ public class EnergyStatsController {
     @FXML private NumberAxis usageLargeXAxis;
     @FXML private NumberAxis usageLargeYAxis;
 
+    @FXML private SolarStatusCardController solarStatusCardController;
+
     private SimulationService simulationService;
 
     private final XYChart.Series<Number, Number> smallSeries = new XYChart.Series<>();
@@ -256,6 +258,10 @@ public class EnergyStatsController {
         this.simulationService = service;
         if (this.simulationService != null) {
             initServiceConnection();
+
+            if (solarStatusCardController != null) {
+                solarStatusCardController.setSimulationService(service);
+            }
         }
     }
 
