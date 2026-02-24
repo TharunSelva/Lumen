@@ -196,17 +196,7 @@
                                 </StackPane>
                             </VBox>
 
-                            <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                                <padding><Insets bottom="12" left="12" right="12" top="12" /></padding>
-                                <Label style="-fx-font-weight: bold;" text="Lumen can help..." />
-                                <Label style="-fx-text-fill: #6B7280;" text="Chat to our energy-focused AI assistant, it's free." wrapText="true" />
-
-                                <HBox alignment="CENTER_LEFT" spacing="10">
-                                    <Button style="-fx-background-color: #111827; -fx-text-fill: white; -fx-background-radius: 10;" text="Chat Now" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label style="-fx-font-size: 22;" text="💬" />
-                                </HBox>
-                            </VBox>
+                            <fx:include fx:id="solarStatusCard" source="SolarGenCard.fxml" VBox.vgrow="ALWAYS" />
                         </VBox>
                   <rowConstraints>
                      <RowConstraints />

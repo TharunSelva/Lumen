@@ -1,5 +1,9 @@
 package com.energyapp.utils;
 
+import com.energyapp.model.EnergyRecord;
+
+import java.util.ArrayList;
+
 /**
  * Static class for calculating the cost of certain energy usages.
  */
@@ -30,6 +34,18 @@ public final class EnergyCalculator {
         return "High Usage";
     }
 
+    public static String determineSolarGenLevel(EnergyRecord rec, double genPct) {
+        genPct *= 100;
+        if (genPct > 35) {
+            return "Status: Optimal";
+        } else if (genPct == 0) {
+            return "Status: Not Generating";
+        } else {
+            return "Status: Underperforming";
+        }
+    }
+
+
     public static double calculateSolarUsed(double totalLoad, double solarGen) {
         return Math.min(solarGen, totalLoad);
     }
@@ -50,5 +66,15 @@ public final class EnergyCalculator {
         if (carbon <= 150) return "Low CO2";
         if (carbon <= 250) return "Medium CO2";
         return "High CO2";
+    }
+
+    public static ArrayList<Double> solarStatusCalc(EnergyRecord rec, double maxSolarCapacity) {
+        double currentGen = rec.getSolarGenKwh();
+        double progressBarValue = currentGen / maxSolarCapacity;
+        ArrayList<Double> returnList = new ArrayList<>();
+        returnList.add(currentGen);
+        returnList.add(progressBarValue);
+
+        return returnList;
     }
 }
