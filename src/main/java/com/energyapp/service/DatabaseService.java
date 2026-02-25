@@ -67,6 +67,19 @@ public class DatabaseService {
         getConnection().createStatement().execute(sql);
     }
 
+    public void importFromCSV(String filePath) {
+        // Assumes CSV headings match db table headings, so we should edit CSV if possible.
+        String sql = "INSERT INTO energyRecords SELECT * FROM CSVREAD('" + filePath + "')";
+
+        try (Statement stmt = getConnection().createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public void fromSimulationService() {
 
