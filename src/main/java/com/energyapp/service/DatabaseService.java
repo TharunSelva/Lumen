@@ -47,14 +47,11 @@ public class DatabaseService {
     }
 
 
-    private void addData(EnergyRecord record) {
-
-    }
 
 
     public void createEnergyRecordsTable () throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS energyRecords (" +
-                "time REAL PRIMARY KEY, s" +
+                "time LOCALDATETIME PRIMARY KEY, s" +
                 "time_label STRING, " +
                 "price_p_kWh FLOAT, " +
                 "carbon_gCO2_kWh FLOAT, " +
@@ -74,6 +71,38 @@ public class DatabaseService {
     public void fromSimulationService() {
 
     }
+
+    private void addData(EnergyRecord record) {
+        String sql = "INSERT INTO energyRecords (" +
+                "time, time_label, price_p_kWh, carbon_gCO2_kWh, " +
+                "total_load_kWh, solar_gen_kWh, battery_level_kWh, " +
+                "grid_import_kWh, ev_charger_kWh, washing_machine_kWh, " +
+                "heating_kWh, baseload_kWh" +
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
+
+            pstmt.setTimestamp(1, record.getTimestamp());
+            //pstmt.setString(2, record.);
+            pstmt.setDouble(3, record.getPricePerKwh());
+            pstmt.setDouble(4, record.getCarbon());
+            pstmt.setDouble(5, record.getTotalLoadKwh());
+            pstmt.setDouble(6, record.getSolarGenKwh());
+            pstmt.setDouble(7, record.getBatteryLevel());
+            pstmt.setDouble(8, record.getGridImport());
+            pstmt.setDouble(9, record.getEvChargerUsageKwh());
+            pstmt.setDouble(10, record.getWashingMachineUsageKwh());
+            pstmt.setDouble(11, record.getHeatingUsageKwh());
+            pstmt.setDouble(12, record.getBaseloadKwh());
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+        }
+
+    }
+
 
 
 }
