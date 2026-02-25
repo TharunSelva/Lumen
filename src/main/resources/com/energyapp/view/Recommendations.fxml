@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationsController">
    <ScrollPane prefHeight="200.0" prefWidth="200.0">
       <content>
       
@@ -87,31 +87,8 @@
                                   </VBox>
                               </HBox>
       
-                              <!-- Tip card 1 -->
-                              <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                                  <padding>
-                                      <Insets bottom="14" left="16" right="16" top="14" />
-                                  </padding>
-      
-                                  <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Quick tip: Closing the fridge door saves 11% more electricity than leaving it open" wrapText="true" />
-      
-                                  <!-- placeholder lines (kept simple like his UI) -->
-                                  <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
-                                  <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
-                              </VBox>
-      
-                              <!-- Tip card 2 -->
-                              <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                                  <padding>
-                                      <Insets bottom="14" left="16" right="16" top="14" />
-                                  </padding>
-      
-                                  <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="Turning off the lights when you leave the room saves you 43% more electricity" wrapText="true" />
-      
-                                  <Label style="-fx-text-fill: #111827;" text="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" />
-                              </VBox>
-      
                               <Region prefHeight="6" />
+                        <VBox fx:id="recommendationsContainer" spacing="10"/>
                           </VBox>
                       </content>
                   </ScrollPane>
