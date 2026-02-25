@@ -11,7 +11,12 @@ public class DatabaseService {
     SimulationService simulationService;
 
     public DatabaseService() {
-
+        try {
+            createEnergyRecordsTable();
+        }catch (Exception e) {
+           e.printStackTrace();
+           System.out.println("Failed to create energy records table");
+        }
         simulationService = new SimulationService();
         simulationService.startSimulation();
         simulationService.getCurrentEnergyRecord().addListener((obs, oldVal, newVal) -> {
@@ -46,25 +51,28 @@ public class DatabaseService {
 
     }
 
-    public boolean checkTable(String tableName) throws SQLException {
-        DatabaseMetaData dbmd = getConnection().getMetaData();
-        try (ResultSet rs = dbmd.getTables(null, null, tableName, null)) {
-            return rs.next();
-        }
+
+    public void createEnergyRecordsTable () throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS energyRecords (" +
+                "time REAL PRIMARY KEY, s" +
+                "time_label STRING, " +
+                "price_p_kWh FLOAT, " +
+                "carbon_gCO2_kWh FLOAT, " +
+                "total_load_kWh FLOAT, " +
+                "solar_gen_kWh FLOAT, " +
+                "battery_level_kWh FLOAT, " +
+                "grid_import_kWh FLOAT, " +
+                "ev_charger_kWh FLOAT, " +
+                "washing_machine_kWh FLOAT, " +
+                "heating_kWh FLOAT, " +
+                "baseload_kWh FLOAT" +
+                ")";
+        getConnection().createStatement().execute(sql);
     }
 
-    public createEnergyRecordsTable () throws SQLException {
-        if (checkTable("energyRecords")){
-            return;
-        }
-        else{
-            String sql = "CREATE TABLE energyRecords (" +
-                    "id  PRIMARY KEY, " +
-                    "2 DATATYPE, " +
-                    "3 DATATYPE, " +
-                    "4 DATATYPE" +
-                    ")";
-        }
+
+    public void fromSimulationService() {
+
     }
 
 
