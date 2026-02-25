@@ -79,11 +79,12 @@ public class DatabaseService {
     }
 
 
-
+ /*
 
     public void fromSimulationService() {
 
     }
+
 
     private void addData(EnergyRecord record) {
         String sql = "INSERT INTO energyRecords (" +
@@ -115,7 +116,7 @@ public class DatabaseService {
         }
 
     }
-
+*/
 
 
 }
