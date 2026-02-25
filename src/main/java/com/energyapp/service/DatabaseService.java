@@ -51,7 +51,7 @@ public class DatabaseService {
 
     public void createEnergyRecordsTable () throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS energyRecords (" +
-                "time LOCALDATETIME PRIMARY KEY, s" +
+                "time LOCALDATETIME PRIMARY KEY, " +
                 "time_label STRING, " +
                 "price_p_kWh FLOAT, " +
                 "carbon_gCO2_kWh FLOAT, " +
