@@ -264,4 +264,104 @@ public final class DbBootstrap {
             Double perc;
         }
     }
+
+    // Helper methods for generation mix - for e.g. "(national, null, 2026-02-27 00:00:00, fuel=wind, perc=58.1, …)"
+    private static void upsertGenerationMixRows(Connection conn, String json, String scope, Integer regionId) throws SQLException {
+        JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+        JsonElement dataEl = root.get("data");
+        if (dataEl == null) return;
+
+        conn.setAutoCommit(false);
+        try (PreparedStatement ps = conn.prepareStatement("""
+        INSERT OR REPLACE INTO grid_generation_mix_interval(
+          scope, region_id, ts_start, ts_end, fuel, perc, retrieved_at
+        ) VALUES(?,?,?,?,?,?,?)
+        """)) {
+
+            if (dataEl.isJsonObject()) {
+                insertOneGenWindow(ps, dataEl.getAsJsonObject(), scope, regionId);
+            } else if (dataEl.isJsonArray()) {
+                JsonArray arr = dataEl.getAsJsonArray();
+                for (JsonElement e : arr) {
+                    if (e.isJsonObject()) insertOneGenWindow(ps, e.getAsJsonObject(), scope, regionId);
+                }
+            }
+
+            ps.executeBatch();
+            conn.commit();
+        } catch (SQLException ex) {
+            conn.rollback();
+            throw ex;
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
+    private static void insertOneGenWindow(PreparedStatement ps, JsonObject window, String scope, Integer regionId) throws SQLException {
+        String fromIso = getAsString(window, "from");
+        String toIso = getAsString(window, "to");
+        JsonArray mix = window.getAsJsonArray("generationmix");
+        if (mix == null) return;
+
+        String tsStart = toAppTs(fromIso);
+        String tsEnd = toAppTs(toIso);
+        String retrievedAt = LocalDateTime.now().format(TS_FMT);
+
+        for (JsonElement fuelEl : mix) {
+            if (!fuelEl.isJsonObject()) continue;
+            JsonObject f = fuelEl.getAsJsonObject();
+            String fuel = getAsString(f, "fuel");
+            Double perc = f.has("perc") && !f.get("perc").isJsonNull() ? f.get("perc").getAsDouble() : null;
+            if (fuel == null || perc == null) continue;
+
+            ps.setString(1, scope);
+            if (regionId == null) ps.setNull(2, Types.INTEGER);
+            else ps.setInt(2, regionId);
+            ps.setString(3, tsStart);
+            ps.setString(4, tsEnd);
+            ps.setString(5, fuel);
+            ps.setDouble(6, perc);
+            ps.setString(7, retrievedAt);
+            ps.addBatch();
+        }
+    }
+
+    private static String extractGenerationToTimestamp(String json) {
+        try {
+            JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+            JsonObject data = root.getAsJsonObject("data");
+            if (data == null) return null;
+            // Use "to" so pt24h backfill goes up to the most recent known window
+            return getAsString(data, "to");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static String getAsString(JsonObject obj, String key) {
+        if (obj == null || !obj.has(key) || obj.get(key).isJsonNull()) return null;
+        return obj.get(key).getAsString();
+    }
+
+    private static void cleanupOldGenerationMix(Connection conn, String scope, Integer regionId, int keepHours) throws SQLException {
+        // SQLite datetime('now', '-72 hours') returns "YYYY-MM-DD HH:MM:SS"
+        // which matches our stored "yyyy-MM-dd HH:mm:ss" format.
+        String sql;
+        if (regionId == null) {
+            sql = "DELETE FROM grid_generation_mix_interval " +
+                    "WHERE scope=? AND region_id IS NULL AND ts_start < datetime('now', ?)";
+        } else {
+            sql = "DELETE FROM grid_generation_mix_interval " +
+                    "WHERE scope=? AND region_id=? AND ts_start < datetime('now', ?)";
+        }
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, scope);
+            int idx = 2;
+            if (regionId != null) ps.setInt(idx++, regionId);
+            ps.setString(idx, "-" + keepHours + " hours");
+            ps.executeUpdate();
+        }
+    }
+
 }
