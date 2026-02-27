@@ -26,7 +26,8 @@ public class MainLayoutController {
 
     }
 
-    private void switchView(ViewType viewType) {
+
+        private void switchView (ViewType viewType){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(viewType.getFxmlPath()));
             Parent root = loader.load();
@@ -41,13 +42,17 @@ public class MainLayoutController {
                 ((EnergyStatsController) controller).setSimulationService(this.simulationService);
             } else if (controller instanceof RecommendationsController) {
                 ((RecommendationsController) controller).setSimulationService(this.simulationService);
-            }
-
-            rootLayout.setCenter(root);
-        } catch (IOException e) {
-            e.printStackTrace();
+            } else if (controller instanceof EcoStatisticsController) {
+                ((EcoStatisticsController) controller).setSimulationService(this.simulationService);
         }
+
+        rootLayout.setCenter(root);
+
+    } catch(IOException e){
+        e.printStackTrace();
     }
+    }
+
 
     @FXML
     public void handleShowDashboard() {
