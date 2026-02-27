@@ -133,6 +133,23 @@ CREATE TABLE IF NOT EXISTS forecast_insight (
 );
 
 -- =========================
+-- Generation mix (normalized cache)
+-- =========================
+CREATE TABLE IF NOT EXISTS grid_generation_mix_interval (
+    scope        TEXT NOT NULL,        -- 'national' (or 'regional' later)
+    region_id    INTEGER,              -- NULL for national
+    ts_start     TEXT NOT NULL,         -- "yyyy-MM-dd HH:mm:ss"
+    ts_end       TEXT,
+    fuel         TEXT NOT NULL,         -- e.g. 'wind', 'gas'
+    perc         REAL NOT NULL,         -- percent
+    retrieved_at TEXT NOT NULL,
+    PRIMARY KEY (scope, region_id, ts_start, fuel)
+);
+
+CREATE INDEX IF NOT EXISTS idx_genmix_time
+ON grid_generation_mix_interval(scope, region_id, ts_start);
+
+-- =========================
 -- Recommendations + tips
 -- =========================
 CREATE TABLE IF NOT EXISTS recommendation_template (

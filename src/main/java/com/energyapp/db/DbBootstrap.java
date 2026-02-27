@@ -4,6 +4,13 @@ import com.energyapp.model.EnergyRecord;
 import com.energyapp.utils.CsvReadForService;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -160,34 +167,33 @@ public final class DbBootstrap {
             }
         }
 
-        // Current generation mix
+        // Current generation mix - with normalised rows
         HttpRequest genReq = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.carbonintensity.org.uk/generation"))
                 .GET()
                 .build();
 
         String genJson = client.send(genReq, HttpResponse.BodyHandlers.ofString()).body();
-        GenerationMixResponse gen = gson.fromJson(genJson, GenerationMixResponse.class);
 
-        if (gen != null && gen.data != null && gen.data.generationmix != null) {
-            conn.setAutoCommit(false);
-            try (PreparedStatement ps = conn.prepareStatement("""
-                INSERT OR REPLACE INTO app_meta(meta_key, meta_value) VALUES(?,?)
-                """)) {
-                // Keep it minimal: store a compact snapshot of generation mix JSON in app_meta
-                // (If you later want a dedicated table for mix rows, we add it in Part 1.5)
-                ps.setString(1, "generation_mix_snapshot_json");
-                ps.setString(2, genJson);
-                ps.executeUpdate();
+        // 1) Insert the current window (data object)
+        upsertGenerationMixRows(conn, genJson, "national", null);
 
-                conn.commit();
-            } catch (Exception e) {
-                conn.rollback();
-                throw e;
-            } finally {
-                conn.setAutoCommit(true);
-            }
+        // 2) Backfill last 24h (so the  “last 4 hours” UI works immediately)
+        // The API docs list /generation/{from}/pt24h. :contentReference[oaicite:1]{index=1}
+        String fromForPt24h = extractGenerationToTimestamp(genJson); // e.g. "2026-02-27T00:30Z"
+        if (fromForPt24h != null) {
+            String encoded = URLEncoder.encode(fromForPt24h, StandardCharsets.UTF_8);
+            String ptUrl = "https://api.carbonintensity.org.uk/generation/" + encoded + "/pt24h";
+
+            HttpRequest ptReq = HttpRequest.newBuilder().uri(URI.create(ptUrl)).GET().build();
+            String ptJson = client.send(ptReq, HttpResponse.BodyHandlers.ofString()).body();
+
+            // pt24h is typically returned as an array of windows (data array)
+            upsertGenerationMixRows(conn, ptJson, "national", null);
         }
+
+        // 3) Cleanup (toavoid DB growing forever)
+        cleanupOldGenerationMix(conn, "national", null, 72);
     }
 
     private static String toAppTs(String iso) {
