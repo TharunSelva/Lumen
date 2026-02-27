@@ -77,4 +77,8 @@ public class EnergyRecord {
         return this.gridImport * this.pricePerKwh;
     }
 
+    public String getTimeLabel() {
+        return this.timeLabel;
+    }
+
 }

@@ -1,4 +1,5 @@
 package com.energyapp;
+import com.energyapp.db.DbBootstrap;
 
 import com.energyapp.controller.DashboardController;
 import com.energyapp.controller.MainLayoutController;
@@ -18,6 +19,7 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/MainLayout.fxml"));
         Parent root = loader.load();
 
+        DbBootstrap.init();  // DB initialisation
         simulationService.loadData();
         simulationService.startSimulation();
 
