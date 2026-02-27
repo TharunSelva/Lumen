@@ -1,16 +1,15 @@
-package com.energyapp.service;
+package com.energyapp.service.legacy;
+
+import com.energyapp.service.SimulationService;
 
 import java.sql.*;
 
-import com.energyapp.model.EnergyRecord;
-import com.energyapp.service.SimulationService;
 
-
-public class DatabaseService {
+public class DatabaseServiceLegacy {
     private static Connection conn = null;
     SimulationService simulationService;
 
-    public DatabaseService() {
+    public DatabaseServiceLegacy() {
         try {
             createEnergyRecordsTable();
         }catch (Exception e) {
@@ -24,6 +23,11 @@ public class DatabaseService {
                 addData(newVal);
             }
         });
+    }
+
+    // Legacy stub: keeps compiler happy (class is not used)
+    private void addData(com.energyapp.model.EnergyRecord ignored) {
+        // no-op
     }
 
     /**
