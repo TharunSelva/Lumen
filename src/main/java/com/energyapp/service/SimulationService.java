@@ -1,8 +1,9 @@
 package com.energyapp.service;
-
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.utils.CsvReadForService;
 import com.energyapp.utils.EnergyCalculator;
+import com.energyapp.db.EnergyIntervalRepository;
+
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -12,8 +13,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -32,8 +35,20 @@ public class SimulationService {
     private double totalAccumulatedCost = 0.0;
     private final List<EnergyRecord> energyStatsSessionHistory = new ArrayList<>();
 
+    private final EnergyIntervalRepository repo = new EnergyIntervalRepository();
+    private static final String HOME_ID = "HOME_1";
+
     public void loadData() {
-        simulationData = CsvReadForService.loadData();
+//        simulationData = CsvReadForService.loadData();
+
+        // Replace CSV loading DB loading
+        simulationData = repo.fetchAll(HOME_ID);
+
+        if (simulationData.isEmpty()) {
+            throw new IllegalStateException(
+                    "No simulation data found in DB. Did DbBootstrap import simulation_data.csv into energy_interval?"
+            );
+        }
     }
 
     public void startSimulation() {
