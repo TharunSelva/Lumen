@@ -44,8 +44,9 @@ public class MainLayoutController {
                 ((RecommendationsController) controller).setSimulationService(this.simulationService);
             } else if (controller instanceof EcoStatisticsController) {
                 ((EcoStatisticsController) controller).setSimulationService(this.simulationService);
-        }
-
+            } else if (controller instanceof ForecastingController) {
+                    ((ForecastingController) controller).setSimulationService(this.simulationService);
+            }
         rootLayout.setCenter(root);
 
     } catch(IOException e){

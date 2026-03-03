@@ -11,8 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
-<VBox prefHeight="800.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:controller="com.energyapp.controller.ForecastingController" prefHeight="800.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -65,17 +64,13 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox prefWidth="300.0" spacing="15.0" style="-fx-background-color: #efefef; -fx-background-radius: 5; -fx-padding: 15;">
+            <VBox fx:id="insightsContainer" prefWidth="300.0" spacing="15.0" style="-fx-background-color: #efefef; -fx-background-radius: 5; -fx-padding: 15;">
                <children>
                   <Label text="Forecast Insights">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <HBox spacing="10.0">
-                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTBLUE" height="20.0" stroke="BLACK" width="20.0" />
-                     <Label text="Placeholder text" wrapText="true" />
-                  </HBox>
                </children>
             </VBox>
          </children>
