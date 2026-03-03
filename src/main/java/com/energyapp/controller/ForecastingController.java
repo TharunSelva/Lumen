@@ -63,13 +63,19 @@ public class ForecastingController {
         if (history.size() >= 10) {
             int mid = history.size() - 5;
             for (int i = history.size() - 1; i >= mid; i--) {
-                currentUsageTotal += history.get(i).getGridImport();
+                currentUsageTotal += history.get(i).getEvChargerUsageKwh()
+                        + history.get(i).getWashingMachineUsageKwh()
+                        + history.get(i).getHeatingUsageKwh()
+                        + history.get(i).getBaseloadKwh();
             }
             for (int i = mid - 1; i >= mid - 5; i--) {
-                previousUsageTotal += history.get(i).getGridImport();
+                previousUsageTotal += history.get(i).getEvChargerUsageKwh()
+                        + history.get(i).getWashingMachineUsageKwh()
+                        + history.get(i).getHeatingUsageKwh()
+                        + history.get(i).getBaseloadKwh();
             }
         }
-
+        System.out.println("Previous total: " + previousUsageTotal + " kWh, Current total: " + currentUsageTotal + " kWh");
         InsightEngine engine = new InsightEngine();
         List<Insight> activeInsights = engine.generateInsights(currentUsageTotal, previousUsageTotal);
 

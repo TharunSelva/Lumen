@@ -14,11 +14,11 @@ public class InsightEngine {
             double diff = previous - current;
             if (diff > 0) {
                 double percent = (diff / previous) * 100;
-                String msg = String.format("You saved %.2f kWh compared to last week. That's a %.1f%% decrease!", diff, percent);
+                String msg = String.format("You saved %.2f kWh compared to the previous interval. That's a %.1f%% decrease!", diff, percent);
                 results.add(new Insight("Weekly Savings", msg, "leaf-icon", 1.0));
             } else if (diff < 0) {
                 double percent = (Math.abs(diff) / previous) * 100;
-                String msg = String.format("Alert: Usage increased by %.2f kWh compared to last week. That's a %.1f%% increase!", Math.abs(diff), percent);
+                String msg = String.format("Alert: Usage increased by %.2f kWh compared to previous interval. That's a %.1f%% increase!", Math.abs(diff), percent);
                 results.add(new Insight("Usage Alert", msg, "warning-icon", 0.9));
             }
         }
