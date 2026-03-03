@@ -77,4 +77,8 @@ public final class EnergyCalculator {
 
         return returnList;
     }
+
+    public static double calculateCleanShare(double totalLoad, double solar) {
+        return (totalLoad > 0) ? (solar / totalLoad) * 100.0 : 0.0;
+    }
 }

@@ -2,6 +2,7 @@ package com.energyapp.controller;
 
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.service.SimulationService;
+import com.energyapp.utils.EnergyCalculator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
@@ -88,7 +89,7 @@ public class EcoStatisticsController {
         double grid = record.getGridImport();
         double totalLoad = solar + grid;
 
-        double cleanSharePercent = (totalLoad > 0) ? (solar / totalLoad) * 100.0 : 0.0;
+        double cleanSharePercent = EnergyCalculator.calculateCleanShare(totalLoad, solar);
         cleanEnergySeries.getData().add(new XYChart.Data<>(timeStr, cleanSharePercent));
 
         if (cleanEnergySeries.getData().size() > 20) {
