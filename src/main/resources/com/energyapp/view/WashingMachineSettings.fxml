@@ -4,6 +4,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -101,16 +102,12 @@
                               <Font size="40.0" />
                            </font>
                         </Button>
-                        <Button fx:id="powerOn" layoutX="63.0" layoutY="14.0" mnemonicParsing="false" prefHeight="85.0" prefWidth="378.0" text="Power ON">
-                           <font>
-                              <Font size="40.0" />
-                           </font>
-                        </Button>
                         <Label fx:id="estimateText" layoutX="14.0" layoutY="302.0" text="Estimated Cost for next run:">
                            <font>
                               <Font size="30.0" />
                            </font>
                         </Label>
+                        <ToggleButton fx:id="powerToggle" layoutX="187.0" layoutY="25.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="117.0" text="Power: ON" />
                         <Label fx:id="estimateLabel" layoutX="390.0" layoutY="302.0" text="£0.12">
                            <font>
                               <Font size="30.0" />

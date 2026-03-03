@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -24,113 +18,9 @@
                 </Label>
 
                 <ScrollPane fx:id="devicesScrollPane" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
-                    <content>
-                        <GridPane fx:id="devicesGrid" hgap="20" vgap="20">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
-                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
-                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
-                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
-                            </columnConstraints>
-
-                            <children>
-                                <TitledPane fx:id="device1" animated="false" collapsible="false" text="TurboWash 360" maxHeight="Infinity">
-                                    <content>
-                                        <StackPane>
-                                            <Button fx:id="btnForDevice1" maxWidth="Infinity" maxHeight="Infinity" style="-fx-padding: 0; -fx-background-color: transparent;">
-                                                <graphic>
-                                                    <ImageView fx:id="device1Image" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                                        <image>
-                                                            <Image url="@images/lg.png" />
-                                                        </image>
-                                                    </ImageView>
-                                                </graphic>
-                                            </Button>
-                                        </StackPane>
-                                    </content>
-                                </TitledPane>
-
-                                <TitledPane fx:id="device2" animated="false" collapsible="false" text="Series 5 DV90" GridPane.columnIndex="1" maxHeight="Infinity">
-                                    <content>
-                                        <StackPane>
-                                            <Button fx:id="btnForDevice2" maxWidth="Infinity" maxHeight="Infinity" style="-fx-padding: 0; -fx-background-color: transparent;">
-                                                <graphic>
-                                                    <ImageView fx:id="device2Image" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                                        <image>
-                                                            <Image url="@images/Phillips-Logo-2008.png" />
-                                                        </image>
-                                                    </ImageView>
-                                                </graphic>
-                                            </Button>
-                                        </StackPane>
-                                    </content>
-                                </TitledPane>
-
-                                <TitledPane fx:id="device3" animated="false" collapsible="false" text="W1 TwinDos" GridPane.columnIndex="2" maxHeight="Infinity">
-                                    <content>
-                                        <StackPane>
-                                            <Button fx:id="btnForDevice3" maxWidth="Infinity" maxHeight="Infinity" style="-fx-padding: 0; -fx-background-color: transparent;">
-                                                <graphic>
-                                                    <ImageView fx:id="device3Image" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                                        <image>
-                                                            <Image url="@images/Samgsung_logo.png" />
-                                                        </image>
-                                                    </ImageView>
-                                                </graphic>
-                                            </Button>
-                                        </StackPane>
-                                    </content>
-                                </TitledPane>
-
-                                <TitledPane fx:id="device4" animated="false" collapsible="false" text="Smart Lightning" GridPane.columnIndex="3" maxHeight="Infinity">
-                                    <content>
-                                        <StackPane>
-                                            <Button fx:id="btnForDevice4" maxWidth="Infinity" maxHeight="Infinity" style="-fx-padding: 0; -fx-background-color: transparent;">
-                                                <graphic>
-                                                    <ImageView fx:id="device4Image" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                                        <image>
-                                                            <Image url="@images/Govee-Logo.png" />
-                                                        </image>
-                                                    </ImageView>
-                                                </graphic>
-                                            </Button>
-                                        </StackPane>
-                                    </content>
-                                </TitledPane>
-
-                                <TitledPane fx:id="device5" animated="false" collapsible="false" text="Fridge Freezer" GridPane.rowIndex="1" maxHeight="Infinity">
-                                    <content>
-                                        <StackPane>
-                                            <Button fx:id="btnForDevice5" maxWidth="Infinity" maxHeight="Infinity" style="-fx-padding: 0; -fx-background-color: transparent;">
-                                                <graphic>
-                                                    <ImageView fx:id="device5Image" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                                        <image>
-                                                            <Image url="@images/Hisense.svg.png" />
-                                                        </image>
-                                                    </ImageView>
-                                                </graphic>
-                                            </Button>
-                                        </StackPane>
-                                    </content>
-                                </TitledPane>
-
-                                <StackPane fx:id="addDeviceBoarder" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                    <children>
-                                        <Button fx:id="btnForAdd" mnemonicParsing="false" opacity="0.6" style="-fx-background-color: transparent; -fx-border-color: #aaa; -fx-border-style: dashed; -fx-border-width: 2;">
-                                            <graphic>
-                                                <ImageView fx:id="addDeviceImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                                    <image>
-                                                        <Image url="@images/free-plus-icon-321-thumb.png" />
-                                                    </image>
-                                                </ImageView>
-                                            </graphic>
-                                        </Button>
-                                    </children>
-                                </StackPane>
-
-                            </children>
-                        </GridPane>
-                    </content>
+               <content>
+                  <FlowPane fx:id="deviceContainer" prefHeight="200.0" prefWidth="200.0" />
+               </content>
                 </ScrollPane>
             </children>
         </VBox>
