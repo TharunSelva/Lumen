@@ -46,6 +46,8 @@ public class MainLayoutController {
                 ((EcoStatisticsController) controller).setSimulationService(this.simulationService);
             } else if (controller instanceof ForecastingController) {
                     ((ForecastingController) controller).setSimulationService(this.simulationService);
+            } else if (controller instanceof DevicesController) {
+                ((DevicesController) controller).setSimulationService(this.simulationService);
             }
         rootLayout.setCenter(root);
 

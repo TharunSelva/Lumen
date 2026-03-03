@@ -20,6 +20,7 @@ public class SmartPlugSettingsController {
         this.currentPlug = plug;
         deviceNameTitle.setText(plug.getDeviceName());
         powerToggle.selectedProperty().bindBidirectional(plug.isOnProperty());
+        powerToggle.textProperty().bind(Bindings.when(powerToggle.selectedProperty()).then("ON").otherwise("OFF"));
 
         /* we use this to ensure there is no type mismatch between the String in the cutoffInput,
            and the double in priceCutoffProperty. */

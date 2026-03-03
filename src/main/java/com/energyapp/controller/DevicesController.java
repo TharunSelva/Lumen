@@ -4,6 +4,7 @@ import com.energyapp.model.Device;
 import com.energyapp.model.DeviceType;
 import com.energyapp.model.SmartPlug;
 import com.energyapp.service.DeviceService;
+import com.energyapp.service.SimulationService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,16 +19,19 @@ import java.util.List;
 
 public class DevicesController {
 
-    // --- Buttons ---
-    @FXML private Button btnForAdd;
-
     @FXML private FlowPane deviceContainer;
 
-    private DeviceService deviceService = new DeviceService();
-    private List<Device> allDevices = deviceService.getAllDevices();
+    private DeviceService deviceService;
+    private List<Device> allDevices;
 
     @FXML
     public void initialize() {
+
+    }
+
+    public void setSimulationService(SimulationService service) {
+        this.deviceService = new DeviceService(service);
+        this.allDevices = this.deviceService.getAllDevices();
         createDeviceButtons();
     }
 
