@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SmartPlugSettingsController">
    <children>
       <Label fx:id="deviceNameTitle" text="Plug Name">
@@ -27,7 +26,7 @@
       </HBox>
       <HBox>
          <children>
-            <Label text="Price Cut-off (£ per kWh):">
+            <Label text="Price Cut-off (pence per kWh):">
                <font>
                   <Font size="19.0" />
                </font>

@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,6 +29,9 @@ public class DevicesController {
 
     @FXML
     public void initialize() {
+        deviceContainer.setVgap(5.0);
+        deviceContainer.setHgap(5.0);
+
         btnForAdd.setOnAction((event) -> {
             Stage addDeviceModalStage = new Stage();
             // setting as app modal means the user can't click the background app while the modal is active
@@ -63,6 +68,13 @@ public class DevicesController {
 
     private void createDeviceButtons() {
         for (Device device : this.allDevices) {
+            String formattedDeviceType = device.getDeviceType().name().replace("_", " ");
+            Label label = new Label(formattedDeviceType);
+            label.setStyle("-fx-text-fill: #333333; -fx-font-weight: bold; -fx-font-size: 12px;");
+            VBox card = new VBox(5);
+            card.setStyle("-fx-padding: 10; -fx-border-color: #cccccc; -fx-border-radius: 8; " +
+                    "-fx-background-radius: 8; -fx-background-color: white; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
             Button b = new Button(device.getDeviceName());
             b.setOnAction(event -> {
                 try {
@@ -71,7 +83,8 @@ public class DevicesController {
                     throw new RuntimeException(e);
                 }
             });
-            deviceContainer.getChildren().add(b);
+            card.getChildren().addAll(label, b);
+            deviceContainer.getChildren().add(card);
         }
     }
 
