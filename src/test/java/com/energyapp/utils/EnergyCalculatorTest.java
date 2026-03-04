@@ -96,4 +96,29 @@ public class EnergyCalculatorTest {
         double result = EnergyCalculator.calculateBatteryUsed(5.0, 10.0, 0.0);
         assertEquals(0.0, result, 0.001);
     }
+
+
+@Test
+void testCalculateCleanShare_Normal() {
+    // 5.0 solar out of 10.0 total load should be 50.0%
+    assertEquals(50.0, EnergyCalculator.calculateCleanShare(10.0, 5.0), 0.001);
+}
+
+@Test
+void testCalculateCleanShare_ZeroTotalLoad() {
+    // If total load is 0, it should safely return 0.0 without dividing by zero
+    assertEquals(0.0, EnergyCalculator.calculateCleanShare(0.0, 0.0), 0.001);
+}
+
+@Test
+void testCalculateCleanShare_AllSolar() {
+    // If solar matches total load exactly, it should be 100%
+    assertEquals(100.0, EnergyCalculator.calculateCleanShare(12.5, 12.5), 0.001);
+}
+
+@Test
+void testCalculateCleanShare_NoSolar() {
+    // If there is load but no solar, it should be 0%
+    assertEquals(0.0, EnergyCalculator.calculateCleanShare(10.0, 0.0), 0.001);
+}
 }
