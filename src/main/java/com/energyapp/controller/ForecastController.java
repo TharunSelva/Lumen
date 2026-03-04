@@ -12,12 +12,14 @@ import javafx.scene.control.Button;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ForecastController {
 
     @FXML
-    private LineChart<Number, Number> energyCostForecastLineChart;
+    private LineChart<String, Number> energyCostForecastLineChart;
 
     @FXML
     private Button forecastingReload;
@@ -25,13 +27,14 @@ public class ForecastController {
     @FXML
     private Label lastUpdatedLabel;
 
-    private XYChart.Series<Number, Number> energyCostSeries = new XYChart.Series<>();
+    private XYChart.Series<String, Number> energyCostSeries = new XYChart.Series<>();
 
-    private List<EnergyRecord> energyRecords;
+    private List<EnergyRecord> energyRecords = new ArrayList<>();
     private List<EnergyRecord> forecastEnergyRecords;
 
     @FXML
     public void initialize() {
+        energyCostSeries.setName("Energy Cost");
         energyCostForecastLineChart.getData().add(energyCostSeries);
     }
 
@@ -47,39 +50,42 @@ public class ForecastController {
         energyRecords.add(newVal);
         forecastEnergyRecords = predict(energyRecords);
         energyCostSeries.getData().clear();
-        energyCostSeries = plotData();
-
-
+        energyCostSeries.getData().addAll(plotData().getData());
     }
 
-    private List<EnergyRecord> predict(List<EnergyRecord> energyRecords) {
-        for (int i = 0; i < 48; i++){
-            if (getTime(energyRecords.get(i).getTimestamp()) == (double) i /2) {
-
-            }else{
-                energyRecords.add(i,null);
+    private List<EnergyRecord> predict(List<EnergyRecord> records) {
+        List<EnergyRecord> result = new ArrayList<>(Collections.nCopies(48, null));
+        for (EnergyRecord record : records) {
+            int index = getTimeSlotIndex(record.getTimestamp());
+            if (index >= 0 && index < 48) {
+                result.set(index, record);
             }
         }
-        return energyRecords;
+        return result;
     }
 
-    private double getTime(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH.mm");
-        String time = dateTime.format(formatter);
-        return Math.round(2*Float.parseFloat(time)) / 2.0;
+    private int getTimeSlotIndex(LocalDateTime dateTime) {
+        int hour = dateTime.getHour();
+        int minute = dateTime.getMinute();
+        return (int) Math.round(2 * (hour + minute / 60.0));
     }
 
-    private XYChart.Series<Number, Number> plotData() {
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    private String formatTimeSlot(int slotIndex) {
+        int hour = slotIndex / 2;
+        int minute = (slotIndex % 2) * 30;
+        return String.format("%02d:%02d", hour, minute);
+    }
 
-        for (EnergyRecord energyRecord : forecastEnergyRecords) {
-            XYChart.Data<Number, Number> energyData = null;
+    private XYChart.Series<String, Number> plotData() {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        for (int i = 0; i < forecastEnergyRecords.size(); i++) {
+            EnergyRecord energyRecord = forecastEnergyRecords.get(i);
             if (energyRecord != null) {
-                double x = getTime(energyRecord.getTimestamp());
+                String x = formatTimeSlot(i);
                 double y = energyRecord.getPricePerKwh();
-                energyData = new XYChart.Data<>(x, y);
+                series.getData().add(new XYChart.Data<>(x, y));
             }
-            series.getData().add(energyData);
         }
         return series;
     }

@@ -55,10 +55,10 @@
                      <children>
                         <LineChart fx:id="energyCostForecastLineChart">
                           <xAxis>
-                            <CategoryAxis side="BOTTOM" />
+                            <CategoryAxis side="BOTTOM" label="Time" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis side="LEFT" />
+                            <NumberAxis side="LEFT" label="Price (p/kWh)" />
                           </yAxis>
                         </LineChart>
                      </children>
