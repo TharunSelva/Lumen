@@ -3,6 +3,7 @@ package com.energyapp.controller;
 import com.energyapp.model.Device;
 import com.energyapp.model.DeviceType;
 import com.energyapp.model.SmartPlug;
+import com.energyapp.utils.DeviceFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -30,11 +31,10 @@ public class AddDeviceController {
             String dName = deviceName.getText();
             DeviceType selectedType = selectDeviceType.getValue();
 
-            if (selectedType == DeviceType.SMART_PLUG) {
-                this.newlyCreatedDevice = new SmartPlug(dName, selectedType);
+            if (DeviceFactory.createDevice(dName, selectedType) != null) {
+                this.newlyCreatedDevice = DeviceFactory.createDevice(dName, selectedType);
             } else {
-                System.out.println("adding this device type to be implemented later");
-                // implement logic to add other devices like washing machine and fridge here
+                System.out.println("this device to be implemented later");
             }
             ((Stage) addButton.getScene().getWindow()).close();
         });

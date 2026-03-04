@@ -5,6 +5,7 @@ import com.energyapp.model.DeviceType;
 import com.energyapp.model.SmartPlug;
 import com.energyapp.service.DeviceService;
 import com.energyapp.service.SimulationService;
+import com.energyapp.utils.UIUtils;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,9 +85,7 @@ public class DevicesController {
                     "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
 
             Circle indicator = new Circle(5);
-            indicator.fillProperty().bind(Bindings.when(device.isOnProperty())
-                    .then(Color.GREEN)
-                    .otherwise(Color.RED));
+            UIUtils.bindOnOffIndicator(indicator, device.isOnProperty());
 
             HBox titleBox = new HBox(5);
             titleBox.getChildren().addAll(indicator, label);
