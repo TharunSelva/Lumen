@@ -3,6 +3,7 @@ package com.energyapp.controller;
 import com.energyapp.utils.EnergyCalculator;
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.service.SimulationService;
+import com.energyapp.utils.EnergyCalculator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
