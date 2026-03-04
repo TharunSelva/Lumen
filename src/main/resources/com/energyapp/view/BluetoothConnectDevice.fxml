@@ -35,7 +35,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Label fx:id="bluethoothText" layoutX="24.0" layoutY="217.0" text="Bluethooth Scan:">
+            <Label fx:id="bluethoothText" layoutX="24.0" layoutY="217.0" text="Bluetooth Scan:">
                <font>
                   <Font size="45.0" />
                </font>

@@ -20,13 +20,39 @@ import java.util.List;
 public class DevicesController {
 
     @FXML private FlowPane deviceContainer;
+    @FXML private Button btnForAdd;
 
     private DeviceService deviceService;
     private List<Device> allDevices;
 
     @FXML
     public void initialize() {
+        btnForAdd.setOnAction((event) -> {
+            Stage addDeviceModalStage = new Stage();
+            // setting as app modal means the user can't click the background app while the modal is active
+            addDeviceModalStage.initModality(Modality.APPLICATION_MODAL);
 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/AddDevice.fxml"));
+            Parent addDeviceModalRoot;
+            try {
+                addDeviceModalRoot = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            addDeviceModalStage.setTitle("Add New Device");
+            addDeviceModalStage.setScene(new Scene(addDeviceModalRoot, 400, 250));
+
+            addDeviceModalStage.showAndWait();
+
+            AddDeviceController controller = loader.getController();
+            Device newDevice = controller.getNewlyCreatedDevice();
+            if (newDevice != null) {
+                deviceService.addDevice(newDevice);
+                deviceContainer.getChildren().clear();
+                createDeviceButtons();
+            }
+        });
     }
 
     public void setSimulationService(SimulationService service) {
@@ -61,7 +87,7 @@ public class DevicesController {
             controller.initData((SmartPlug) device);
 
             settingsModalStage.setTitle("Device Settings");
-            settingsModalStage.setScene(new Scene(settingsModalRoot, 640, 360));
+            settingsModalStage.setScene(new Scene(settingsModalRoot, 500, 275));
 
             settingsModalStage.showAndWait();
         } else {

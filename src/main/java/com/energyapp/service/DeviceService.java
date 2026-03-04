@@ -37,4 +37,8 @@ public class DeviceService {
         }
     }
 
+    public void addDevice(Device device) {
+        this.allDevices.add(device);
+    }
+
 }

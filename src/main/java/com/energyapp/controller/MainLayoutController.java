@@ -13,7 +13,6 @@ public class MainLayoutController {
 
     @FXML private BorderPane rootLayout;
     @FXML private SideBarController mainSideBarController;
-    @FXML private CostCardController weeklyCostCardController;
 
     private SimulationService simulationService;
 
