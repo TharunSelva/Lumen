@@ -5,7 +5,9 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="devicesPlane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DevicesController">
@@ -23,7 +25,15 @@
                   <FlowPane fx:id="deviceContainer" prefHeight="200.0" prefWidth="200.0" />
                </content>
                 </ScrollPane>
-            <Button fx:id="btnForAdd" mnemonicParsing="false" text="Add +" />
+            <HBox alignment="BOTTOM_RIGHT" spacing="5.0">
+               <children>
+                  <Label text="Off=" />
+                  <Circle fill="RED" layoutX="305.0" layoutY="29.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label text="On=" />
+                  <Circle fill="#00ab2b" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Button fx:id="btnForAdd" alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Add +" />
+               </children>
+            </HBox>
             </children>
         </VBox>
     </center>

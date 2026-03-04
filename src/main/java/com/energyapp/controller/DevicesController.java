@@ -5,16 +5,21 @@ import com.energyapp.model.DeviceType;
 import com.energyapp.model.SmartPlug;
 import com.energyapp.service.DeviceService;
 import com.energyapp.service.SimulationService;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,12 +74,24 @@ public class DevicesController {
     private void createDeviceButtons() {
         for (Device device : this.allDevices) {
             String formattedDeviceType = device.getDeviceType().name().replace("_", " ");
+
             Label label = new Label(formattedDeviceType);
             label.setStyle("-fx-text-fill: #333333; -fx-font-weight: bold; -fx-font-size: 12px;");
+
             VBox card = new VBox(5);
             card.setStyle("-fx-padding: 10; -fx-border-color: #cccccc; -fx-border-radius: 8; " +
                     "-fx-background-radius: 8; -fx-background-color: white; " +
                     "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+
+            Circle indicator = new Circle(5);
+            indicator.fillProperty().bind(Bindings.when(device.isOnProperty())
+                    .then(Color.GREEN)
+                    .otherwise(Color.RED));
+
+            HBox titleBox = new HBox(5);
+            titleBox.getChildren().addAll(indicator, label);
+            titleBox.setAlignment(Pos.CENTER_LEFT);
+
             Button b = new Button(device.getDeviceName());
             b.setOnAction(event -> {
                 try {
@@ -83,7 +100,7 @@ public class DevicesController {
                     throw new RuntimeException(e);
                 }
             });
-            card.getChildren().addAll(label, b);
+            card.getChildren().addAll(titleBox, b);
             deviceContainer.getChildren().add(card);
         }
     }
