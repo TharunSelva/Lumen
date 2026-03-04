@@ -19,7 +19,7 @@ public class InsightTest {
     public void testWeeklySavingsCalculation() {
         InsightEngine engine = new InsightEngine();
         List<Insight> results = engine.generateInsights(50.0, 100.0);
-        assertEquals("You saved 50.00 kWh compared to last week. That's a 50.0% decrease!",
+        assertEquals("You saved 50.00 kWh compared to the previous interval. That's a 50.0% decrease!",
                 results.get(0).getDescription());
     }
 }
