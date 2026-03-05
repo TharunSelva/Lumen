@@ -3,6 +3,7 @@ import com.energyapp.db.DbBootstrap;
 
 import com.energyapp.controller.DashboardController;
 import com.energyapp.controller.MainLayoutController;
+import com.energyapp.service.ApiRefreshService;
 import com.energyapp.service.SimulationService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     private final SimulationService simulationService = new SimulationService();
+    private final ApiRefreshService apiRefreshService = new ApiRefreshService();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -20,6 +22,7 @@ public class App extends Application {
         Parent root = loader.load();
 
         DbBootstrap.init();  // DB initialisation
+        apiRefreshService.start();
         simulationService.loadData();
         simulationService.startSimulation();
 
@@ -34,12 +37,17 @@ public class App extends Application {
 
     // overridden stop() method to kill simulation when app is closed via Close Window.
     @Override
-    public void stop() throws Exception {
-        if (simulationService != null) {
-            simulationService.shutdown();
-        }
-        super.stop();
+    public void stop() {
+        apiRefreshService.stop();
+        simulationService.shutdown(); // if you already have this
     }
+    //    @Override
+//    public void stop() throws Exception {
+//        if (simulationService != null) {
+//            simulationService.shutdown();
+//        }
+//        super.stop();
+//    }
 
     public static void main(String[] args) {
         launch();

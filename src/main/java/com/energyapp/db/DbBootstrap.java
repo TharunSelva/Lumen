@@ -546,4 +546,16 @@ public final class DbBootstrap {
         }
     }
 
+    public static void refreshCarbonAndMix(Connection conn) throws Exception {
+        cacheCurrentCarbonAndMix(conn);
+    }
+
+    public static void refreshOctopus(Connection conn) throws Exception {
+        cacheOctopusTariffs(conn);
+    }
+
+    public static void refreshSolar(Connection conn) throws Exception {
+        cacheOpenMeteoSolar(conn);
+    }
+
 }
