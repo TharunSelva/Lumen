@@ -76,7 +76,7 @@
                                                 <NumberAxis fx:id="dashboardUsageXAxis" autoRanging="false" label="" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis fx:id="dashboardUsageYAxis" autoRanging="true" label="Watts" />
+                                                <NumberAxis fx:id="dashboardUsageYAxis" autoRanging="true" label="Kilowatts" />
                                             </yAxis>
                                         </LineChart>
                               <Label text="Tip: Click on graph to go to energy statistics page">
