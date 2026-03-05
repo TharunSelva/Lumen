@@ -293,6 +293,7 @@ public class EnergyStatsController {
     private void plotDataPoint(EnergyRecord rec) {
         long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
         double y = rec.getWatts();
+        y = y/1000;
 
         latestEpochSec = x;
 

@@ -90,7 +90,7 @@
                                 <NumberAxis fx:id="usageSmallXAxis" autoRanging="false" label="" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis fx:id="usageSmallYAxis" autoRanging="true" label="Watts" />
+                                <NumberAxis fx:id="usageSmallYAxis" autoRanging="true" label="Kilowatts" />
                             </yAxis>
                         </LineChart>
                     </VBox>
