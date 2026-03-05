@@ -173,6 +173,7 @@ public class DashboardController {
     private void plotDataPoint(EnergyRecord rec) {
         long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
         double y = rec.getWatts();
+        y = y/1000;
         latestEpochSec = x;
 
         XYChart.Data<Number, Number> d = new XYChart.Data<>(x, y);
