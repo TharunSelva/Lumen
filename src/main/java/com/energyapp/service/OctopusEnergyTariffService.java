@@ -1,30 +1,42 @@
 package com.energyapp.service;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.AbstractMap;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
-
-// Service for fetching electricity tariff rates from the Octopus Energy API.
+/**
+ * Fetches half-hourly electricity unit rates from the Octopus Energy API.
+ *
+ * Uses period_from/period_to in ISO8601 UTC ("Z") format (recommended by Octopus docs). :contentReference[oaicite:2]{index=2}
+ */
 public class OctopusEnergyTariffService {
 
+    // TODO: if you ever want this configurable, move to a settings table or app_meta.
     private static final String BASE_URL =
             "https://api.octopus.energy/v1/products/AGILE-24-10-01/electricity-tariffs/E-1R-AGILE-24-10-01-A/standard-unit-rates/";
 
-    // The API returns half-hourly records (100 results = 50 hours.)
-    private static final int MAX_RESULTS_PER_REQUEST = 100;
+    private static final int MAX_RESULTS_PER_REQUEST = 100; // Octopus price endpoints default to 100 per page :contentReference[oaicite:3]{index=3}
     private static final int MINUTES_PER_SLOT = 30;
-    private static final long MAX_SLOTS_PER_REQUEST = MAX_RESULTS_PER_REQUEST;
+    private static final long MAX_SLOTS_PER_REQUEST = MAX_RESULTS_PER_REQUEST; // 100 half-hours = 50 hours
+
+    private static final DateTimeFormatter OCTOPUS_PARAM_FMT = DateTimeFormatter.ISO_INSTANT;
 
     private final HttpClient httpClient;
 
@@ -38,39 +50,52 @@ public class OctopusEnergyTariffService {
         this.httpClient = httpClient;
     }
 
+    /** A single half-hour rate record (p/kWh inc VAT) */
+    public static final class UnitRate {
+        public final OffsetDateTime validFromUtc;
+        public final OffsetDateTime validToUtc;
+        public final double pencePerKwhIncVat;
 
-    // Fetches Agile electricity tariff rates between the given dates.
-    public List<Map.Entry<LocalDateTime, Double>> getUnitRates(LocalDateTime from, LocalDateTime to)
+        public UnitRate(OffsetDateTime validFromUtc, OffsetDateTime validToUtc, double pencePerKwhIncVat) {
+            this.validFromUtc = validFromUtc;
+            this.validToUtc = validToUtc;
+            this.pencePerKwhIncVat = pencePerKwhIncVat;
+        }
+    }
+
+    /**
+     * Fetch unit rates between [fromUtc, toUtc).
+     * from/to MUST be UTC offsets, and will be sent as ISO8601 with trailing Z. :contentReference[oaicite:4]{index=4}
+     */
+    public List<UnitRate> getUnitRates(OffsetDateTime fromUtc, OffsetDateTime toUtc)
             throws IOException, InterruptedException {
 
-        List<Map.Entry<LocalDateTime, Double>> allResults = new ArrayList<>();
+        OffsetDateTime from = fromUtc.withOffsetSameInstant(ZoneOffset.UTC);
+        OffsetDateTime to = toUtc.withOffsetSameInstant(ZoneOffset.UTC);
 
-        LocalDateTime batchStart = from;
+        List<UnitRate> all = new ArrayList<>();
 
+        OffsetDateTime batchStart = from;
         while (batchStart.isBefore(to)) {
-            // Calculate the end of this batch (at most MAX_SLOTS_PER_REQUEST half-hours)
-            LocalDateTime batchEnd = batchStart.plus(MAX_SLOTS_PER_REQUEST * MINUTES_PER_SLOT, ChronoUnit.MINUTES);
-            if (batchEnd.isAfter(to)) {
-                batchEnd = to;
-            }
+            OffsetDateTime batchEnd = batchStart.plus(MAX_SLOTS_PER_REQUEST * MINUTES_PER_SLOT, ChronoUnit.MINUTES);
+            if (batchEnd.isAfter(to)) batchEnd = to;
 
-            List<Map.Entry<LocalDateTime, Double>> batch = fetchBatch(batchStart, batchEnd);
-            allResults.addAll(batch);
-
+            all.addAll(fetchBatch(batchStart, batchEnd));
             batchStart = batchEnd;
         }
 
-        return allResults;
+        // Octopus results can come back newest-first; sort to make downstream logic easier
+        all.sort(Comparator.comparing(r -> r.validFromUtc));
+        return all;
     }
 
-
-    // Fetches a single batch of up to 100 results from the API.
-    private List<Map.Entry<LocalDateTime, Double>> fetchBatch(LocalDateTime from, LocalDateTime to)
+    private List<UnitRate> fetchBatch(OffsetDateTime fromUtc, OffsetDateTime toUtc)
             throws IOException, InterruptedException {
 
-        String url = BASE_URL
-                + "?period_from=" + formatDateTime(from)
-                + "&period_to=" + formatDateTime(to);
+        String periodFrom = URLEncoder.encode(fromUtc.toInstant().format(OCTOPUS_PARAM_FMT), StandardCharsets.UTF_8);
+        String periodTo = URLEncoder.encode(toUtc.toInstant().format(OCTOPUS_PARAM_FMT), StandardCharsets.UTF_8);
+
+        String url = BASE_URL + "?period_from=" + periodFrom + "&period_to=" + periodTo;
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -81,106 +106,56 @@ public class OctopusEnergyTariffService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
-            throw new IOException("Octopus API returned HTTP " + response.statusCode()
-                    + ": " + response.body());
+            throw new IOException("Octopus API HTTP " + response.statusCode() + ": " + response.body());
         }
 
         return parseResults(response.body());
     }
 
+    /**
+     * Robust JSON parsing using JsonParser (no reflection + no brittle string searching).
+     */
+    private List<UnitRate> parseResults(String json) {
+        List<UnitRate> out = new ArrayList<>();
 
-    // JSON Parser, can potetnitally be replaced by a library
-    private List<Map.Entry<LocalDateTime, Double>> parseResults(String json) {
-        List<Map.Entry<LocalDateTime, Double>> entries = new ArrayList<>();
+        JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+        JsonArray results = root.getAsJsonArray("results");
+        if (results == null) return out;
 
-        // Locate the "results" array
-        int resultsIdx = json.indexOf("\"results\"");
-        if (resultsIdx == -1) {
-            return entries;
+        for (JsonElement el : results) {
+            if (!el.isJsonObject()) continue;
+            JsonObject obj = el.getAsJsonObject();
+
+            // value_inc_vat is p/kWh
+            if (!obj.has("value_inc_vat") || obj.get("value_inc_vat").isJsonNull()) continue;
+            double valueIncVat = obj.get("value_inc_vat").getAsDouble();
+
+            // valid_from / valid_to are ISO8601 with timezone (often Z)
+            String validFrom = obj.has("valid_from") && !obj.get("valid_from").isJsonNull()
+                    ? obj.get("valid_from").getAsString() : null;
+            String validTo = obj.has("valid_to") && !obj.get("valid_to").isJsonNull()
+                    ? obj.get("valid_to").getAsString() : null;
+
+            if (validFrom == null || validTo == null) continue;
+
+            // OffsetDateTime correctly preserves Z/+00:00 offsets
+            OffsetDateTime fromUtc = OffsetDateTime.parse(validFrom).withOffsetSameInstant(ZoneOffset.UTC);
+            OffsetDateTime toUtc = OffsetDateTime.parse(validTo).withOffsetSameInstant(ZoneOffset.UTC);
+
+            out.add(new UnitRate(fromUtc, toUtc, valueIncVat));
         }
 
-        int arrayStart = json.indexOf('[', resultsIdx);
-        if (arrayStart == -1) {
-            return entries;
-        }
-
-        // Walk through each object in the array
-        int searchFrom = arrayStart;
-        while (true) {
-            int objStart = json.indexOf('{', searchFrom);
-            if (objStart == -1) break;
-
-            int objEnd = json.indexOf('}', objStart);
-            if (objEnd == -1) break;
-
-            String obj = json.substring(objStart, objEnd + 1);
-
-            Double valueIncVat = extractDouble(obj, "value_inc_vat");
-            String validFrom = extractString(obj, "valid_from");
-
-            if (valueIncVat != null && validFrom != null) {
-                LocalDateTime dateTime = LocalDateTime.parse(validFrom, DateTimeFormatter.ISO_DATE_TIME);
-                entries.add(new AbstractMap.SimpleImmutableEntry<>(dateTime, valueIncVat));
-            }
-
-            searchFrom = objEnd + 1;
-        }
-
-        return entries;
+        return out;
     }
 
-    // Extracts a quoted string value for the given key from a flat JSON object.
-    private String extractString(String json, String key) {
-        String search = "\"" + key + "\"";
-        int idx = json.indexOf(search);
-        if (idx == -1) return null;
-
-        int colonIdx = json.indexOf(':', idx + search.length());
-        if (colonIdx == -1) return null;
-
-        int quoteStart = json.indexOf('"', colonIdx + 1);
-        if (quoteStart == -1) return null;
-
-        int quoteEnd = json.indexOf('"', quoteStart + 1);
-        if (quoteEnd == -1) return null;
-
-        return json.substring(quoteStart + 1, quoteEnd);
-    }
-
-    // Extracts a numeric value for the given key from a flat JSON object.
-    private Double extractDouble(String json, String key) {
-        String search = "\"" + key + "\"";
-        int idx = json.indexOf(search);
-        if (idx == -1) return null;
-
-        int colonIdx = json.indexOf(':', idx + search.length());
-        if (colonIdx == -1) return null;
-
-        // Skips whitespace after colon
-        int numStart = colonIdx + 1;
-        while (numStart < json.length() && Character.isWhitespace(json.charAt(numStart))) {
-            numStart++;
-        }
-
-        int numEnd = numStart;
-        while (numEnd < json.length()
-                && (Character.isDigit(json.charAt(numEnd))
-                || json.charAt(numEnd) == '.'
-                || json.charAt(numEnd) == '-')) {
-            numEnd++;
-        }
-
-        if (numEnd == numStart) return null;
-
-        try {
-            return Double.parseDouble(json.substring(numStart, numEnd));
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    // Formats a LocalDateTime into the ISO-8601 format expected by the API.
-    private String formatDateTime(LocalDateTime dateTime) {
-        return dateTime.toString();
+    /**
+     * Helper for your app: get a UTC period window aligned to 30-min boundaries.
+     * (Not required by Octopus, but it matches the half-hour rate buckets.)
+     */
+    public static OffsetDateTime roundDownToHalfHourUtc(OffsetDateTime t) {
+        OffsetDateTime utc = t.withOffsetSameInstant(ZoneOffset.UTC).withSecond(0).withNano(0);
+        int minute = utc.getMinute();
+        int rounded = minute < 30 ? 0 : 30;
+        return utc.withMinute(rounded);
     }
 }
