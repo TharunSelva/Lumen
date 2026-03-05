@@ -9,8 +9,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+//import java.net.URLEncoder;
+//import java.nio.charset.StandardCharsets;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -30,6 +30,7 @@ public final class DbBootstrap {
 
     public static void init() {
         DbPaths.ensureDataDirExists();
+        System.out.println("DB PATH = " + DbPaths.dbFile().toAbsolutePath());
 
         try (Connection conn = Sqlite.openConnection()) {
             // 1) Always ensure schema exists
@@ -49,11 +50,19 @@ public final class DbBootstrap {
 
             // 4) (Optional but recommended) Cache current carbon intensity + generation mix once
             // If offline, this will just fail quietly and your app still runs with simulated/carbon from CSV.
+//            try {
+//                cacheCurrentCarbonAndMix(conn);
+//                upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
+//            } catch (Exception ignored) {
+//                // Keep app usable offline
+//            }
+            // This doesn't hide any exceptions given it occurs unlike the commented out code above
             try {
                 cacheCurrentCarbonAndMix(conn);
                 upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
-            } catch (Exception ignored) {
-                // Keep app usable offline
+            } catch (Exception e) {
+                System.err.println("API cache failed (carbon/mix).");
+                e.printStackTrace();
             }
 
         } catch (Exception e) {
@@ -139,32 +148,120 @@ public final class DbBootstrap {
         HttpClient client = HttpClient.newHttpClient();
         Gson gson = new Gson();
 
-        // Current intensity
-        HttpRequest intensityReq = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.carbonintensity.org.uk/intensity"))
-                .GET()
-                .build();
+//        // Current intensity
+//        HttpRequest intensityReq = HttpRequest.newBuilder()
+//                .uri(URI.create("https://api.carbonintensity.org.uk/intensity"))
+//                .GET()
+//                .build();
+//
+//        String intensityJson = client.send(intensityReq, HttpResponse.BodyHandlers.ofString()).body();
+//        CarbonIntensityResponse intensity = gson.fromJson(intensityJson, CarbonIntensityResponse.class);
+//
+//        if (intensity != null && intensity.data != null && !intensity.data.isEmpty()) {
+//            CarbonIntensityResponse.IntensityData d = intensity.data.get(0);
+//
+//            try (PreparedStatement ps = conn.prepareStatement("""
+//                INSERT OR REPLACE INTO forecast_interval_cache(
+//                  home_id, ts_start, ts_end, carbon_gco2_kwh, retrieved_at, source_json
+//                ) VALUES(?,?,?,?,?,?)
+//                """)) {
+//                // Store carbon in forecast cache too (so Forecasts page has something immediately)
+//                ps.setString(1, HOME_ID);
+//                ps.setString(2, toAppTs(d.from));
+//                ps.setString(3, toAppTs(d.to));
+//                ps.setDouble(4, d.intensity != null && d.intensity.actual != null ? d.intensity.actual : d.intensity.forecast);
+//                ps.setString(5, LocalDateTime.now().format(TS_FMT));
+//                ps.setString(6, "{\"source\":\"carbonintensity\",\"endpoint\":\"/intensity\"}");
+//                ps.executeUpdate();
+//            }
+//        }
 
-        String intensityJson = client.send(intensityReq, HttpResponse.BodyHandlers.ofString()).body();
-        CarbonIntensityResponse intensity = gson.fromJson(intensityJson, CarbonIntensityResponse.class);
+        // ===========================
+        // CARBON: store next-24h forecast into forecast_interval_cache
+        // Fixes 400 by using a 'from' timestamp provided by the API itself (guaranteed valid).
+        // ====================
+        try {
+            // 1) Get a valid 'from' value from the API (current half-hour window)
+            HttpRequest curReq = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.carbonintensity.org.uk/intensity"))
+                    .header("Accept", "application/json")
+                    .GET()
+                    .build();
 
-        if (intensity != null && intensity.data != null && !intensity.data.isEmpty()) {
-            CarbonIntensityResponse.IntensityData d = intensity.data.get(0);
-
-            try (PreparedStatement ps = conn.prepareStatement("""
-                INSERT OR REPLACE INTO forecast_interval_cache(
-                  home_id, ts_start, ts_end, carbon_gco2_kwh, retrieved_at, source_json
-                ) VALUES(?,?,?,?,?,?)
-                """)) {
-                // Store carbon in forecast cache too (so Forecasts page has something immediately)
-                ps.setString(1, HOME_ID);
-                ps.setString(2, toAppTs(d.from));
-                ps.setString(3, toAppTs(d.to));
-                ps.setDouble(4, d.intensity != null && d.intensity.actual != null ? d.intensity.actual : d.intensity.forecast);
-                ps.setString(5, LocalDateTime.now().format(TS_FMT));
-                ps.setString(6, "{\"source\":\"carbonintensity\",\"endpoint\":\"/intensity\"}");
-                ps.executeUpdate();
+            HttpResponse<String> curResp = client.send(curReq, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Carbon current status=" + curResp.statusCode());
+            if (curResp.statusCode() != 200) {
+                System.err.println("Carbon current failed body=" + curResp.body());
+                // Don't throw: still let generation mix run below
+                return;
             }
+
+            CarbonIntensityResponse cur = gson.fromJson(curResp.body(), CarbonIntensityResponse.class);
+            if (cur == null || cur.data == null || cur.data.isEmpty() || cur.data.get(0).from == null) {
+                System.err.println("Carbon current parse failed (missing data[0].from)");
+                return;
+            }
+
+            // This value is already in the exact format the API expects, e.g. 2026-03-04T20:00Z
+            String from = cur.data.get(0).from;
+
+            // 2) Fetch 24h forward forecast using that exact from
+            String fwUrl = "https://api.carbonintensity.org.uk/intensity/" + from + "/fw24h";
+            System.out.println("Carbon fw24h url=" + fwUrl);
+
+            HttpRequest fwReq = HttpRequest.newBuilder()
+                    .uri(URI.create(fwUrl))
+                    .header("Accept", "application/json")
+                    .GET()
+                    .build();
+
+            HttpResponse<String> fwResp = client.send(fwReq, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Carbon fw24h status=" + fwResp.statusCode());
+            if (fwResp.statusCode() != 200) {
+                System.err.println("Carbon fw24h failed body=" + fwResp.body());
+                return;
+            }
+
+            CarbonIntensityResponse fw = gson.fromJson(fwResp.body(), CarbonIntensityResponse.class);
+            if (fw == null || fw.data == null || fw.data.isEmpty()) return;
+
+            // 3) Persist every half-hour window into forecast_interval_cache
+            conn.setAutoCommit(false);
+            try (PreparedStatement ps = conn.prepareStatement("""
+        INSERT OR REPLACE INTO forecast_interval_cache(
+          home_id, ts_start, ts_end, carbon_gco2_kwh, retrieved_at, source_json
+        ) VALUES(?,?,?,?,?,?)
+        """)) {
+
+                String retrievedAt = LocalDateTime.now().format(TS_FMT);
+
+                for (CarbonIntensityResponse.IntensityData d : fw.data) {
+                    Integer v = (d.intensity != null && d.intensity.actual != null)
+                            ? d.intensity.actual
+                            : (d.intensity != null ? d.intensity.forecast : null);
+                    if (v == null) continue;
+
+                    ps.setString(1, HOME_ID);
+                    ps.setString(2, toAppTs(d.from));
+                    ps.setString(3, toAppTs(d.to));
+                    ps.setDouble(4, v);
+                    ps.setString(5, retrievedAt);
+                    ps.setString(6, "{\"source\":\"carbonintensity\",\"endpoint\":\"/intensity/{from}/fw24h\"}");
+                    ps.addBatch();
+                }
+
+                ps.executeBatch();
+                conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Carbon cache failed:");
+            e.printStackTrace();
         }
 
         // Current generation mix - with normalised rows
@@ -173,22 +270,39 @@ public final class DbBootstrap {
                 .GET()
                 .build();
 
-        String genJson = client.send(genReq, HttpResponse.BodyHandlers.ofString()).body();
+//        String genJson = client.send(genReq, HttpResponse.BodyHandlers.ofString()).body();
+        // Status and failure handling included
+        // GENERATION MIX: fetch + store normalized rows
+        HttpResponse<String> genResp = client.send(genReq, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Generation status=" + genResp.statusCode());
+        if (genResp.statusCode() != 200) {
+            throw new RuntimeException("Generation API failed: " + genResp.statusCode() + " body=" + genResp.body());
+        }
+        String genJson = genResp.body();
 
         // 1) Insert the current window (data object)
         upsertGenerationMixRows(conn, genJson, "national", null);
 
         // 2) Backfill last 24h (so the  “last 4 hours” UI works immediately)
         // The API docs list /generation/{from}/pt24h. :contentReference[oaicite:1]{index=1}
-        String fromForPt24h = extractGenerationToTimestamp(genJson); // e.g. "2026-02-27T00:30Z"
+        String fromForPt24h = extractGenerationToTimestamp(genJson);
         if (fromForPt24h != null) {
-            String encoded = URLEncoder.encode(fromForPt24h, StandardCharsets.UTF_8);
-            String ptUrl = "https://api.carbonintensity.org.uk/generation/" + encoded + "/pt24h";
+            // IMPORTANT: do NOT URL-encode this timestamp when putting it in the path
+            String ptUrl = "https://api.carbonintensity.org.uk/generation/" + fromForPt24h + "/pt24h";
 
-            HttpRequest ptReq = HttpRequest.newBuilder().uri(URI.create(ptUrl)).GET().build();
-            String ptJson = client.send(ptReq, HttpResponse.BodyHandlers.ofString()).body();
+            HttpRequest ptReq = HttpRequest.newBuilder()
+                    .uri(URI.create(ptUrl))
+                    .GET()
+                    .build();
 
-            // pt24h is typically returned as an array of windows (data array)
+            HttpResponse<String> ptResp = client.send(ptReq, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Generation pt24h url=" + ptUrl);
+            System.out.println("Generation pt24h status=" + ptResp.statusCode());
+            if (ptResp.statusCode() != 200) {
+                throw new RuntimeException("Generation pt24h API failed: " + ptResp.statusCode() + " body=" + ptResp.body());
+            }
+
+            String ptJson = ptResp.body();
             upsertGenerationMixRows(conn, ptJson, "national", null);
         }
 

@@ -7,5 +7,6 @@ module com.energyapp {
     requires com.google.gson;
     opens com.energyapp to javafx.fxml;
     opens com.energyapp.controller to javafx.fxml;
+    opens com.energyapp.db to com.google.gson;
     exports com.energyapp;
 }
