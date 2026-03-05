@@ -3,6 +3,7 @@ package com.energyapp.db;
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.utils.CsvReadForService;
 import com.energyapp.service.OctopusEnergyTariffService;
+import com.energyapp.service.OpenMeteoSolarService;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -74,6 +75,14 @@ public final class DbBootstrap {
                 cacheOctopusTariffs(conn);
             } catch (Exception e) {
                 System.err.println("API cache failed (octopus).");
+                e.printStackTrace();
+            }
+
+            // Run caching for MeteoSolar
+            try {
+                cacheOpenMeteoSolar(conn);
+            } catch (Exception e) {
+                System.err.println("API cache failed (open-meteo solar).");
                 e.printStackTrace();
             }
 
@@ -342,6 +351,31 @@ public final class DbBootstrap {
         ForecastIntervalCacheWriter.upsertTariffRates(conn, HOME_ID, rates);
 
         upsertMeta(conn, "last_octopus_cache_at", LocalDateTime.now().format(TS_FMT));
+    }
+
+    private static void cacheOpenMeteoSolar(Connection conn) throws Exception {
+        // Get lat/lon from home_profile (seeded values in seed.sql)
+        double lat;
+        double lon;
+
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT lat, lon FROM home_profile WHERE home_id=?")) {
+            ps.setString(1, HOME_ID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    throw new IllegalStateException("Missing home_profile for " + HOME_ID);
+                }
+                lat = rs.getDouble("lat");
+                lon = rs.getDouble("lon");
+            }
+        }
+
+        OpenMeteoSolarService solar = new OpenMeteoSolarService();
+        var points = solar.fetchHourlyShortwave(lat, lon, 2); // next 2 days hourly
+        System.out.println("Open-Meteo solar points fetched=" + points.size());
+
+        ForecastIntervalCacheWriter.upsertSolarRadiation(conn, HOME_ID, points);
+        upsertMeta(conn, "last_solar_cache_at", LocalDateTime.now().format(TS_FMT));
     }
 
     private static String toAppTs(String iso) {

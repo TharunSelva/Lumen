@@ -60,6 +60,46 @@ public final class ForecastIntervalCacheWriter {
         }
     }
 
+    public static void upsertSolarRadiation(
+            Connection conn,
+            String homeId,
+            List<com.energyapp.service.OpenMeteoSolarService.SolarPoint> points
+    ) throws SQLException {
+
+        String sql = """
+        INSERT INTO forecast_interval_cache(
+          home_id, ts_start, solar_shortwave_wm2, retrieved_at, source_json
+        ) VALUES(?,?,?,?,?)
+        ON CONFLICT(home_id, ts_start) DO UPDATE SET
+          solar_shortwave_wm2 = excluded.solar_shortwave_wm2,
+          retrieved_at = excluded.retrieved_at
+        """;
+
+        String retrievedAt = LocalDateTime.now().format(DB_TS);
+
+        conn.setAutoCommit(false);
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (var p : points) {
+                // Open-Meteo gives "YYYY-MM-DDTHH:MM" -> convert to DB "YYYY-MM-DD HH:MM:SS"
+                String tsStart = p.timeIso.replace('T', ' ') + ":00";
+
+                ps.setString(1, homeId);
+                ps.setString(2, tsStart);
+                ps.setDouble(3, p.shortwaveWm2);
+                ps.setString(4, retrievedAt);
+                ps.setString(5, "{\"source\":\"open-meteo\",\"field\":\"shortwave_radiation\"}");
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            conn.commit();
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
     private static String toDbTs(OffsetDateTime t) {
         return t.withOffsetSameInstant(ZoneOffset.UTC)
                 .toLocalDateTime()
