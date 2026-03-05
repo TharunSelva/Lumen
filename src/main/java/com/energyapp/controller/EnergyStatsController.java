@@ -74,7 +74,14 @@ public class EnergyStatsController {
 
         // axis formatting
         setupTimeAxis(usageSmallXAxis);
+        usageSmallXAxis.setLabel("Time");
+        usageSmallYAxis.setLabel("kWh");
+        usageSmallYAxis.setAutoRanging(true);
+
         setupTimeAxis(usageLargeXAxis);
+        usageLargeXAxis.setLabel("Time");
+        usageLargeYAxis.setLabel("kWh");
+        usageLargeYAxis.setAutoRanging(true);
 
         // overlay range controls
         // Time range dropdown
@@ -151,8 +158,8 @@ public class EnergyStatsController {
             if (t < startEpochSec) continue;
             if (t > endEpochSec) break;
 
-            XYChart.Data<Number, Number> ds = new XYChart.Data<>(t, rec.getWatts());
-            XYChart.Data<Number, Number> dl = new XYChart.Data<>(t, rec.getWatts());
+            XYChart.Data<Number, Number> ds = new XYChart.Data<>(t, rec.getTotalLoadKwh());
+            XYChart.Data<Number, Number> dl = new XYChart.Data<>(t, rec.getTotalLoadKwh());
 
             smallSeries.getData().add(ds);
             largeSeries.getData().add(dl);
@@ -164,6 +171,7 @@ public class EnergyStatsController {
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
+        axis.setLabel("Time");
         axis.setForceZeroInRange(false);
         axis.setTickUnit(10 * 60);
 
@@ -193,10 +201,10 @@ public class EnergyStatsController {
             int solarPct = EnergyCalculator.calculatePercentage(solarUsed, totalLoad);
             int batteryPct = EnergyCalculator.calculatePercentage(batteryUsed, totalLoad);
 
-            // Simple CO2 label (tweak thresholds if you want)
+            // Simple CO2 label
             String co2Label = EnergyCalculator.determineCo2Label(rec.getCarbon());
 
-            // Tooltip text (matches the style in your screenshot)
+            // Tooltip text
             String tipText =
                     time + "\n" +
                             String.format("%.2f kWh • £%.2f • %d%%", rec.getTotalLoadKwh(), costPounds, solarPct) + "\n" +
@@ -206,7 +214,7 @@ public class EnergyStatsController {
             Tooltip tip = new Tooltip(tipText);
             Tooltip.install(node, tip);
 
-            // Click point -> open overlay (nice UX)
+            // Click point -> open overlay
             node.setOnMouseClicked(ev -> showOverlay());
         });
     }
@@ -292,7 +300,7 @@ public class EnergyStatsController {
 
     private void plotDataPoint(EnergyRecord rec) {
         long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
-        double y = rec.getWatts();
+        double y = rec.getTotalLoadKwh();
 
         latestEpochSec = x;
 

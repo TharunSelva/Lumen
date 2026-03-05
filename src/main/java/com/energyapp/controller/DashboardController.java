@@ -77,6 +77,9 @@ public class DashboardController {
         System.out.println("DashboardController loaded successfully.");
         dashboardUsageLineChart.getData().add(series);
         setupTimeAxis(dashboardUsageXAxis);
+        dashboardUsageXAxis.setLabel("Time");
+        dashboardUsageYAxis.setLabel("kWh");
+        dashboardUsageYAxis.setAutoRanging(true);
 
         // click anywhere on chart opens statistics screen
         dashboardUsageLineChart.setOnMouseClicked(e -> openEnergyStatistics());
@@ -154,6 +157,7 @@ public class DashboardController {
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
+        axis.setLabel("Time");
         axis.setForceZeroInRange(false);
         axis.setTickUnit(10 * 60);
 
@@ -172,7 +176,7 @@ public class DashboardController {
 
     private void plotDataPoint(EnergyRecord rec) {
         long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
-        double y = rec.getWatts();
+        double y = rec.getTotalLoadKwh();
         latestEpochSec = x;
 
         XYChart.Data<Number, Number> d = new XYChart.Data<>(x, y);
@@ -203,4 +207,3 @@ public class DashboardController {
 
 
 }
-
