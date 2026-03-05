@@ -92,8 +92,12 @@ public class OctopusEnergyTariffService {
     private List<UnitRate> fetchBatch(OffsetDateTime fromUtc, OffsetDateTime toUtc)
             throws IOException, InterruptedException {
 
-        String periodFrom = URLEncoder.encode(fromUtc.toInstant().format(OCTOPUS_PARAM_FMT), StandardCharsets.UTF_8);
-        String periodTo = URLEncoder.encode(toUtc.toInstant().format(OCTOPUS_PARAM_FMT), StandardCharsets.UTF_8);
+        // Format first and then encode.. to avoid encoding problems
+        String periodFromRaw = OCTOPUS_PARAM_FMT.format(fromUtc.toInstant()); // e.g. 2026-03-05T00:00:00Z
+        String periodToRaw   = OCTOPUS_PARAM_FMT.format(toUtc.toInstant());
+
+        String periodFrom = URLEncoder.encode(periodFromRaw, StandardCharsets.UTF_8);
+        String periodTo   = URLEncoder.encode(periodToRaw, StandardCharsets.UTF_8);
 
         String url = BASE_URL + "?period_from=" + periodFrom + "&period_to=" + periodTo;
 

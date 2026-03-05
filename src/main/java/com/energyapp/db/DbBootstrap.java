@@ -2,6 +2,7 @@ package com.energyapp.db;
 
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.utils.CsvReadForService;
+import com.energyapp.service.OctopusEnergyTariffService;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -20,6 +21,8 @@ import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 public final class DbBootstrap {
@@ -57,11 +60,20 @@ public final class DbBootstrap {
 //                // Keep app usable offline
 //            }
             // This doesn't hide any exceptions given it occurs unlike the commented out code above
+            // Run API caching for current carbon and mix
             try {
                 cacheCurrentCarbonAndMix(conn);
                 upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
             } catch (Exception e) {
                 System.err.println("API cache failed (carbon/mix).");
+                e.printStackTrace();
+            }
+
+            // Run API caching for Octopus API tariffs
+            try {
+                cacheOctopusTariffs(conn);
+            } catch (Exception e) {
+                System.err.println("API cache failed (octopus).");
                 e.printStackTrace();
             }
 
@@ -308,6 +320,28 @@ public final class DbBootstrap {
 
         // 3) Cleanup (toavoid DB growing forever)
         cleanupOldGenerationMix(conn, "national", null, 72);
+    }
+
+    private static void cacheOctopusTariffs(Connection conn) throws Exception {
+        // --------------
+        // OCTOPUS: choose from/to here
+        // from = now (UTC) rounded down to 30-min boundary
+        // to   = from + 48h (you can change to 24h if you want)
+        // --------------------------
+
+        OffsetDateTime from = OctopusEnergyTariffService.roundDownToHalfHourUtc(
+                OffsetDateTime.now(ZoneOffset.UTC)
+        );
+        OffsetDateTime to = from.plusHours(48);
+
+        OctopusEnergyTariffService octopus = new OctopusEnergyTariffService();
+        var rates = octopus.getUnitRates(from, to);
+
+        System.out.println("Octopus rates fetched=" + rates.size() + " from=" + from + " to=" + to);
+
+        ForecastIntervalCacheWriter.upsertTariffRates(conn, HOME_ID, rates);
+
+        upsertMeta(conn, "last_octopus_cache_at", LocalDateTime.now().format(TS_FMT));
     }
 
     private static String toAppTs(String iso) {
