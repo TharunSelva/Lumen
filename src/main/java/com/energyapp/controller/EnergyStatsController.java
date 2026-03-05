@@ -75,12 +75,12 @@ public class EnergyStatsController {
         // axis formatting
         setupTimeAxis(usageSmallXAxis);
         usageSmallXAxis.setLabel("Time");
-        usageSmallYAxis.setLabel("kWh");
+        usageSmallYAxis.setLabel("Power (kWh)");
         usageSmallYAxis.setAutoRanging(true);
 
         setupTimeAxis(usageLargeXAxis);
         usageLargeXAxis.setLabel("Time");
-        usageLargeYAxis.setLabel("kWh");
+        usageLargeYAxis.setLabel("Power (kWh)");
         usageLargeYAxis.setAutoRanging(true);
 
         // overlay range controls

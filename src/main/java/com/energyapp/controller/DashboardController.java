@@ -78,7 +78,7 @@ public class DashboardController {
         dashboardUsageLineChart.getData().add(series);
         setupTimeAxis(dashboardUsageXAxis);
         dashboardUsageXAxis.setLabel("Time");
-        dashboardUsageYAxis.setLabel("kWh");
+        dashboardUsageYAxis.setLabel("Power (kWh)");
         dashboardUsageYAxis.setAutoRanging(true);
 
         // click anywhere on chart opens statistics screen
