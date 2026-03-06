@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
 <StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EnergyStatsController">
     <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
@@ -55,6 +56,11 @@
                         </padding>
 
                         <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Summary">
+                           <font>
+                              <Font name="System Bold" size="26.0" />
+                           </font>
+                        </Label>
                             <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="9.2 kWh Total Energy" />
                             <Label style="-fx-text-fill: #6B7280;" text="Total household consumption today" />
                             <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="3.1 kg CO₂ Emissions" />
@@ -62,6 +68,7 @@
                         </VBox>
 
                         <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label />
                             <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="£3.40 Total Cost" />
                             <Label style="-fx-text-fill: #6B7280;" text="Based on your time-of-use tariff" />
                             <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="44% solar • 22% battery • 34% grid" />
