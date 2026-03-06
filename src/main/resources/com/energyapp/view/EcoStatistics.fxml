@@ -19,24 +19,21 @@
 <?import javafx.scene.shape.Rectangle?>
 
 <StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EcoStatisticsController">
-   <ScrollPane prefHeight="200.0" prefWidth="200.0">
-      <content>
-      
-          <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;">
-      
-              <!-- ONE SCREEN CONTENT (no ScrollPane) -->
-              <center>
-                  <VBox maxWidth="Infinity" spacing="12" style="-fx-background-color: transparent;">
-                      <padding>
-                          <Insets bottom="14" left="14" right="14" top="14" />
-                      </padding>
-      
-                      <!-- Header (smaller) -->
-                      <HBox alignment="CENTER_LEFT" maxHeight="64" prefHeight="64" spacing="12">
-                          <VBox spacing="3" HBox.hgrow="ALWAYS">
-                              <Label style="-fx-font-size: 30; -fx-font-weight: bold;" text="Eco-Impact" />
-                              <Label style="-fx-text-fill: #6B7280;" text="Today • Updated 1 hr ago" />
-                          </VBox>
+    <ScrollPane prefHeight="200.0" prefWidth="200.0" fitToWidth="true" fitToHeight="true">
+        <content>
+
+            <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;">
+                <center>
+                    <VBox maxWidth="Infinity" spacing="12" style="-fx-background-color: transparent;">
+                        <padding>
+                            <Insets bottom="14" left="14" right="14" top="14" />
+                        </padding>
+
+                        <HBox alignment="CENTER_LEFT" maxHeight="64" prefHeight="64" spacing="12">
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label style="-fx-font-size: 30; -fx-font-weight: bold;" text="Eco Statistics" />
+                                <Label style="-fx-text-fill: #6B7280;" text="Today • Updated 1 hr ago" />
+                            </VBox>
       
                           <ComboBox prefWidth="90" promptText="Day" />
       
