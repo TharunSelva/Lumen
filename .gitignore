@@ -14,4 +14,8 @@ target/
 # OS junk
 .DS_Store
 Thumbs.db
-/out/artifacts/energyapp_jar/energyapp.jar
+
+## DB
+data/
+*.sqlite
+*.db
