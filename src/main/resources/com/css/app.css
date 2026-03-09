@@ -1,0 +1,1130 @@
+/*
+ * Central stylesheet for ADD-10.
+ * These rules are a 1:1 extraction of the previous inline styles so the UI keeps the same look.
+ * The app-root and dark hooks are here so EC-10 can be layered in later without another refactor.
+ */
+
+.app-root {
+}
+
+.app-root.dark {
+    /* Future dark-mode overrides go here. */
+}
+
+.device-card-type-label {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.device-card {
+    -fx-padding: 10;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+/* CostCard.fxml */
+#costCardVBox {
+    -fx-border-color: black;
+}
+
+/* Dashboard.fxml */
+#dashboard-auto-1 {
+    -fx-padding: 20;
+}
+
+#dashboard00VBox {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+#dashboardUsageTitleLabel {
+    -fx-font-weight: bold;
+}
+
+#dashboard-auto-2 {
+    -fx-border-color: black;
+}
+
+#dashboardUsageLineChart {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+#dashboard10VBox {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+#dashboardQuickRecTitleLabel {
+    -fx-font-weight: bold;
+}
+
+#dashboardEcoImpactVBox {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+#dashboardEcoImpactTitleLabel {
+    -fx-font-weight: bold;
+}
+
+#dashboardEcoImpactCleanLabel {
+    -fx-font-size: 18;
+    -fx-text-fill: green;
+}
+
+#dashboardEcoImpactFossilLabel {
+    -fx-font-size: 18;
+    -fx-text-fill: grey;
+}
+
+#dashboardQuickForecastVBox {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+#dashboardQuickForecastTitleLabel {
+    -fx-font-weight: bold;
+}
+
+#dashboardQuickForecastBarHBox {
+    -fx-background-color: #f4f4f4;
+}
+
+/* Devices.fxml */
+#devicesPaneMain {
+    -fx-padding: 20;
+}
+
+#devicesScrollPane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+/* EcoStatistics.fxml */
+#ecostatistics-auto-1 {
+    -fx-background-color: #F6F7F9;
+}
+
+#ecostatistics-auto-2 {
+    -fx-background-color: #F6F7F9;
+}
+
+#ecostatistics-auto-3 {
+    -fx-background-color: transparent;
+}
+
+#ecostatistics-auto-4 {
+    -fx-font-size: 30;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-5 {
+    -fx-text-fill: #6B7280;
+}
+
+#ecostatistics-auto-6 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+#ecostatistics-auto-7 {
+    -fx-font-size: 16;
+}
+
+#ecostatistics-auto-8 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#ecostatistics-auto-9 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#ecostatistics-auto-10 {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-11 {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-12 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#ecostatistics-auto-13 {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-14 {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-15 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#ecostatistics-auto-16 {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-17 {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-18 {
+    -fx-text-fill: #6B7280;
+}
+
+#ecostatistics-auto-19 {
+    -fx-text-fill: #16A34A;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-20 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#cleanEnergyShareLabel {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+#cleanEnergyChartContainer {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+#ecostatistics-auto-21 {
+    -fx-fill: #FBBF24;
+}
+
+#ecostatistics-auto-22 {
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-23 {
+    -fx-fill: #10B981;
+}
+
+#ecostatistics-auto-24 {
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-25 {
+    -fx-fill: #60A5FA;
+}
+
+#ecostatistics-auto-26 {
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-27 {
+    -fx-fill: #EF4444;
+}
+
+#ecostatistics-auto-28 {
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-29 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#ecostatistics-auto-30 {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-31 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#ecostatistics-auto-32 {
+    -fx-background-color: #EF4444;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-33 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-34 {
+    -fx-background-color: #EF4444;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-35 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-36 {
+    -fx-background-color: #F59E0B;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-37 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-38 {
+    -fx-background-color: #F59E0B;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-39 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-40 {
+    -fx-background-color: #10B981;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-41 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-42 {
+    -fx-background-color: #10B981;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-43 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-44 {
+    -fx-background-color: #10B981;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-45 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-46 {
+    -fx-background-color: #10B981;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-47 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-48 {
+    -fx-background-color: #F59E0B;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-49 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-50 {
+    -fx-background-color: #EF4444;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-51 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-52 {
+    -fx-background-color: #EF4444;
+    -fx-background-radius: 8;
+}
+
+#ecostatistics-auto-53 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-54 {
+    -fx-background-color: #111827;
+    -fx-background-radius: 10;
+}
+
+#ecostatistics-auto-55 {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-56 {
+    -fx-text-fill: #D1D5DB;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-57 {
+    -fx-text-fill: #D1D5DB;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-58 {
+    -fx-text-fill: #D1D5DB;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-59 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#ecostatistics-auto-60 {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-61 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#ecostatistics-auto-62 {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-63 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#ecostatistics-auto-64 {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-65 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#ecostatistics-auto-66 {
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-67 {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-68 {
+    -fx-font-weight: bold;
+    -fx-font-size: 11;
+}
+
+#ecostatistics-auto-69 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#ecostatistics-auto-70 {
+    -fx-font-weight: bold;
+}
+
+#ecostatistics-auto-71 {
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-72 {
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-73 {
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-74 {
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-75 {
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-76 {
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-77 {
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-78 {
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-79 {
+    -fx-font-size: 12;
+}
+
+#ecostatistics-auto-80 {
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+}
+
+/* EnergyStatistics.fxml */
+#energystatistics-auto-1 {
+    -fx-background-color: #F6F7F9;
+}
+
+#energystatistics-auto-2 {
+    -fx-background-color: #F6F7F9;
+}
+
+#energystatistics-auto-3 {
+    -fx-background-color: transparent;
+}
+
+#energystatistics-auto-4 {
+    -fx-background-color: transparent;
+}
+
+#energystatistics-auto-5 {
+    -fx-font-size: 32;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-6 {
+    -fx-text-fill: #6B7280;
+}
+
+#energystatistics-auto-7 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+#energystatistics-auto-8 {
+    -fx-font-size: 16;
+}
+
+#energystatistics-auto-9 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#energystatistics-auto-10 {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-11 {
+    -fx-text-fill: #6B7280;
+}
+
+#energystatistics-auto-12 {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-13 {
+    -fx-text-fill: #6B7280;
+}
+
+#energystatistics-auto-14 {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-15 {
+    -fx-text-fill: #6B7280;
+}
+
+#energystatistics-auto-16 {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-17 {
+    -fx-text-fill: #6B7280;
+}
+
+#energystatistics-auto-18 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#energystatistics-auto-19 {
+    -fx-font-size: 26;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-20 {
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-21 {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 12;
+}
+
+#usageChartSmall {
+    -fx-background-color: transparent;
+}
+
+#energystatistics-auto-22 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#energystatistics-auto-23 {
+    -fx-font-size: 26;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-24 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#energystatistics-auto-25 {
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-26 {
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-27 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#energystatistics-auto-28 {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
+
+#device1 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#device1holder {
+    -fx-font-weight: bold;
+}
+
+#weeklycost1 {
+    -fx-text-fill: #6B7280;
+}
+
+#device2 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#device2holder {
+    -fx-font-weight: bold;
+}
+
+#weeklycost2 {
+    -fx-text-fill: #6B7280;
+}
+
+#device3 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#device3holder {
+    -fx-font-weight: bold;
+}
+
+#weeklycost3 {
+    -fx-text-fill: #6B7280;
+}
+
+#energystatistics-auto-29 {
+    -fx-fill: #111827;
+}
+
+#energystatistics-auto-30 {
+    -fx-fill: #D1D5DB;
+}
+
+#energystatistics-auto-31 {
+    -fx-fill: #D1D5DB;
+}
+
+#energystatistics-auto-32 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#energystatistics-auto-33 {
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-34 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+#energystatistics-auto-35 {
+    -fx-text-fill: #6B7280;
+}
+
+#graphOverlay {
+    -fx-background-color: rgba(17,24,39,0.25);
+}
+
+#energystatistics-auto-36 {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #E5E7EB;
+}
+
+#energystatistics-auto-37 {
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 0 0 1 0;
+}
+
+#backButton {
+    -fx-background-color: #111827;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+}
+
+#energystatistics-auto-38 {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+#energystatistics-auto-39 {
+    -fx-text-fill: #6B7280;
+}
+
+#energystatistics-auto-40 {
+    -fx-font-size: 22;
+    -fx-font-weight: bold;
+}
+
+/* Forecasts.fxml */
+#forecasts-auto-1 {
+    -fx-background-color: white;
+}
+
+#forecastingReload {
+    -fx-background-radius: 10;
+}
+
+#forecasts-auto-2 {
+    -fx-border-color: #333333;
+    -fx-border-radius: 5;
+    -fx-padding: 15;
+}
+
+#insightsContainer {
+    -fx-background-color: #efefef;
+    -fx-background-radius: 5;
+    -fx-padding: 15;
+}
+
+#forecasts-auto-3 {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+#forecasts-auto-4 {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+#forecasts-auto-5 {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+/* InsightCard.fxml */
+#insightcard-auto-1 {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+}
+
+/* RecommendationCard.fxml */
+#recommendationcard-auto-1 {
+    -fx-background-color: white;
+    -fx-border-width: 1px;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+/* Recommendations.fxml */
+#recommendations-auto-1 {
+    -fx-background-color: #F6F7F9;
+}
+
+#recommendations-auto-2 {
+    -fx-background-color: #F6F7F9;
+}
+
+#recommendations-auto-3 {
+    -fx-background-color: transparent;
+}
+
+#recommendations-auto-4 {
+    -fx-background-color: transparent;
+}
+
+#recommendations-auto-5 {
+    -fx-font-size: 32;
+    -fx-font-weight: bold;
+}
+
+#recommendations-auto-6 {
+    -fx-text-fill: #6B7280;
+}
+
+#recommendations-auto-7 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+#recommendations-auto-8 {
+    -fx-font-size: 16;
+}
+
+#recommendations-auto-9 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#recommendations-auto-10 {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+#recommendations-auto-11 {
+    -fx-font-weight: bold;
+}
+
+#recommendations-auto-12 {
+    -fx-font-weight: bold;
+}
+
+#recommendations-auto-13 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-font-weight: bold;
+}
+
+#recommendations-auto-14 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#recommendations-auto-15 {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+#recommendations-auto-16 {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+#recommendations-auto-17 {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+/* Settings.fxml */
+#settingsMainVBox {
+    -fx-padding: 30;
+}
+
+#settingsLogOutProceedButton {
+    -fx-base: #ffcccc;
+}
+
+/* SideBar.fxml */
+#sideBarContainer {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 0 1 0 0;
+}
+
+#sidebar-auto-1 {
+    -fx-background-color: #F3F4F6;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: #E5E7EB;
+}
+
+#sidebar-auto-2 {
+    -fx-font-size: 10;
+    -fx-text-fill: #6B7280;
+}
+
+#sidebar-auto-3 {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+#sidebar-auto-4 {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+#sidebar-auto-5 {
+    -fx-font-size: 14;
+}
+
+#sidebar-auto-6 {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+#sidebar-auto-7 {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER_LEFT;
+}
+
+#sidebar-auto-8 {
+    -fx-font-size: 16;
+}
+
+#sidebar-auto-9 {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 10;
+}
+
+#sidebar-auto-10 {
+    -fx-font-size: 16;
+}
+
+#sidebar-auto-11 {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER_LEFT;
+}
+
+#sidebar-auto-12 {
+    -fx-font-size: 16;
+}
+
+#sidebar-auto-13 {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER_LEFT;
+}
+
+#sidebar-auto-14 {
+    -fx-font-size: 16;
+}
+
+#sidebar-auto-15 {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER_LEFT;
+}
+
+#sidebar-auto-16 {
+    -fx-font-size: 16;
+}
+
+#sidebar-auto-17 {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER_LEFT;
+}
+
+#sidebar-auto-18 {
+    -fx-font-size: 16;
+}
+
+#sidebar-auto-19 {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER_LEFT;
+}
+
+#sidebar-auto-20 {
+    -fx-font-size: 16;
+}
+
+/* Remaining views: theme hooks and extracted typography */
+
+#addDeviceFormRoot,
+#bluetoothConnectRoot,
+#smartPlugSettingsRoot,
+#washingMachineSettingsRoot {
+    -fx-background-color: white;
+}
+
+#addDeviceFormTitle {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+#smartPlugSettingsTitle {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+#smartPlugPowerLabel,
+#smartPlugCutoffLabel {
+    -fx-font-size: 19px;
+}
+
+#solarGenCardTitle {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+#bluetoothConnectTitle {
+    -fx-font-size: 50px;
+}
+
+#bluetoothConnectComment {
+    -fx-font-size: 32px;
+}
+
+#bluetoothScanTitle {
+    -fx-font-size: 45px;
+}
+
+#washingMachineSettingsTitle {
+    -fx-font-size: 45px;
+}
+
+#deviceViewStatusText,
+#deviceViewStatusLabel,
+#deviceViewCurrentDrawText,
+#deviceViewCurrentDrawLabel,
+#deviceViewSettingsText,
+#deviceViewOptimizationText,
+#deviceViewReadyByText,
+#deviceViewGreenEnergyCheckbox {
+    -fx-font-size: 40px;
+}
+
+#deviceViewDeviceStatusLabel {
+    -fx-font-size: 40px;
+    -fx-font-style: italic;
+}
+
+#deviceViewForceRunButton {
+    -fx-font-size: 40px;
+}
+
+#deviceViewEstimateText,
+#deviceViewEstimateLabel {
+    -fx-font-size: 30px;
+}
+
+#deviceViewDeleteButton {
+    -fx-font-size: 24px;
+}
