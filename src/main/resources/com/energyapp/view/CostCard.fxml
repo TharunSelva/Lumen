@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="costCardVBox"
+<VBox fx:id="costCardVBox" stylesheets="@../../css/app.css"
       xmlns:fx="http://javafx.com/fxml/1"
       xmlns="http://javafx.com/javafx/8"
       fx:controller="com.energyapp.controller.CostCardController"

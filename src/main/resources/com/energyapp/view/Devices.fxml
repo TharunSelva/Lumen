@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="devicesPlane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DevicesController">
+<BorderPane fx:id="devicesPlane" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DevicesController">
     <center>
         <VBox fx:id="devicesPaneMain" alignment="TOP_CENTER" spacing="20" id="devicesPaneMain">
             <children>
