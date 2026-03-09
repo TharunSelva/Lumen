@@ -12,7 +12,7 @@
 
 <BorderPane fx:id="devicesPlane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DevicesController">
     <center>
-        <VBox fx:id="devicesPaneMain" alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;">
+        <VBox fx:id="devicesPaneMain" alignment="TOP_CENTER" spacing="20" id="devicesPaneMain">
             <children>
                 <Label fx:id="devicesTitle" text="Your Home Devices...">
                     <font>
@@ -20,7 +20,7 @@
                     </font>
                 </Label>
 
-                <ScrollPane fx:id="devicesScrollPane" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <ScrollPane fx:id="devicesScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" id="devicesScrollPane">
                <content>
                   <FlowPane fx:id="deviceContainer" prefHeight="200.0" prefWidth="200.0" />
                </content>

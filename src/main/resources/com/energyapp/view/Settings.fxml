@@ -15,7 +15,7 @@
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="settingsMainVBox" spacing="20.0" style="-fx-padding: 30;">
+            <VBox fx:id="settingsMainVBox" spacing="20.0" id="settingsMainVBox">
                <children>
                   <Label fx:id="settingsGreetingLabel" text="What's wrong Richard? :(">
                      <font>
@@ -121,7 +121,7 @@
                                  </font>
                               </Label>
                               <Label fx:id="settingsLogOutMessageLabel" text="You can log in again soon. See ya later!" wrapText="true"/>
-                              <Button fx:id="settingsLogOutProceedButton" mnemonicParsing="false" text="Proceed" style="-fx-base: #ffcccc;"/>
+                              <Button fx:id="settingsLogOutProceedButton" mnemonicParsing="false" text="Proceed" id="settingsLogOutProceedButton"/>
                            </children>
                         </VBox>
 

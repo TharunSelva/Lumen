@@ -6,33 +6,27 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.AddDeviceController">
+<VBox id="addDeviceFormRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.AddDeviceController">
    <children>
-      <Label text="Add Device">
-         <font>
-            <Font name="System Bold" size="26.0" />
-         </font>
-      </Label>
-      <HBox>
+      <Label id="addDeviceFormTitle" text="Add Device" />
+      <HBox id="addDeviceNameRow">
          <children>
-            <Label text="Device Name:" />
-            <TextField fx:id="deviceName" />
+            <Label id="addDeviceNameLabel" text="Device Name:" />
+            <TextField fx:id="deviceName" id="addDeviceNameField" />
          </children>
       </HBox>
-      <HBox>
+      <HBox id="addDeviceTypeRow">
          <children>
-            <Label text="Device Type:" />
-            <ComboBox fx:id="selectDeviceType" prefWidth="150.0" />
+            <Label id="addDeviceTypeLabel" text="Device Type:" />
+            <ComboBox fx:id="selectDeviceType" id="addDeviceTypeCombo" prefWidth="150.0" />
          </children>
       </HBox>
       <HBox />
-      <HBox>
+      <HBox id="addDeviceButtonRow">
          <children>
-            <Button fx:id="addButton" mnemonicParsing="false" text="Add" />
-            <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="addButton" id="addDeviceConfirmButton" mnemonicParsing="false" text="Add" />
+            <Button fx:id="cancelButton" id="addDeviceCancelButton" mnemonicParsing="false" text="Cancel" />
          </children>
       </HBox>
    </children>

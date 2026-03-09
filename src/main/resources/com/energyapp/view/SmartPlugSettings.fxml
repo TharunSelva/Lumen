@@ -6,35 +6,22 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SmartPlugSettingsController">
+<VBox id="smartPlugSettingsRoot" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SmartPlugSettingsController">
    <children>
-      <Label fx:id="deviceNameTitle" text="Plug Name">
-         <font>
-            <Font name="System Bold" size="30.0" />
-         </font>
-      </Label>
-      <HBox>
+      <Label fx:id="deviceNameTitle" id="smartPlugSettingsTitle" text="Plug Name" />
+      <HBox id="smartPlugPowerRow">
          <children>
-            <Label text="Power:">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Label>
-            <ToggleButton fx:id="powerToggle" mnemonicParsing="false" text="ON" />
+            <Label id="smartPlugPowerLabel" text="Power:" />
+            <ToggleButton fx:id="powerToggle" id="smartPlugPowerToggle" mnemonicParsing="false" text="ON" />
          </children>
       </HBox>
-      <HBox>
+      <HBox id="smartPlugCutoffRow">
          <children>
-            <Label text="Price Cut-off (pence per kWh):">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Label>
-            <TextField fx:id="cutoffInput" />
+            <Label id="smartPlugCutoffLabel" text="Price Cut-off (pence per kWh):" />
+            <TextField fx:id="cutoffInput" id="smartPlugCutoffInput" />
          </children>
       </HBox>
-      <Button fx:id="applyButton" mnemonicParsing="false" text="Apply" />
+      <Button fx:id="applyButton" id="smartPlugApplyButton" mnemonicParsing="false" text="Apply" />
    </children>
 </VBox>

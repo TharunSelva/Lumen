@@ -21,16 +21,16 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EnergyStatsController">
-    <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane prefHeight="800" prefWidth="1200" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EnergyStatsController" id="energystatistics-auto-1">
+    <BorderPane prefHeight="800" prefWidth="1200" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" id="energystatistics-auto-2">
 
     <!-- CENTER CONTENT -->
     <center>
         <!-- fitToHeight=true helps ensure the content starts “flush” in the viewport.
              The IMPORTANT fix for the cut-off is removing the GridPane RowConstraints (done below). -->
-        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" vbarPolicy="AS_NEEDED">
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" id="energystatistics-auto-3">
             <content>
-                <VBox spacing="14" style="-fx-background-color: transparent;">
+                <VBox spacing="14" id="energystatistics-auto-4">
                     <padding>
                         <Insets bottom="16" left="16" right="16" top="16" />
                     </padding>
@@ -38,19 +38,19 @@
                     <!-- Header row -->
                     <HBox alignment="CENTER_LEFT" spacing="12">
                         <VBox spacing="4" HBox.hgrow="ALWAYS">
-                            <Label style="-fx-font-size: 32; -fx-font-weight: bold;" text="Your energy statistics..." />
-                            <Label style="-fx-text-fill: #6B7280;" text="Today • Updated 3 mins ago" />
+                            <Label text="Your energy statistics..."  id="energystatistics-auto-5"/>
+                            <Label text="Today • Updated 3 mins ago"  id="energystatistics-auto-6"/>
                         </VBox>
 
                         <ComboBox prefWidth="90" promptText="Day" />
 
-                        <Button mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10;">
-                            <graphic><Label style="-fx-font-size: 16;" text="⚙" /></graphic>
+                        <Button mnemonicParsing="false" id="energystatistics-auto-7">
+                            <graphic><Label text="⚙"  id="energystatistics-auto-8"/></graphic>
                         </Button>
                     </HBox>
 
                     <!-- TOP STATS CARD -->
-                    <HBox spacing="16" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                    <HBox spacing="16" id="energystatistics-auto-9">
                         <padding>
                             <Insets bottom="14" left="16" right="16" top="14" />
                         </padding>
@@ -61,30 +61,30 @@
                               <Font name="System Bold" size="26.0" />
                            </font>
                         </Label>
-                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="9.2 kWh Total Energy" />
-                            <Label style="-fx-text-fill: #6B7280;" text="Total household consumption today" />
-                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="3.1 kg CO₂ Emissions" />
-                            <Label style="-fx-text-fill: #6B7280;" text="Includes grid + battery sources" />
+                            <Label text="9.2 kWh Total Energy"  id="energystatistics-auto-10"/>
+                            <Label text="Total household consumption today"  id="energystatistics-auto-11"/>
+                            <Label text="3.1 kg CO₂ Emissions"  id="energystatistics-auto-12"/>
+                            <Label text="Includes grid + battery sources"  id="energystatistics-auto-13"/>
                         </VBox>
 
                         <VBox spacing="8" HBox.hgrow="ALWAYS">
                         <Label />
-                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="£3.40 Total Cost" />
-                            <Label style="-fx-text-fill: #6B7280;" text="Based on your time-of-use tariff" />
-                            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="44% solar • 22% battery • 34% grid" />
-                            <Label style="-fx-text-fill: #6B7280;" text="Solar/Battery Contribution" />
+                            <Label text="£3.40 Total Cost"  id="energystatistics-auto-14"/>
+                            <Label text="Based on your time-of-use tariff"  id="energystatistics-auto-15"/>
+                            <Label text="44% solar • 22% battery • 34% grid"  id="energystatistics-auto-16"/>
+                            <Label text="Solar/Battery Contribution"  id="energystatistics-auto-17"/>
                         </VBox>
                     </HBox>
 
                     <!-- USAGE CARD -->
-                    <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                    <VBox spacing="10" id="energystatistics-auto-18">
                         <padding>
                             <Insets bottom="14" left="16" right="16" top="14" />
                         </padding>
 
-                        <Label style="-fx-font-size: 26; -fx-font-weight: bold;" text="Usage" />
-                        <Label style="-fx-font-weight: bold;" text="Hour-by-Hour Usage" />
-                        <Label style="-fx-text-fill: #6B7280; -fx-font-size: 12;" text="Tip: Click the graph to expand. Use Time Range for Real time, Last 1 hour, Last 24 hours, or All time." />
+                        <Label text="Usage"  id="energystatistics-auto-19"/>
+                        <Label text="Hour-by-Hour Usage"  id="energystatistics-auto-20"/>
+                        <Label text="Tip: Click the graph to expand. Use Time Range for Real time, Last 1 hour, Last 24 hours, or All time."  id="energystatistics-auto-21"/>
 
 
                         <!-- Smaller fixed height so everything is more likely to fit initially -->
@@ -92,7 +92,7 @@
 <!--                            <xAxis><CategoryAxis label="" /></xAxis>-->
 <!--                            <yAxis><NumberAxis label="" /></yAxis>-->
 <!--                        </BarChart>-->
-                        <LineChart fx:id="usageChartSmall" animated="false" createSymbols="true" legendVisible="false" maxHeight="170" prefHeight="170" style="-fx-background-color: transparent;">
+                        <LineChart fx:id="usageChartSmall" animated="false" createSymbols="true" legendVisible="false" maxHeight="170" prefHeight="170" id="usageChartSmall">
                             <xAxis>
                                 <NumberAxis fx:id="usageSmallXAxis" autoRanging="false" label="" />
                             </xAxis>
@@ -112,82 +112,82 @@
                         </columnConstraints>
 
                         <!-- COSTS PANEL -->
-                        <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="0">
+                        <VBox spacing="10" GridPane.columnIndex="0" id="energystatistics-auto-22">
                             <padding>
                                 <Insets bottom="14" left="16" right="16" top="14" />
                             </padding>
 
-                            <Label style="-fx-font-size: 26; -fx-font-weight: bold;" text="Costs" />
+                            <Label text="Costs"  id="energystatistics-auto-23"/>
 
                             <BarChart animated="false" legendVisible="false" maxHeight="150" prefHeight="150" title="">
                                 <xAxis><CategoryAxis label="" /></xAxis>
                                 <yAxis><NumberAxis label="" /></yAxis>
                             </BarChart>
 
-                            <VBox spacing="6" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                            <VBox spacing="6" id="energystatistics-auto-24">
                                 <padding>
                                     <Insets bottom="10" left="10" right="10" top="10" />
                                 </padding>
                                 <HBox>
                                     <Label text="Total Cost Today:" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label style="-fx-font-weight: bold;" text="£3.40" />
+                                    <Label text="£3.40"  id="energystatistics-auto-25"/>
                                 </HBox>
                                 <HBox>
                                     <Label text="Projected daily cost:" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label style="-fx-font-weight: bold;" text="£4.10" />
+                                    <Label text="£4.10"  id="energystatistics-auto-26"/>
                                 </HBox>
                             </VBox>
                         </VBox>
 
                         <!-- DEVICE-LEVEL BREAKDOWN -->
-                        <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="1">
+                        <VBox spacing="10" GridPane.columnIndex="1" id="energystatistics-auto-27">
                             <padding>
                                 <Insets bottom="14" left="16" right="16" top="14" />
                             </padding>
 
-                            <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="Device-level breakdown" />
+                            <Label text="Device-level breakdown"  id="energystatistics-auto-28"/>
 
                             <VBox fx:id="devicebreakdownpanel" spacing="10">
-                                <VBox fx:id="device1" spacing="4" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                <VBox fx:id="device1" spacing="4" id="device1">
                                     <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-                                    <Label fx:id="device1holder" style="-fx-font-weight: bold;" text="🔌 EV Charger:" />
+                                    <Label fx:id="device1holder" text="🔌 EV Charger:"  id="device1holder"/>
                                     <Label fx:id="device1useage" text="3.5 kWh • £0.90 • 1.2 kg CO₂" />
-                                    <Label fx:id="weeklycost1" style="-fx-text-fill: #6B7280;" text="Estimated Weekly Cost: " />
+                                    <Label fx:id="weeklycost1" text="Estimated Weekly Cost: "  id="weeklycost1"/>
                                 </VBox>
 
-                                <VBox fx:id="device2" spacing="4" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                <VBox fx:id="device2" spacing="4" id="device2">
                                     <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-                                    <Label fx:id="device2holder" style="-fx-font-weight: bold;" text="🌀 Tumble Dryer:" />
+                                    <Label fx:id="device2holder" text="🌀 Tumble Dryer:"  id="device2holder"/>
                                     <Label fx:id="device2useage" text="1.4 kWh • £0.48" />
-                                    <Label fx:id="weeklycost2" style="-fx-text-fill: #6B7280;" text="Estimated Weekly Cost: " />
+                                    <Label fx:id="weeklycost2" text="Estimated Weekly Cost: "  id="weeklycost2"/>
                                 </VBox>
 
-                                <VBox fx:id="device3" spacing="4" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
+                                <VBox fx:id="device3" spacing="4" id="device3">
                                     <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-                                    <Label fx:id="device3holder" style="-fx-font-weight: bold;" text="🔥 Heat Pump:" />
+                                    <Label fx:id="device3holder" text="🔥 Heat Pump:"  id="device3holder"/>
                                     <Label fx:id="device3useage" text="2.1 kWh • £0.62" />
-                                    <Label fx:id="weeklycost3" style="-fx-text-fill: #6B7280;" text="Estimated Weekly Cost: " />
+                                    <Label fx:id="weeklycost3" text="Estimated Weekly Cost: "  id="weeklycost3"/>
                                 </VBox>
                             </VBox>
 
                             <!-- dots (kept near bottom by adding a small spacer) -->
                             <Region prefHeight="6" />
                             <HBox alignment="CENTER" spacing="10">
-                                <Circle radius="6" style="-fx-fill: #111827;" />
-                                <Circle radius="6" style="-fx-fill: #D1D5DB;" />
-                                <Circle radius="6" style="-fx-fill: #D1D5DB;" />
+                                <Circle radius="6"  id="energystatistics-auto-29"/>
+                                <Circle radius="6"  id="energystatistics-auto-30"/>
+                                <Circle radius="6"  id="energystatistics-auto-31"/>
                             </HBox>
                         </VBox>
 
                         <!-- RIGHT COLUMN: source mix + assistant card -->
                         <VBox spacing="12" GridPane.columnIndex="2">
-                            <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                            <VBox spacing="8" id="energystatistics-auto-32">
                                 <padding><Insets bottom="12" left="12" right="12" top="12" /></padding>
-                                <Label style="-fx-font-weight: bold;" text="Source Mix (Last 4 Hours)" />
-                                <StackPane maxHeight="150" prefHeight="150" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
-                                    <Label style="-fx-text-fill: #6B7280;" text="(chart placeholder)" />
+                                <Label text="Source Mix (Last 4 Hours)"  id="energystatistics-auto-33"/>
+                                <StackPane maxHeight="150" prefHeight="150" id="energystatistics-auto-34">
+                                    <Label text="(chart placeholder)"  id="energystatistics-auto-35"/>
                                 </StackPane>
                             </VBox>
 
@@ -208,21 +208,21 @@
     
     
 
-    <AnchorPane fx:id="graphOverlay" managed="false" style="-fx-background-color: rgba(17,24,39,0.25);" visible="false">
-        <BorderPane style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #E5E7EB;" AnchorPane.bottomAnchor="24" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="24" AnchorPane.topAnchor="24">
+    <AnchorPane fx:id="graphOverlay" managed="false" visible="false" id="graphOverlay">
+        <BorderPane AnchorPane.bottomAnchor="24" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="24" AnchorPane.topAnchor="24" id="energystatistics-auto-36">
             <top>
-                <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
+                <HBox alignment="CENTER_LEFT" spacing="12" id="energystatistics-auto-37">
                     <padding>
                         <Insets bottom="12" left="16" right="16" top="12" />
                     </padding>
 
-                    <Button fx:id="backButton" style="-fx-background-color: #111827; -fx-text-fill: white; -fx-background-radius: 10;" text="← Back" />
+                    <Button fx:id="backButton" text="← Back"  id="backButton"/>
 
-                    <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Usage" />
+                    <Label text="Usage"  id="energystatistics-auto-38"/>
 
                     <Region HBox.hgrow="ALWAYS" />
 
-                    <Label style="-fx-text-fill: #6B7280;" text="Time Range" />
+                    <Label text="Time Range"  id="energystatistics-auto-39"/>
                     <ComboBox fx:id="timeRangeCombo" prefWidth="160" />
                 </HBox>
             </top>
@@ -233,7 +233,7 @@
                         <Insets bottom="16" left="16" right="16" top="16" />
                     </padding>
 
-                    <Label style="-fx-font-size: 22; -fx-font-weight: bold;" text="House Total Power Draw" />
+                    <Label text="House Total Power Draw"  id="energystatistics-auto-40"/>
 
                     <LineChart fx:id="usageChartLarge" animated="false" createSymbols="true" legendVisible="false" VBox.vgrow="ALWAYS">
                         <xAxis>
