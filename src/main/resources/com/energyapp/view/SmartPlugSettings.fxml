@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -7,19 +8,25 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="smartPlugSettingsRoot" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="640.0" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SmartPlugSettingsController">
+<VBox id="smartPlugSettingsRoot" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="640.0"
+      alignment="TOP_LEFT" spacing="16.0"
+      xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.energyapp.controller.SmartPlugSettingsController">
+   <padding>
+      <Insets top="18.0" right="18.0" bottom="18.0" left="18.0" />
+   </padding>
    <children>
       <Label fx:id="deviceNameTitle" id="smartPlugSettingsTitle" text="Plug Name" />
-      <HBox id="smartPlugPowerRow">
+      <HBox id="smartPlugPowerRow" alignment="CENTER_LEFT" spacing="12.0">
          <children>
-            <Label id="smartPlugPowerLabel" text="Power:" />
-            <ToggleButton fx:id="powerToggle" id="smartPlugPowerToggle" mnemonicParsing="false" text="ON" />
+            <Label id="smartPlugPowerLabel" prefWidth="120.0" text="Power:" />
+            <ToggleButton fx:id="powerToggle" id="smartPlugPowerToggle" mnemonicParsing="false" prefWidth="80.0" text="ON" />
          </children>
       </HBox>
-      <HBox id="smartPlugCutoffRow">
+      <HBox id="smartPlugCutoffRow" alignment="CENTER_LEFT" spacing="12.0">
          <children>
-            <Label id="smartPlugCutoffLabel" text="Price Cut-off (pence per kWh):" />
-            <TextField fx:id="cutoffInput" id="smartPlugCutoffInput" />
+            <Label id="smartPlugCutoffLabel" prefWidth="280.0" text="Price Cut-off (pence per kWh):" />
+            <TextField fx:id="cutoffInput" id="smartPlugCutoffInput" prefWidth="220.0" />
          </children>
       </HBox>
       <Button fx:id="applyButton" id="smartPlugApplyButton" mnemonicParsing="false" text="Apply" />

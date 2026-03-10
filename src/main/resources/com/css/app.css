@@ -1,21 +1,66 @@
 /*
- * Central stylesheet for ADD-10.
+ * Central stylesheet
  * These rules are a 1:1 extraction of the previous inline styles so the UI keeps the same look.
- * The app-root and dark hooks are here so EC-10 can be layered in later without another refactor.
+ * Note: The app-root and dark hooks are here so that they can be layered in later without another refactor.
  */
 
+/* =========================================================
+   Theme tokens
+   ========================================================= */
+
 .app-root {
+    -app-bg: #f5f5f5;
+    -app-surface: #ffffff;
+    -app-surface-2: #f1f3f5;
+    -app-border: #d0d7de;
+    -app-text: #111111;
+    -app-text-muted: #5f6368;
+    -app-popup-bg: #ffffff;
+    -app-popup-text: #111111;
+    -app-popup-selected: #e8eaed;
+    -app-chart-bg: #ffffff;
+    -app-chart-grid: #d9d9d9;
 }
+
+
+
+/*.app-root.dark {*/
+/*    -app-bg: #1a1a1a;             !* whole app background *!*/
+/*    -app-sidebar: #1f1f1f;        !* sidebar background *!*/
+/*    -app-surface: #262626;        !* cards/panels *!*/
+/*    -app-surface-2: #303030;      !* search bar, inputs, hover states *!*/
+/*    -app-border: #666666;         !* borders *!*/
+/*    -app-text: #f8f8f8;          !* main text *!*/
+/*    -app-text-muted: #d0d0d0;     !* secondary text *!*/
+/*    -app-popup-bg: #2a2a2a;       !* dropdown/menu backgrounds *!*/
+/*    -app-popup-text: #f8f8f8;     !* dropdown text *!*/
+/*    -app-popup-selected: #3a3a3a;*/
+/*    -app-chart-bg: #2b2b2b;       !* graph plot background *!*/
+/*    -app-chart-grid: #5f5f5f;      !* graph grid lines *!*/
+/*}*/
 
 .app-root.dark {
-    /* Future dark-mode overrides go here. */
+    -app-bg: #1a1a1a;             /* whole app background */
+    -app-sidebar: #1f1f1f;        /* sidebar background */
+    -app-surface: #262626;        /* cards/panels */
+    -app-surface-2: #303030;      /* search bar, inputs, hover states */
+    -app-border: #666666;         /* borders */
+    -app-text: #f8f8f8;           /* main text */
+    -app-text-muted: #d0d0d0;     /* secondary text */
+    -app-popup-bg: #2a2a2a;       /* dropdown/menu backgrounds */
+    -app-popup-text: #f8f8f8;     /* dropdown text */
+    -app-popup-selected: #3a3a3a;
+    -app-chart-bg: #2b2b2b;       /* graph plot background */
+    -app-chart-grid: #5f5f5f;     /* graph grid lines */
+
+    /* Extra dark-mode tokens used by borders, modals, highlights and status colours */
+    -app-surface-alt: #303030;
+    -app-border-strong: #7a7a7a;
+    -app-success: #7ee787;
+    -app-overlay: rgba(255,255,255,0.08);
+    -app-danger-soft: #7a1f1f;
 }
 
-.device-card-type-label {
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold;
-    -fx-font-size: 12px;
-}
 
 .device-card {
     -fx-padding: 10;
@@ -24,6 +69,12 @@
     -fx-background-radius: 8;
     -fx-background-color: white;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.device-card-type-label {
+    -fx-text-fill: #1f2937;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
 }
 
 /* CostCard.fxml */
@@ -1128,3 +1179,405 @@
 #deviceViewDeleteButton {
     -fx-font-size: 24px;
 }
+
+#sideBarContainer .button:hover {
+    -fx-background-color: #f1f3f5;
+}
+
+#sideBarContainer .button:pressed {
+    -fx-background-color: #e9ecef;
+}
+
+
+/* =========================================================
+   Dark mode overrides
+   ========================================================= */
+
+.app-root.dark,
+.app-root.dark #devicesPaneMain,
+.app-root.dark #settingsMainVBox,
+.app-root.dark #ecostatistics-auto-1,
+.app-root.dark #ecostatistics-auto-2,
+.app-root.dark #energystatistics-auto-1,
+.app-root.dark #energystatistics-auto-2,
+.app-root.dark #recommendations-auto-1,
+.app-root.dark #recommendations-auto-2,
+.app-root.dark #forecasts-auto-1,
+.app-root.dark#addDeviceFormRoot,
+.app-root.dark#smartPlugSettingsRoot,
+.app-root.dark#bluetoothConnectRoot,
+.app-root.dark#washingMachineSettingsRoot {
+    -fx-background-color: -app-surface;
+}
+
+.app-root.dark#addDeviceFormRoot .label,
+.app-root.dark#smartPlugSettingsRoot .label,
+.app-root.dark#bluetoothConnectRoot .label,
+.app-root.dark#washingMachineSettingsRoot .label {
+    -fx-text-fill: -app-text;
+}
+
+.app-root.dark .label,
+.app-root.dark .check-box {
+    -fx-text-fill: -app-text;
+}
+
+.app-root.dark .text-field,
+.app-root.dark .combo-box-base {
+    -fx-background-color: -app-surface-alt;
+    -fx-text-fill: -app-text;
+    -fx-prompt-text-fill: -app-text-muted;
+}
+
+.app-root.dark .scroll-pane,
+.app-root.dark .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.app-root.dark .axis {
+    -fx-tick-label-fill: -app-text-muted;
+}
+
+.app-root.dark .axis-label {
+    -fx-text-fill: -app-text-muted;
+}
+
+.app-root.dark .chart-legend {
+    -fx-background-color: transparent;
+}
+
+.app-root.dark .device-card {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border-strong;
+}
+
+.app-root.dark .device-card-type-label {
+    -fx-text-fill: -app-text;
+}
+
+.app-root.dark #sideBarContainer {
+    -fx-background-color: -app-sidebar;
+    -fx-border-color: -app-border;
+}
+
+.app-root.dark #sidebar-auto-1,
+.app-root.dark #sidebar-auto-4,
+.app-root.dark #cleanEnergyChartContainer,
+.app-root.dark #device1,
+.app-root.dark #device2,
+.app-root.dark #device3,
+.app-root.dark #recommendationcard-auto-1,
+.app-root.dark #insightcard-auto-1,
+.app-root.dark #ecostatistics-auto-6,
+.app-root.dark #ecostatistics-auto-8,
+.app-root.dark #ecostatistics-auto-9,
+.app-root.dark #ecostatistics-auto-12,
+.app-root.dark #ecostatistics-auto-15,
+.app-root.dark #ecostatistics-auto-20,
+.app-root.dark #ecostatistics-auto-29,
+.app-root.dark #ecostatistics-auto-31,
+.app-root.dark #ecostatistics-auto-59,
+.app-root.dark #ecostatistics-auto-61,
+.app-root.dark #ecostatistics-auto-63,
+.app-root.dark #ecostatistics-auto-65,
+.app-root.dark #ecostatistics-auto-69,
+.app-root.dark #energystatistics-auto-7,
+.app-root.dark #energystatistics-auto-9,
+.app-root.dark #energystatistics-auto-18,
+.app-root.dark #energystatistics-auto-22,
+.app-root.dark #energystatistics-auto-24,
+.app-root.dark #energystatistics-auto-27,
+.app-root.dark #energystatistics-auto-32,
+.app-root.dark #energystatistics-auto-34,
+.app-root.dark #energystatistics-auto-36,
+.app-root.dark #recommendations-auto-7,
+.app-root.dark #recommendations-auto-9,
+.app-root.dark #recommendations-auto-13,
+.app-root.dark #recommendations-auto-14,
+.app-root.dark #recommendations-auto-16 {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+}
+
+.app-root.dark #dashboard00VBox,
+.app-root.dark #dashboard10VBox,
+.app-root.dark #dashboardEcoImpactVBox,
+.app-root.dark #dashboardQuickForecastVBox,
+.app-root.dark #costCardVBox,
+.app-root.dark #forecasts-auto-2,
+.app-root.dark #forecasts-auto-3,
+.app-root.dark #forecasts-auto-4,
+.app-root.dark #forecasts-auto-5,
+.app-root.dark #insightsContainer {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border-strong;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.app-root.dark #dashboardQuickForecastBarHBox {
+    -fx-background-color: -app-surface-alt;
+}
+
+.app-root.dark #ecostatistics-auto-5,
+.app-root.dark #ecostatistics-auto-11,
+.app-root.dark #ecostatistics-auto-14,
+.app-root.dark #ecostatistics-auto-16,
+.app-root.dark #ecostatistics-auto-18,
+.app-root.dark #ecostatistics-auto-56,
+.app-root.dark #ecostatistics-auto-57,
+.app-root.dark #ecostatistics-auto-58,
+.app-root.dark #ecostatistics-auto-62,
+.app-root.dark #ecostatistics-auto-67,
+.app-root.dark #energystatistics-auto-6,
+.app-root.dark #energystatistics-auto-11,
+.app-root.dark #energystatistics-auto-13,
+.app-root.dark #energystatistics-auto-15,
+.app-root.dark #energystatistics-auto-17,
+.app-root.dark #energystatistics-auto-21,
+.app-root.dark #energystatistics-auto-35,
+.app-root.dark #energystatistics-auto-39,
+.app-root.dark #recommendations-auto-6,
+.app-root.dark #sidebar-auto-2,
+.app-root.dark #weeklycost1,
+.app-root.dark #weeklycost2,
+.app-root.dark #weeklycost3 {
+    -fx-text-fill: -app-text-muted;
+}
+
+.app-root.dark #dashboardEcoImpactCleanLabel {
+    -fx-text-fill: -app-success;
+}
+
+.app-root.dark #dashboardEcoImpactFossilLabel {
+    -fx-text-fill: -app-text-muted;
+}
+
+.app-root.dark #graphOverlay {
+    -fx-background-color: -app-overlay;
+}
+
+.app-root.dark #backButton,
+.app-root.dark #ecostatistics-auto-54 {
+    -fx-background-color: #020617;
+}
+
+.app-root.dark #settingsLogOutProceedButton {
+    -fx-base: -app-danger-soft;
+}
+
+    /* =========================================================
+       More dark mode elements
+       ========================================================= */
+
+    .app-root.dark,
+    .app-root.dark .root {
+        -fx-background-color: -app-bg;
+    }
+
+    /* General text */
+    .app-root.dark .label,
+    .app-root.dark .text,
+    .app-root.dark .check-box,
+    .app-root.dark .radio-button {
+        -fx-text-fill: -app-text;
+    }
+
+    /* Sidebar */
+    /*.app-root.dark #sideBarContainer {*/
+    /*    -fx-background-color: #0f0f0f;*/
+    /*    -fx-border-color: -app-border;*/
+    /*}*/
+
+    /*.app-root.dark #sideBarContainer .label,*/
+    /*.app-root.dark #sideBarContainer .button {*/
+    /*    -fx-text-fill: -app-text;*/
+    /*}*/
+
+    /*.app-root.dark #sideBarContainer .button {*/
+    /*    -fx-background-color: transparent;*/
+    /*}*/
+    .app-root.dark #sideBarContainer {
+        -fx-background-color: -app-sidebar;
+        -fx-border-color: -app-border;
+    }
+
+    .app-root.dark #sidebar-auto-5 {
+        -fx-text-fill: -app-text;
+        -fx-min-width: 22px;
+        -fx-pref-width: 22px;
+        -fx-max-width: 22px;
+        -fx-text-overrun: clip;
+    }
+
+    .app-root.dark #sideBarContainer .button {
+        -fx-background-color: transparent;
+        -fx-border-color: transparent;
+        -fx-border-width: 0;
+        -fx-background-radius: 0;
+        -fx-border-radius: 0;
+        -fx-text-fill: -app-text;
+    }
+
+    .app-root.dark #sideBarContainer .button .label {
+        -fx-text-fill: -app-text;
+    }
+
+    .app-root.dark #sideBarContainer .button:hover {
+        -fx-background-color: -app-surface-2;
+    }
+
+    .app-root.dark #sideBarContainer .button:pressed {
+        -fx-background-color: -app-surface;
+    }
+
+    /* Search bars / text fields */
+    .app-root.dark .text-field,
+    .app-root.dark .password-field,
+    .app-root.dark .text-area,
+    .app-root.dark .text-area .content {
+        -fx-background-color: -app-surface-2;
+        -fx-text-fill: -app-text;
+        -fx-prompt-text-fill: -app-text-muted;
+        -fx-highlight-fill: #3a3a3a;
+        -fx-highlight-text-fill: -app-text;
+        -fx-border-color: -app-border;
+    }
+
+    /* Combo boxes / choice boxes / date pickers */
+    .app-root.dark .combo-box-base,
+    .app-root.dark .choice-box,
+    .app-root.dark .date-picker {
+        -fx-background-color: -app-surface-2;
+        -fx-border-color: -app-border;
+    }
+
+    .app-root.dark .combo-box-base .text,
+    .app-root.dark .choice-box .label,
+    .app-root.dark .date-picker .text-field {
+        -fx-fill: -app-text;
+        -fx-text-fill: -app-text;
+    }
+
+    /* Dropdown popup lists */
+    .app-root.dark .combo-box-popup > .list-view,
+    .app-root.dark .choice-box .context-menu,
+    .app-root.dark .date-picker-popup,
+    .app-root.dark .list-view {
+        -fx-background-color: -app-popup-bg;
+        -fx-control-inner-background: -app-popup-bg;
+        -fx-border-color: -app-border;
+    }
+
+    .app-root.dark .combo-box-popup > .list-view .list-cell,
+    .app-root.dark .choice-box .menu-item .label,
+    .app-root.dark .list-view .list-cell,
+    .app-root.dark .date-picker-popup .month-year-pane,
+    .app-root.dark .date-picker-popup .spinner .label {
+        -fx-background-color: -app-popup-bg;
+        -fx-text-fill: -app-popup-text;
+    }
+
+    .app-root.dark .combo-box-popup > .list-view .list-cell:hover,
+    .app-root.dark .combo-box-popup > .list-view .list-cell:selected,
+    .app-root.dark .list-view .list-cell:hover,
+    .app-root.dark .list-view .list-cell:selected,
+    .app-root.dark .choice-box .menu-item:focused,
+    .app-root.dark .choice-box .menu-item:hover {
+        -fx-background-color: -app-popup-selected;
+        -fx-text-fill: -app-popup-text;
+    }
+
+    /* Context menus / suggestion popups */
+    .app-root.dark .context-menu {
+        -fx-background-color: -app-popup-bg;
+        -fx-border-color: -app-border;
+    }
+
+    .app-root.dark .context-menu .menu-item .label {
+        -fx-text-fill: -app-popup-text;
+    }
+
+    .app-root.dark .context-menu .menu-item:focused,
+    .app-root.dark .context-menu .menu-item:hover {
+        -fx-background-color: -app-popup-selected;
+    }
+
+    /* Buttons */
+    .app-root.dark .button {
+        -fx-text-fill: -app-text;
+    }
+
+    .app-root.dark .button,
+    .app-root.dark .toggle-button {
+        -fx-background-color: -app-surface-2;
+        -fx-border-color: -app-border;
+    }
+
+    /* Device cards */
+    .app-root.dark .device-card {
+        -fx-background-color: -app-surface;
+        -fx-border-color: -app-border;
+    }
+
+    .app-root.dark .device-card-type-label {
+        -fx-text-fill: -app-text;
+    }
+
+    /* Main cards / panels */
+    .app-root.dark #dashboard00VBox,
+    .app-root.dark #dashboard10VBox,
+    .app-root.dark #dashboardEcoImpactVBox,
+    .app-root.dark #dashboardQuickForecastVBox,
+    .app-root.dark #costCardVBox {
+        -fx-background-color: -app-surface;
+        -fx-border-color: -app-border;
+    }
+
+    /* Charts */
+    .app-root.dark .chart {
+        -fx-background-color: transparent;
+    }
+
+    .app-root.dark .chart-plot-background {
+        -fx-background-color: -app-chart-bg;
+    }
+
+    .app-root.dark .chart-vertical-grid-lines,
+    .app-root.dark .chart-horizontal-grid-lines {
+        -fx-stroke: -app-chart-grid;
+    }
+
+    .app-root.dark .axis {
+        -fx-tick-label-fill: -app-text;
+    }
+
+    .app-root.dark .axis-label {
+        -fx-text-fill: -app-text;
+    }
+
+    .app-root.dark .chart-legend {
+        -fx-background-color: transparent;
+    }
+
+    /* Modal/dialog roots */
+    .app-root.dark #addDeviceFormRoot,
+    .app-root.dark #smartPlugSettingsRoot,
+    .app-root.dark #bluetoothConnectRoot,
+    .app-root.dark #washingMachineSettingsRoot {
+        -fx-background-color: -app-surface;
+    }
+
+    /* Modal text */
+    .app-root.dark #addDeviceFormRoot .label,
+    .app-root.dark #smartPlugSettingsRoot .label,
+    .app-root.dark #bluetoothConnectRoot .label,
+    .app-root.dark #washingMachineSettingsRoot .label {
+        -fx-text-fill: -app-text;
+    }
+
+    /* Settings logout / destructive button still visible */
+    .app-root.dark #settingsLogOutProceedButton {
+        -fx-base: #7a1f1f;
+    }
