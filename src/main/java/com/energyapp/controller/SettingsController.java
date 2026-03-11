@@ -1,5 +1,6 @@
 package com.energyapp.controller;
 
+import com.energyapp.service.AccessibilityManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -68,6 +69,8 @@ public class SettingsController {
             }
         });
 
-        System.out.println("Settings controller successfully loaded.");
+        settingsDisplaySetting2.selectedProperty().bindBidirectional(AccessibilityManager.isCompactView());
+        settingsDisplaySetting3.selectedProperty().bindBidirectional(AccessibilityManager.animationsShowing());
+        settingsAccessibilitySetting3.selectedProperty().bindBidirectional(AccessibilityManager.isLargeText());
     }
 }

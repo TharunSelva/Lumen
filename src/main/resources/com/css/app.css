@@ -2096,3 +2096,67 @@
     -fx-text-fill: #ffffff;
     -fx-fill: #ffffff;
 }
+
+.large-text {
+    -fx-font-size: 18px;
+}
+
+/* Accessibility: Compact View */
+
+/* 1. Squish the massive grids across the app */
+.compact-view #dashboardMainGridPane,
+.compact-view #settingsMainGridPane {
+    -fx-hgap: 10px !important;
+    -fx-vgap: 10px !important;
+}
+
+/* 2. Target the main vertical spacing of every screen's root container */
+.compact-view #dashboardContentVBox,
+.compact-view #settingsMainVBox,
+.compact-view #forecasts-auto-1,
+.compact-view #devicesPaneMain,
+.compact-view #sideBarContainer,
+.compact-view #energystatistics-auto-4,
+.compact-view #ecostatistics-auto-3,
+.compact-view #recommendations-auto-4 {
+    -fx-spacing: 8px !important;
+}
+
+/* 3. Squish the inner VBox panels on Dashboard & Settings */
+.compact-view #dashboard00VBox,
+.compact-view #dashboard10VBox,
+.compact-view #settingsAccountVBox,
+.compact-view #settingsAccessibilityVBox,
+.compact-view #settingsPrivacyVBox,
+.compact-view #settingsHelpVBox,
+.compact-view #settingsDisplayVBox {
+    -fx-spacing: 4px !important;
+}
+
+/* 4. Reduce the thick outer padding margins on specific screens */
+.compact-view #forecasts-auto-1,
+.compact-view #sideBarContainer {
+    -fx-padding: 8px !important;
+}
+
+.compact-view .scroll-pane {
+    -fx-fit-to-width: true;
+    -fx-hbar-policy: never;
+    -fx-vbar-policy: as-needed;
+}
+
+.compact-view #sideBarContainer {
+    -fx-pref-width: 130px !important;
+    -fx-min-width: 130px !important;
+    -fx-max-width: 130px !important;
+}
+
+
+.compact-view #sideBarContainer .button {
+    -fx-font-size: 12px !important;
+    -fx-padding: 5px 10px !important;
+}
+
+.compact-view .label {
+    -fx-wrap-text: true;
+}
