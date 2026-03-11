@@ -2103,14 +2103,12 @@
 
 /* Accessibility: Compact View */
 
-/* 1. Squish the massive grids across the app */
 .compact-view #dashboardMainGridPane,
 .compact-view #settingsMainGridPane {
     -fx-hgap: 10px !important;
     -fx-vgap: 10px !important;
 }
 
-/* 2. Target the main vertical spacing of every screen's root container */
 .compact-view #dashboardContentVBox,
 .compact-view #settingsMainVBox,
 .compact-view #forecasts-auto-1,
@@ -2122,7 +2120,6 @@
     -fx-spacing: 8px !important;
 }
 
-/* 3. Squish the inner VBox panels on Dashboard & Settings */
 .compact-view #dashboard00VBox,
 .compact-view #dashboard10VBox,
 .compact-view #settingsAccountVBox,
@@ -2133,7 +2130,6 @@
     -fx-spacing: 4px !important;
 }
 
-/* 4. Reduce the thick outer padding margins on specific screens */
 .compact-view #forecasts-auto-1,
 .compact-view #sideBarContainer {
     -fx-padding: 8px !important;
