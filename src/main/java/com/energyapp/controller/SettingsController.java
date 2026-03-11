@@ -51,6 +51,7 @@ public class SettingsController {
         settingsMainVBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 settingsDisplaySetting1.setSelected(ThemeController.isDarkModeEnabled());
+                settingsAccessibilitySetting1.setSelected(ThemeController.isHighContrastEnabled());
                 ThemeController.applyTheme(newScene);
             }
         });
@@ -58,6 +59,12 @@ public class SettingsController {
         settingsDisplaySetting1.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
             if (settingsMainVBox.getScene() != null) {
                 ThemeController.setDarkMode(settingsMainVBox.getScene(), isSelected);
+            }
+        });
+
+        settingsAccessibilitySetting1.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (settingsMainVBox.getScene() != null) {
+                ThemeController.setHighContrast(settingsMainVBox.getScene(), isSelected);
             }
         });
 

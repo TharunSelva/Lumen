@@ -1367,217 +1367,732 @@
     -fx-base: -app-danger-soft;
 }
 
-    /* =========================================================
-       More dark mode elements
-       ========================================================= */
+/* =========================================================
+   More dark mode elements
+   ========================================================= */
 
-    .app-root.dark,
-    .app-root.dark .root {
-        -fx-background-color: -app-bg;
-    }
+.app-root.dark,
+.app-root.dark .root {
+    -fx-background-color: -app-bg;
+}
 
-    /* General text */
-    .app-root.dark .label,
-    .app-root.dark .text,
-    .app-root.dark .check-box,
-    .app-root.dark .radio-button {
-        -fx-text-fill: -app-text;
-    }
+/* General text */
+.app-root.dark .label,
+.app-root.dark .text,
+.app-root.dark .check-box,
+.app-root.dark .radio-button {
+    -fx-text-fill: -app-text;
+}
 
-    /* Sidebar */
-    /*.app-root.dark #sideBarContainer {*/
-    /*    -fx-background-color: #0f0f0f;*/
-    /*    -fx-border-color: -app-border;*/
-    /*}*/
+/* Sidebar */
+/*.app-root.dark #sideBarContainer {*/
+/*    -fx-background-color: #0f0f0f;*/
+/*    -fx-border-color: -app-border;*/
+/*}*/
 
-    /*.app-root.dark #sideBarContainer .label,*/
-    /*.app-root.dark #sideBarContainer .button {*/
-    /*    -fx-text-fill: -app-text;*/
-    /*}*/
+/*.app-root.dark #sideBarContainer .label,*/
+/*.app-root.dark #sideBarContainer .button {*/
+/*    -fx-text-fill: -app-text;*/
+/*}*/
 
-    /*.app-root.dark #sideBarContainer .button {*/
-    /*    -fx-background-color: transparent;*/
-    /*}*/
-    .app-root.dark #sideBarContainer {
-        -fx-background-color: -app-sidebar;
-        -fx-border-color: -app-border;
-    }
+/*.app-root.dark #sideBarContainer .button {*/
+/*    -fx-background-color: transparent;*/
+/*}*/
+.app-root.dark #sideBarContainer {
+    -fx-background-color: -app-sidebar;
+    -fx-border-color: -app-border;
+}
 
-    .app-root.dark #sidebar-auto-5 {
-        -fx-text-fill: -app-text;
-        -fx-min-width: 22px;
-        -fx-pref-width: 22px;
-        -fx-max-width: 22px;
-        -fx-text-overrun: clip;
-    }
+.app-root.dark #sidebar-auto-5 {
+    -fx-text-fill: -app-text;
+    -fx-min-width: 22px;
+    -fx-pref-width: 22px;
+    -fx-max-width: 22px;
+    -fx-text-overrun: clip;
+}
 
-    .app-root.dark #sideBarContainer .button {
-        -fx-background-color: transparent;
-        -fx-border-color: transparent;
-        -fx-border-width: 0;
-        -fx-background-radius: 0;
-        -fx-border-radius: 0;
-        -fx-text-fill: -app-text;
-    }
+.app-root.dark #sideBarContainer .button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-text-fill: -app-text;
+}
 
-    .app-root.dark #sideBarContainer .button .label {
-        -fx-text-fill: -app-text;
-    }
+.app-root.dark #sideBarContainer .button .label {
+    -fx-text-fill: -app-text;
+}
 
-    .app-root.dark #sideBarContainer .button:hover {
-        -fx-background-color: -app-surface-2;
-    }
+.app-root.dark #sideBarContainer .button:hover {
+    -fx-background-color: -app-surface-2;
+}
 
-    .app-root.dark #sideBarContainer .button:pressed {
-        -fx-background-color: -app-surface;
-    }
+.app-root.dark #sideBarContainer .button:pressed {
+    -fx-background-color: -app-surface;
+}
 
-    /* Search bars / text fields */
-    .app-root.dark .text-field,
-    .app-root.dark .password-field,
-    .app-root.dark .text-area,
-    .app-root.dark .text-area .content {
-        -fx-background-color: -app-surface-2;
-        -fx-text-fill: -app-text;
-        -fx-prompt-text-fill: -app-text-muted;
-        -fx-highlight-fill: #3a3a3a;
-        -fx-highlight-text-fill: -app-text;
-        -fx-border-color: -app-border;
-    }
+/* Search bars / text fields */
+.app-root.dark .text-field,
+.app-root.dark .password-field,
+.app-root.dark .text-area,
+.app-root.dark .text-area .content {
+    -fx-background-color: -app-surface-2;
+    -fx-text-fill: -app-text;
+    -fx-prompt-text-fill: -app-text-muted;
+    -fx-highlight-fill: #3a3a3a;
+    -fx-highlight-text-fill: -app-text;
+    -fx-border-color: -app-border;
+}
 
-    /* Combo boxes / choice boxes / date pickers */
-    .app-root.dark .combo-box-base,
-    .app-root.dark .choice-box,
-    .app-root.dark .date-picker {
-        -fx-background-color: -app-surface-2;
-        -fx-border-color: -app-border;
-    }
+/* Combo boxes / choice boxes / date pickers */
+.app-root.dark .combo-box-base,
+.app-root.dark .choice-box,
+.app-root.dark .date-picker {
+    -fx-background-color: -app-surface-2;
+    -fx-border-color: -app-border;
+}
 
-    .app-root.dark .combo-box-base .text,
-    .app-root.dark .choice-box .label,
-    .app-root.dark .date-picker .text-field {
-        -fx-fill: -app-text;
-        -fx-text-fill: -app-text;
-    }
+.app-root.dark .combo-box-base .text,
+.app-root.dark .choice-box .label,
+.app-root.dark .date-picker .text-field {
+    -fx-fill: -app-text;
+    -fx-text-fill: -app-text;
+}
 
-    /* Dropdown popup lists */
-    .app-root.dark .combo-box-popup > .list-view,
-    .app-root.dark .choice-box .context-menu,
-    .app-root.dark .date-picker-popup,
-    .app-root.dark .list-view {
-        -fx-background-color: -app-popup-bg;
-        -fx-control-inner-background: -app-popup-bg;
-        -fx-border-color: -app-border;
-    }
+/* Dropdown popup lists */
+.app-root.dark .combo-box-popup > .list-view,
+.app-root.dark .choice-box .context-menu,
+.app-root.dark .date-picker-popup,
+.app-root.dark .list-view {
+    -fx-background-color: -app-popup-bg;
+    -fx-control-inner-background: -app-popup-bg;
+    -fx-border-color: -app-border;
+}
 
-    .app-root.dark .combo-box-popup > .list-view .list-cell,
-    .app-root.dark .choice-box .menu-item .label,
-    .app-root.dark .list-view .list-cell,
-    .app-root.dark .date-picker-popup .month-year-pane,
-    .app-root.dark .date-picker-popup .spinner .label {
-        -fx-background-color: -app-popup-bg;
-        -fx-text-fill: -app-popup-text;
-    }
+.app-root.dark .combo-box-popup > .list-view .list-cell,
+.app-root.dark .choice-box .menu-item .label,
+.app-root.dark .list-view .list-cell,
+.app-root.dark .date-picker-popup .month-year-pane,
+.app-root.dark .date-picker-popup .spinner .label {
+    -fx-background-color: -app-popup-bg;
+    -fx-text-fill: -app-popup-text;
+}
 
-    .app-root.dark .combo-box-popup > .list-view .list-cell:hover,
-    .app-root.dark .combo-box-popup > .list-view .list-cell:selected,
-    .app-root.dark .list-view .list-cell:hover,
-    .app-root.dark .list-view .list-cell:selected,
-    .app-root.dark .choice-box .menu-item:focused,
-    .app-root.dark .choice-box .menu-item:hover {
-        -fx-background-color: -app-popup-selected;
-        -fx-text-fill: -app-popup-text;
-    }
+.app-root.dark .combo-box-popup > .list-view .list-cell:hover,
+.app-root.dark .combo-box-popup > .list-view .list-cell:selected,
+.app-root.dark .list-view .list-cell:hover,
+.app-root.dark .list-view .list-cell:selected,
+.app-root.dark .choice-box .menu-item:focused,
+.app-root.dark .choice-box .menu-item:hover {
+    -fx-background-color: -app-popup-selected;
+    -fx-text-fill: -app-popup-text;
+}
 
-    /* Context menus / suggestion popups */
-    .app-root.dark .context-menu {
-        -fx-background-color: -app-popup-bg;
-        -fx-border-color: -app-border;
-    }
+/* Context menus / suggestion popups */
+.app-root.dark .context-menu {
+    -fx-background-color: -app-popup-bg;
+    -fx-border-color: -app-border;
+}
 
-    .app-root.dark .context-menu .menu-item .label {
-        -fx-text-fill: -app-popup-text;
-    }
+.app-root.dark .context-menu .menu-item .label {
+    -fx-text-fill: -app-popup-text;
+}
 
-    .app-root.dark .context-menu .menu-item:focused,
-    .app-root.dark .context-menu .menu-item:hover {
-        -fx-background-color: -app-popup-selected;
-    }
+.app-root.dark .context-menu .menu-item:focused,
+.app-root.dark .context-menu .menu-item:hover {
+    -fx-background-color: -app-popup-selected;
+}
 
-    /* Buttons */
-    .app-root.dark .button {
-        -fx-text-fill: -app-text;
-    }
+/* Buttons */
+.app-root.dark .button {
+    -fx-text-fill: -app-text;
+}
 
-    .app-root.dark .button,
-    .app-root.dark .toggle-button {
-        -fx-background-color: -app-surface-2;
-        -fx-border-color: -app-border;
-    }
+.app-root.dark .button,
+.app-root.dark .toggle-button {
+    -fx-background-color: -app-surface-2;
+    -fx-border-color: -app-border;
+}
 
-    /* Device cards */
-    .app-root.dark .device-card {
-        -fx-background-color: -app-surface;
-        -fx-border-color: -app-border;
-    }
+/* Device cards */
+.app-root.dark .device-card {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+}
 
-    .app-root.dark .device-card-type-label {
-        -fx-text-fill: -app-text;
-    }
+.app-root.dark .device-card-type-label {
+    -fx-text-fill: -app-text;
+}
 
-    /* Main cards / panels */
-    .app-root.dark #dashboard00VBox,
-    .app-root.dark #dashboard10VBox,
-    .app-root.dark #dashboardEcoImpactVBox,
-    .app-root.dark #dashboardQuickForecastVBox,
-    .app-root.dark #costCardVBox {
-        -fx-background-color: -app-surface;
-        -fx-border-color: -app-border;
-    }
+/* Main cards / panels */
+.app-root.dark #dashboard00VBox,
+.app-root.dark #dashboard10VBox,
+.app-root.dark #dashboardEcoImpactVBox,
+.app-root.dark #dashboardQuickForecastVBox,
+.app-root.dark #costCardVBox {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+}
 
-    /* Charts */
-    .app-root.dark .chart {
-        -fx-background-color: transparent;
-    }
+/* Charts */
+.app-root.dark .chart {
+    -fx-background-color: transparent;
+}
 
-    .app-root.dark .chart-plot-background {
-        -fx-background-color: -app-chart-bg;
-    }
+.app-root.dark .chart-plot-background {
+    -fx-background-color: -app-chart-bg;
+}
 
-    .app-root.dark .chart-vertical-grid-lines,
-    .app-root.dark .chart-horizontal-grid-lines {
-        -fx-stroke: -app-chart-grid;
-    }
+.app-root.dark .chart-vertical-grid-lines,
+.app-root.dark .chart-horizontal-grid-lines {
+    -fx-stroke: -app-chart-grid;
+}
 
-    .app-root.dark .axis {
-        -fx-tick-label-fill: -app-text;
-    }
+.app-root.dark .axis {
+    -fx-tick-label-fill: -app-text;
+}
 
-    .app-root.dark .axis-label {
-        -fx-text-fill: -app-text;
-    }
+.app-root.dark .axis-label {
+    -fx-text-fill: -app-text;
+}
 
-    .app-root.dark .chart-legend {
-        -fx-background-color: transparent;
-    }
+.app-root.dark .chart-legend {
+    -fx-background-color: transparent;
+}
 
-    /* Modal/dialog roots */
-    .app-root.dark #addDeviceFormRoot,
-    .app-root.dark #smartPlugSettingsRoot,
-    .app-root.dark #bluetoothConnectRoot,
-    .app-root.dark #washingMachineSettingsRoot {
-        -fx-background-color: -app-surface;
-    }
+/* Modal/dialog roots */
+.app-root.dark #addDeviceFormRoot,
+.app-root.dark #smartPlugSettingsRoot,
+.app-root.dark #bluetoothConnectRoot,
+.app-root.dark #washingMachineSettingsRoot {
+    -fx-background-color: -app-surface;
+}
 
-    /* Modal text */
-    .app-root.dark #addDeviceFormRoot .label,
-    .app-root.dark #smartPlugSettingsRoot .label,
-    .app-root.dark #bluetoothConnectRoot .label,
-    .app-root.dark #washingMachineSettingsRoot .label {
-        -fx-text-fill: -app-text;
-    }
+/* Modal text */
+.app-root.dark #addDeviceFormRoot .label,
+.app-root.dark #smartPlugSettingsRoot .label,
+.app-root.dark #bluetoothConnectRoot .label,
+.app-root.dark #washingMachineSettingsRoot .label {
+    -fx-text-fill: -app-text;
+}
 
-    /* Settings logout / destructive button still visible */
-    .app-root.dark #settingsLogOutProceedButton {
-        -fx-base: #7a1f1f;
-    }
+/* Settings logout / destructive button still visible */
+.app-root.dark #settingsLogOutProceedButton {
+    -fx-base: #7a1f1f;
+}
+
+
+/* =========================================================
+   HIGH CONTRAST THEME TOKENS
+   ========================================================= */
+
+.app-root.high-contrast {
+    /* Core theme */
+    -app-bg: #000000;
+    -app-sidebar: #000000;
+    -app-surface: #000000;
+    -app-surface-2: #000000;
+    -app-surface-alt: #000000;
+
+    /* Borders and text */
+    -app-border: #ffffff;
+    -app-border-strong: #ffffff;
+    -app-text: #ffffff;
+    -app-text-muted: #ffffff;
+
+    /* Popups and charts */
+    -app-popup-bg: #000000;
+    -app-popup-text: #ffffff;
+    -app-popup-selected: #1f1f1f;
+    -app-chart-bg: #000000;
+    -app-chart-grid: #ffffff;
+
+    /* Status/highlight colors */
+    -app-success: #00ff66;
+    -app-overlay: rgba(255,255,255,0.18);
+    -app-danger-soft: #660000;
+    -app-focus: #ffcc00;
+}
+
+/* =========================================================
+   HIGH CONTRAST OVERRIDES
+   ========================================================= */
+
+/* Global backgrounds */
+.app-root.high-contrast,
+.app-root.high-contrast .root,
+.app-root.high-contrast .scroll-pane,
+.app-root.high-contrast .scroll-pane > .viewport {
+    -fx-background-color: -app-bg;
+}
+
+.app-root.high-contrast .scroll-pane {
+    -fx-background: -app-bg;
+}
+
+/* Main page roots */
+.app-root.high-contrast #dashboard-auto-1,
+.app-root.high-contrast #devicesPaneMain,
+.app-root.high-contrast #settingsMainVBox,
+.app-root.high-contrast #ecostatistics-auto-1,
+.app-root.high-contrast #ecostatistics-auto-2,
+.app-root.high-contrast #energystatistics-auto-1,
+.app-root.high-contrast #energystatistics-auto-2,
+.app-root.high-contrast #recommendations-auto-1,
+.app-root.high-contrast #recommendations-auto-2,
+.app-root.high-contrast #forecasts-auto-1 {
+    -fx-background-color: -app-bg;
+}
+
+/* General text */
+.app-root.high-contrast .label,
+.app-root.high-contrast .text,
+.app-root.high-contrast .check-box,
+.app-root.high-contrast .radio-button,
+.app-root.high-contrast .check-box .text,
+.app-root.high-contrast .radio-button .text {
+    -fx-text-fill: -app-text;
+    -fx-fill: -app-text;
+}
+
+/* Sidebar */
+.app-root.high-contrast #sideBarContainer {
+    -fx-background-color: -app-sidebar;
+    -fx-border-color: -app-border;
+}
+
+.app-root.high-contrast #sideBarContainer .button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-text-fill: -app-text;
+}
+
+.app-root.high-contrast #sideBarContainer .button .label,
+.app-root.high-contrast #sidebar-auto-2,
+.app-root.high-contrast #sidebar-auto-5 {
+    -fx-text-fill: -app-text;
+}
+
+.app-root.high-contrast #sideBarContainer .button:hover {
+    -fx-background-color: #1f1f1f;
+}
+
+.app-root.high-contrast #sideBarContainer .button:pressed {
+    -fx-background-color: #2a2a2a;
+}
+
+/* Inputs and controls */
+.app-root.high-contrast .text-field,
+.app-root.high-contrast .password-field,
+.app-root.high-contrast .text-area,
+.app-root.high-contrast .text-area .content,
+.app-root.high-contrast .combo-box-base,
+.app-root.high-contrast .choice-box,
+.app-root.high-contrast .date-picker,
+.app-root.high-contrast .button,
+.app-root.high-contrast .toggle-button,
+.app-root.high-contrast .menu-button {
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
+    -fx-prompt-text-fill: -app-text;
+    -fx-border-color: -app-border;
+    -fx-border-width: 2;
+}
+
+/* Combo / dropdown text and arrows */
+.app-root.high-contrast .combo-box-base .text,
+.app-root.high-contrast .choice-box .label,
+.app-root.high-contrast .date-picker .text-field,
+.app-root.high-contrast .text-field,
+.app-root.high-contrast .button .text,
+.app-root.high-contrast .toggle-button .text,
+.app-root.high-contrast .menu-button .text {
+    -fx-fill: -app-text;
+    -fx-text-fill: -app-text;
+}
+
+.app-root.high-contrast .combo-box-base .arrow,
+.app-root.high-contrast .choice-box .arrow,
+.app-root.high-contrast .menu-button .arrow {
+    -fx-background-color: -app-text;
+}
+
+/* Popup lists and dropdowns */
+.app-root.high-contrast .combo-box-popup > .list-view,
+.app-root.high-contrast .choice-box .context-menu,
+.app-root.high-contrast .date-picker-popup,
+.app-root.high-contrast .list-view,
+.app-root.high-contrast .context-menu {
+    -fx-background-color: -app-popup-bg;
+    -fx-control-inner-background: -app-popup-bg;
+    -fx-border-color: -app-border;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .combo-box-popup > .list-view .list-cell,
+.app-root.high-contrast .choice-box .menu-item .label,
+.app-root.high-contrast .list-view .list-cell,
+.app-root.high-contrast .context-menu .menu-item .label,
+.app-root.high-contrast .date-picker-popup .label {
+    -fx-background-color: -app-popup-bg;
+    -fx-text-fill: -app-popup-text;
+}
+
+.app-root.high-contrast .combo-box-popup > .list-view .list-cell:hover,
+.app-root.high-contrast .combo-box-popup > .list-view .list-cell:selected,
+.app-root.high-contrast .list-view .list-cell:hover,
+.app-root.high-contrast .list-view .list-cell:selected,
+.app-root.high-contrast .choice-box .menu-item:hover,
+.app-root.high-contrast .choice-box .menu-item:focused,
+.app-root.high-contrast .context-menu .menu-item:hover,
+.app-root.high-contrast .context-menu .menu-item:focused {
+    -fx-background-color: -app-popup-selected;
+    -fx-text-fill: -app-popup-text;
+}
+
+/* Core cards and white panels from extracted IDs */
+.app-root.high-contrast #dashboard00VBox,
+.app-root.high-contrast #dashboard10VBox,
+.app-root.high-contrast #dashboardEcoImpactVBox,
+.app-root.high-contrast #dashboardQuickForecastVBox,
+.app-root.high-contrast #dashboardQuickRecVBox,
+.app-root.high-contrast #costCardVBox,
+.app-root.high-contrast #insightcard-auto-1,
+.app-root.high-contrast #recommendationcard-auto-1,
+.app-root.high-contrast #forecasts-auto-2,
+.app-root.high-contrast #forecasts-auto-3,
+.app-root.high-contrast #forecasts-auto-4,
+.app-root.high-contrast #forecasts-auto-5,
+.app-root.high-contrast #insightsContainer,
+.app-root.high-contrast .device-card,
+.app-root.high-contrast #ecostatistics-auto-6,
+.app-root.high-contrast #ecostatistics-auto-8,
+.app-root.high-contrast #ecostatistics-auto-9,
+.app-root.high-contrast #ecostatistics-auto-12,
+.app-root.high-contrast #ecostatistics-auto-15,
+.app-root.high-contrast #ecostatistics-auto-20,
+.app-root.high-contrast #cleanEnergyChartContainer,
+.app-root.high-contrast #ecostatistics-auto-29,
+.app-root.high-contrast #ecostatistics-auto-31,
+.app-root.high-contrast #ecostatistics-auto-59,
+.app-root.high-contrast #ecostatistics-auto-61,
+.app-root.high-contrast #ecostatistics-auto-63,
+.app-root.high-contrast #ecostatistics-auto-65,
+.app-root.high-contrast #ecostatistics-auto-69,
+.app-root.high-contrast #energystatistics-auto-7,
+.app-root.high-contrast #energystatistics-auto-18,
+.app-root.high-contrast #energystatistics-auto-22,
+.app-root.high-contrast #energystatistics-auto-24,
+.app-root.high-contrast #energystatistics-auto-27,
+.app-root.high-contrast #device1,
+.app-root.high-contrast #device2,
+.app-root.high-contrast #device3,
+.app-root.high-contrast #energystatistics-auto-32,
+.app-root.high-contrast #energystatistics-auto-34,
+.app-root.high-contrast #energystatistics-auto-36,
+.app-root.high-contrast #recommendations-auto-7,
+.app-root.high-contrast #recommendations-auto-9,
+.app-root.high-contrast #recommendations-auto-13,
+.app-root.high-contrast #recommendations-auto-14,
+.app-root.high-contrast #recommendations-auto-16 {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+/* Force text back to white on the main pages */
+.app-root.high-contrast #dashboard00VBox .label,
+.app-root.high-contrast #dashboard10VBox .label,
+.app-root.high-contrast #dashboardEcoImpactVBox .label,
+.app-root.high-contrast #dashboardQuickForecastVBox .label,
+.app-root.high-contrast #dashboardQuickRecVBox .label,
+.app-root.high-contrast #forecasts-auto-2 .label,
+.app-root.high-contrast #forecasts-auto-3 .label,
+.app-root.high-contrast #forecasts-auto-4 .label,
+.app-root.high-contrast #forecasts-auto-5 .label,
+.app-root.high-contrast #insightsContainer .label,
+.app-root.high-contrast #recommendations-auto-1 .label,
+.app-root.high-contrast #recommendations-auto-2 .label,
+.app-root.high-contrast #energystatistics-auto-1 .label,
+.app-root.high-contrast #energystatistics-auto-2 .label,
+.app-root.high-contrast #ecostatistics-auto-1 .label,
+.app-root.high-contrast #ecostatistics-auto-2 .label {
+    -fx-text-fill: -app-text;
+}
+
+/* IDs that were explicitly muted before */
+.app-root.high-contrast #dashboardEcoImpactCleanLabel {
+    -fx-text-fill: -app-success;
+}
+
+.app-root.high-contrast #dashboardEcoImpactFossilLabel,
+.app-root.high-contrast #ecostatistics-auto-5,
+.app-root.high-contrast #ecostatistics-auto-11,
+.app-root.high-contrast #ecostatistics-auto-14,
+.app-root.high-contrast #ecostatistics-auto-16,
+.app-root.high-contrast #ecostatistics-auto-18,
+.app-root.high-contrast #ecostatistics-auto-56,
+.app-root.high-contrast #ecostatistics-auto-57,
+.app-root.high-contrast #ecostatistics-auto-58,
+.app-root.high-contrast #ecostatistics-auto-62,
+.app-root.high-contrast #ecostatistics-auto-67,
+.app-root.high-contrast #energystatistics-auto-6,
+.app-root.high-contrast #energystatistics-auto-11,
+.app-root.high-contrast #energystatistics-auto-13,
+.app-root.high-contrast #energystatistics-auto-15,
+.app-root.high-contrast #energystatistics-auto-17,
+.app-root.high-contrast #energystatistics-auto-21,
+.app-root.high-contrast #energystatistics-auto-35,
+.app-root.high-contrast #energystatistics-auto-39,
+.app-root.high-contrast #weeklycost1,
+.app-root.high-contrast #weeklycost2,
+.app-root.high-contrast #weeklycost3,
+.app-root.high-contrast #recommendations-auto-6 {
+    -fx-text-fill: -app-text;
+}
+
+/* Strong labels/buttons that were dark-themed */
+.app-root.high-contrast #ecostatistics-auto-54,
+.app-root.high-contrast #backButton,
+.app-root.high-contrast #graphOverlay {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+}
+
+.app-root.high-contrast #ecostatistics-auto-55,
+.app-root.high-contrast #ecostatistics-auto-56,
+.app-root.high-contrast #ecostatistics-auto-57,
+.app-root.high-contrast #ecostatistics-auto-58 {
+    -fx-text-fill: -app-text;
+}
+
+/* Charts */
+.app-root.high-contrast .chart {
+    -fx-background-color: transparent;
+}
+
+.app-root.high-contrast .chart-plot-background {
+    -fx-background-color: -app-chart-bg;
+}
+
+.app-root.high-contrast .chart-vertical-grid-lines,
+.app-root.high-contrast .chart-horizontal-grid-lines {
+    -fx-stroke: -app-chart-grid;
+}
+
+.app-root.high-contrast .axis {
+    -fx-tick-label-fill: -app-text;
+}
+
+.app-root.high-contrast .axis-label {
+    -fx-text-fill: -app-text;
+}
+
+.app-root.high-contrast .chart-legend,
+.app-root.high-contrast .chart-legend .label {
+    -fx-background-color: transparent;
+    -fx-text-fill: -app-text;
+}
+
+/* Focus visibility */
+.app-root.high-contrast .button:focused,
+.app-root.high-contrast .toggle-button:focused,
+.app-root.high-contrast .text-field:focused,
+.app-root.high-contrast .combo-box-base:focused,
+.app-root.high-contrast .choice-box:focused,
+.app-root.high-contrast .date-picker:focused,
+.app-root.high-contrast .check-box:focused {
+    -fx-border-color: -app-focus;
+    -fx-border-width: 3;
+}
+
+/* Placeholder / helper text in dashboard and recommendations */
+.app-root.high-contrast #dashboardQuickForecastVBox .label,
+.app-root.high-contrast #dashboardQuickRecVBox .label,
+.app-root.high-contrast #recommendationcard-auto-1 .label,
+.app-root.high-contrast #insightcard-auto-1 .label {
+    -fx-text-fill: -app-text;
+}
+
+/* Modal/dialog roots */
+.app-root.high-contrast#addDeviceFormRoot,
+.app-root.high-contrast#smartPlugSettingsRoot,
+.app-root.high-contrast#bluetoothConnectRoot,
+.app-root.high-contrast#washingMachineSettingsRoot {
+    -fx-background-color: -app-surface;
+}
+
+.app-root.high-contrast#addDeviceFormRoot .label,
+.app-root.high-contrast#smartPlugSettingsRoot .label,
+.app-root.high-contrast#bluetoothConnectRoot .label,
+.app-root.high-contrast#washingMachineSettingsRoot .label {
+    -fx-text-fill: -app-text;
+}
+
+/* Device card label text */
+.app-root.high-contrast .device-card-type-label {
+    -fx-text-fill: -app-text;
+}
+
+/* =========================================================
+   More visibility stuff
+   ========================================================= */
+
+/* ---------------------------
+   1) Sidebar logo + search
+   --------------------------- */
+
+/* White logo circle */
+.app-root.high-contrast #sidebar-auto-1 {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ffffff;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+}
+
+/* "Logo" text inside the white circle */
+.app-root.high-contrast #sidebar-auto-2 {
+    -fx-text-fill: #000000;
+    -fx-fill: #000000;
+    -fx-opacity: 1;
+}
+
+/* "Energy Tool" title beside the circle */
+.app-root.high-contrast #sidebar-auto-3 {
+    -fx-text-fill: #ffffff;
+    -fx-fill: #ffffff;
+    -fx-opacity: 1;
+}
+
+/* Search shell */
+.app-root.high-contrast #sidebar-auto-4 {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+}
+
+/* Search icon label */
+.app-root.high-contrast #sidebar-auto-5 {
+    -fx-text-fill: #ffffff;
+    -fx-fill: #ffffff;
+    -fx-opacity: 1;
+    -fx-font-size: 14;
+    -fx-min-width: 22px;
+    -fx-pref-width: 22px;
+    -fx-max-width: 22px;
+    -fx-text-overrun: clip;
+}
+
+/* Search field */
+.app-root.high-contrast #sidebar-auto-6 {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #ffffff;
+    -fx-highlight-fill: #ffffff;
+    -fx-highlight-text-fill: #000000;
+}
+
+/* Actual rendered typed text */
+.app-root.high-contrast #sidebar-auto-6 .text {
+    -fx-fill: #ffffff;
+}
+
+/* Prompt text */
+.app-root.high-contrast #sidebar-auto-6 .prompt-text {
+    -fx-fill: #ffffff;
+    -fx-opacity: 1;
+}
+
+/* ---------------------------
+   2) Quick forecast placeholder
+   --------------------------- */
+
+/* Forecast placeholder bar itself */
+.app-root.high-contrast #dashboardQuickForecastBarHBox {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+}
+
+/* Placeholder text + helper text in the dashboard forecast area */
+.app-root.high-contrast #dashboardQuickForecastBarHBox .label,
+.app-root.high-contrast #dashboardQuickForecastBarHBox .text,
+.app-root.high-contrast #dashboardQuickForecastVBox .label,
+.app-root.high-contrast #dashboardQuickForecastVBox .text,
+.app-root.high-contrast #dashboardQuickForecastTitleLabel,
+.app-root.high-contrast #dashboardQuickRecTitleLabel {
+    -fx-text-fill: #ffffff;
+    -fx-fill: #ffffff;
+    -fx-opacity: 1;
+}
+
+/* ---------------------------
+   3) Energy Statistics / Eco Statistics / Recommendations top text
+   --------------------------- */
+
+/* Big page headings */
+.app-root.high-contrast #energystatistics-auto-5,
+.app-root.high-contrast #recommendations-auto-5,
+.app-root.high-contrast #ecostatistics-auto-4 {
+    -fx-text-fill: #ffffff;
+    -fx-fill: #ffffff;
+    -fx-opacity: 1;
+}
+
+/* Small subtitle / updated-time text */
+.app-root.high-contrast #energystatistics-auto-6,
+.app-root.high-contrast #recommendations-auto-6,
+.app-root.high-contrast #ecostatistics-auto-5 {
+    -fx-text-fill: #ffffff;
+    -fx-fill: #ffffff;
+    -fx-opacity: 1;
+}
+
+/* Force first major white cards on these pages back to black */
+.app-root.high-contrast #energystatistics-auto-7,
+.app-root.high-contrast #energystatistics-auto-9,
+.app-root.high-contrast #ecostatistics-auto-6,
+.app-root.high-contrast #ecostatistics-auto-8,
+.app-root.high-contrast #ecostatistics-auto-9,
+.app-root.high-contrast #recommendations-auto-7,
+.app-root.high-contrast #recommendations-auto-9 {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+}
+
+/* Text inside those main cards back to white */
+.app-root.high-contrast #energystatistics-auto-7 .label,
+.app-root.high-contrast #energystatistics-auto-7 .text,
+.app-root.high-contrast #energystatistics-auto-9 .label,
+.app-root.high-contrast #energystatistics-auto-9 .text,
+.app-root.high-contrast #ecostatistics-auto-6 .label,
+.app-root.high-contrast #ecostatistics-auto-6 .text,
+.app-root.high-contrast #ecostatistics-auto-8 .label,
+.app-root.high-contrast #ecostatistics-auto-8 .text,
+.app-root.high-contrast #ecostatistics-auto-9 .label,
+.app-root.high-contrast #ecostatistics-auto-9 .text,
+.app-root.high-contrast #recommendations-auto-7 .label,
+.app-root.high-contrast #recommendations-auto-7 .text,
+.app-root.high-contrast #recommendations-auto-9 .label,
+.app-root.high-contrast #recommendations-auto-9 .text {
+    -fx-text-fill: #ffffff;
+    -fx-fill: #ffffff;
+}
+
+/* Keep the recommendation cards / insight cards readable too */
+.app-root.high-contrast #recommendationcard-auto-1 .label,
+.app-root.high-contrast #recommendationcard-auto-1 .text,
+.app-root.high-contrast #insightcard-auto-1 .label,
+.app-root.high-contrast #insightcard-auto-1 .text {
+    -fx-text-fill: #ffffff;
+    -fx-fill: #ffffff;
+}
