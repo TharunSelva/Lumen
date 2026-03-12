@@ -59,21 +59,21 @@
                               <padding>
                            <Insets bottom="12" left="14" right="14" top="12" />
                         </padding>
-      
+
                               <HBox spacing="10">
                                   <VBox spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
                                       <padding>
-                                 <Insets bottom="8" left="10" right="10" top="8" />
-                              </padding>
-                                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="211 gCO₂/kWh" />
-                                      <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="UK average right now" />
+                                          <Insets bottom="8" left="10" right="10" top="8" />
+                                      </padding>
+                                      <Label fx:id="carbonSavedLabel" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #10B981;" text="0.00 kg CO₂" />
+                                      <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Carbon Saved (Solar)" />
                                   </VBox>
-      
+
                                   <VBox spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
                                       <padding>
-                                 <Insets bottom="8" left="10" right="10" top="8" />
-                              </padding>
-                                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="150 gCO₂/kWh" />
+                                          <Insets bottom="8" left="10" right="10" top="8" />
+                                      </padding>
+                                      <Label fx:id="carbonFootprintLabel" style="-fx-font-size: 16; -fx-font-weight: bold;" text="0 gCO₂/kWh" />
                                       <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Your Carbon Footprint" />
                                   </VBox>
                               </HBox>
