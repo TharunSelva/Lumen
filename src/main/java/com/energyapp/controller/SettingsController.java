@@ -23,7 +23,6 @@ public class SettingsController {
     @FXML private CheckBox settingsAccountSetting3;
     @FXML private Label settingsAccountTitleLabel;
     @FXML private VBox settingsAccountVBox;
-    @FXML private CheckBox settingsDisplaySetting1;
     @FXML private CheckBox settingsDisplaySetting2;
     @FXML private CheckBox settingsDisplaySetting3;
     @FXML private Label settingsDisplayTitleLabel;
@@ -45,10 +44,30 @@ public class SettingsController {
     @FXML private CheckBox settingsPrivacySetting3;
     @FXML private Label settingsPrivacyTitleLabel;
     @FXML private VBox settingsPrivacyVBox;
+    @FXML private CheckBox settingsDisplaySetting1;   // Dark Mode
 
     @FXML
     public void initialize() {
+        settingsMainVBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                settingsDisplaySetting1.setSelected(ThemeController.isDarkModeEnabled());
+                settingsAccessibilitySetting1.setSelected(ThemeController.isHighContrastEnabled());
+                ThemeController.applyTheme(newScene);
+            }
+        });
+
+        settingsDisplaySetting1.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (settingsMainVBox.getScene() != null) {
+                ThemeController.setDarkMode(settingsMainVBox.getScene(), isSelected);
+            }
+        });
+
+        settingsAccessibilitySetting1.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (settingsMainVBox.getScene() != null) {
+                ThemeController.setHighContrast(settingsMainVBox.getScene(), isSelected);
+            }
+        });
+
         System.out.println("Settings controller successfully loaded.");
     }
-
 }

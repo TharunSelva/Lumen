@@ -14,9 +14,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
+import javafx.scene.shape.Circle;
 import javafx.util.StringConverter;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import java.time.*;
 import java.util.List;
@@ -47,6 +49,10 @@ public class EnergyStatsController {
     @FXML private Label device1holder, device2holder, device3holder;
     @FXML private Label device1useage, device2useage, device3useage;
     @FXML private Label weeklycost1, weeklycost2, weeklycost3;
+    @FXML private Circle page1, page2, page3;
+
+    private List<DeviceData> allDevices = new ArrayList<>();
+    private int currentPage = 0;
 
     private SimulationService simulationService;
 
@@ -62,6 +68,21 @@ public class EnergyStatsController {
 
     @FXML
     public void initialize() {
+        page1.setOnMouseClicked(e -> { currentPage = 0; renderPage(); });
+        page2.setOnMouseClicked(e -> { currentPage = 1; renderPage(); });
+
+        // Page 1 & 2: Always there, but Page 2 starts "faded"
+        page1.setVisible(true);
+        page1.setManaged(true);
+        page1.setOpacity(1.0);
+
+        page2.setVisible(true);
+        page2.setManaged(true);
+        page2.setOpacity(1); // Faded on launch
+
+        // Page 3: Always gone
+        page3.setVisible(false);
+        page3.setManaged(false);
         // overlay toggling
         graphOverlay.setVisible(false);
         graphOverlay.setManaged(false);
@@ -74,7 +95,14 @@ public class EnergyStatsController {
 
         // axis formatting
         setupTimeAxis(usageSmallXAxis);
+        usageSmallXAxis.setLabel("Time");
+        usageSmallYAxis.setLabel("Power (kWh)");
+        usageSmallYAxis.setAutoRanging(true);
+
         setupTimeAxis(usageLargeXAxis);
+        usageLargeXAxis.setLabel("Time");
+        usageLargeYAxis.setLabel("Power (kWh)");
+        usageLargeYAxis.setAutoRanging(true);
 
         // overlay range controls
         // Time range dropdown
@@ -151,8 +179,8 @@ public class EnergyStatsController {
             if (t < startEpochSec) continue;
             if (t > endEpochSec) break;
 
-            XYChart.Data<Number, Number> ds = new XYChart.Data<>(t, rec.getWatts());
-            XYChart.Data<Number, Number> dl = new XYChart.Data<>(t, rec.getWatts());
+            XYChart.Data<Number, Number> ds = new XYChart.Data<>(t, rec.getTotalLoadKwh());
+            XYChart.Data<Number, Number> dl = new XYChart.Data<>(t, rec.getTotalLoadKwh());
 
             smallSeries.getData().add(ds);
             largeSeries.getData().add(dl);
@@ -164,6 +192,7 @@ public class EnergyStatsController {
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
+        axis.setLabel("Time");
         axis.setForceZeroInRange(false);
         axis.setTickUnit(10 * 60);
 
@@ -193,10 +222,10 @@ public class EnergyStatsController {
             int solarPct = EnergyCalculator.calculatePercentage(solarUsed, totalLoad);
             int batteryPct = EnergyCalculator.calculatePercentage(batteryUsed, totalLoad);
 
-            // Simple CO2 label (tweak thresholds if you want)
+            // Simple CO2 label
             String co2Label = EnergyCalculator.determineCo2Label(rec.getCarbon());
 
-            // Tooltip text (matches the style in your screenshot)
+            // Tooltip text
             String tipText =
                     time + "\n" +
                             String.format("%.2f kWh • £%.2f • %d%%", rec.getTotalLoadKwh(), costPounds, solarPct) + "\n" +
@@ -206,7 +235,7 @@ public class EnergyStatsController {
             Tooltip tip = new Tooltip(tipText);
             Tooltip.install(node, tip);
 
-            // Click point -> open overlay (nice UX)
+            // Click point -> open overlay
             node.setOnMouseClicked(ev -> showOverlay());
         });
     }
@@ -292,7 +321,7 @@ public class EnergyStatsController {
 
     private void plotDataPoint(EnergyRecord rec) {
         long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
-        double y = rec.getWatts();
+        double y = rec.getTotalLoadKwh();
 
         latestEpochSec = x;
 
@@ -313,24 +342,67 @@ public class EnergyStatsController {
         if (simulationService == null) return;
         Map<String, Double> weeklyTotals = simulationService.getWeeklyAccumulatedUsage();
 
-        List<Map.Entry<String, Double>> sorted = new ArrayList<>(weeklyTotals.entrySet());
-        sorted.sort((a, b) -> b.getValue().compareTo(a.getValue()));
-        if (sorted.size() >= 3) {
-            device1holder.setText(sorted.get(0).getKey());
-            device1useage.setText(String.format("%.2f kWh this week", sorted.get(0).getValue()));
-            double cost1 = sorted.get(0).getValue() * 0.28;
-            weeklycost1.setText(String.format("Weekly Cost: £%.2f", cost1));
+        // 1. Map the data to our list
+        allDevices = weeklyTotals.entrySet().stream()
+                .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+                .map(entry -> new DeviceData(
+                        entry.getKey(),
+                        String.format("%.2f kWh this week", entry.getValue()),
+                        String.format("Weekly Cost: £%.2f", entry.getValue() * 0.28)
+                ))
+                .collect(Collectors.toList());
 
-            device2holder.setText(sorted.get(1).getKey());
-            device2useage.setText(String.format("%.2f kWh this week", sorted.get(1).getValue()));
-            double cost2 = sorted.get(1).getValue() * 0.28;
-            weeklycost2.setText(String.format("Weekly Cost: £%.2f", cost2));
+        // Just refresh the contents; the circles handle themselves via opacity in renderPage
+        Platform.runLater(this::renderPage);
+    }
 
+    private void renderPage() {
+        if (allDevices.isEmpty()) return;
 
-            device3holder.setText(sorted.get(2).getKey());
-            device3useage.setText(String.format("%.2f kWh this week", sorted.get(2).getValue()));
-            double cost3 = sorted.get(2).getValue() * 0.28;
-            weeklycost3.setText(String.format("Weekly Cost: £%.2f", cost3));
+        // PAGE 1 DOT:
+        // Fully visible (1.0) if we are on page 0, otherwise faded (0.3)
+        page1.setOpacity(currentPage == 0 ? 1.0 : 0.3);
+        page1.setVisible(true);
+        page1.setManaged(true);
+
+        // PAGE 2 DOT:
+        // Fully visible (1.0) if we are on page 1, otherwise faded (0.3)
+        page2.setOpacity(currentPage == 1 ? 1.0 : 0.3);
+        page2.setVisible(true);
+        page2.setManaged(true);
+
+        // PAGE 3 DOT: Always hidden
+        page3.setVisible(false);
+        page3.setManaged(false);
+
+        int startIndex = currentPage * 3;
+        updateSlot(device1, device1holder, device1useage, weeklycost1, startIndex);
+        updateSlot(device2, device2holder, device2useage, weeklycost2, startIndex + 1);
+        updateSlot(device3, device3holder, device3useage, weeklycost3, startIndex + 2);
+    }
+
+    private void updateSlot(VBox container, Label holder, Label usage, Label cost, int index) {
+        if (index < allDevices.size()) {
+            DeviceData data = allDevices.get(index);
+            holder.setText(data.name);
+            usage.setText(data.usage);
+            cost.setText(data.weeklyCost);
+
+            container.setVisible(true);
+            container.setManaged(true);
+        } else {
+            // This is key: Hide the 3rd box on Page 2
+            container.setVisible(false);
+            container.setManaged(false);
+        }
+    }
+
+    private static class DeviceData {
+        String name, usage, weeklyCost;
+        DeviceData(String name, String usage, String weeklyCost) {
+            this.name = name;
+            this.usage = usage;
+            this.weeklyCost = weeklyCost;
         }
     }
 }

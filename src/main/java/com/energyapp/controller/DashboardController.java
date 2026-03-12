@@ -9,7 +9,10 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -50,6 +53,9 @@ public class DashboardController {
     @FXML private Label dashboardUsageInsightRightLabel;
     @FXML private VBox dashboardUsageInsightRightVBox;
     @FXML private GridPane dashboardUsageInsightsGridPane;
+    @FXML private ComboBox<String> zoomComboBox;
+    @FXML private VBox dashboardContentVBox;
+    @FXML private ScrollPane dashboardScrollPane;
 
     //@FXML private LineChart<?, ?> dashboardUsageLineChart;
     @FXML private LineChart<Number, Number> dashboardUsageLineChart;
@@ -77,9 +83,26 @@ public class DashboardController {
         System.out.println("DashboardController loaded successfully.");
         dashboardUsageLineChart.getData().add(series);
         setupTimeAxis(dashboardUsageXAxis);
+        dashboardUsageXAxis.setLabel("Time");
+        dashboardUsageYAxis.setLabel("Power (kWh)");
+        dashboardUsageYAxis.setAutoRanging(true);
 
         // click anywhere on chart opens statistics screen
         dashboardUsageLineChart.setOnMouseClicked(e -> openEnergyStatistics());
+
+        zoomComboBox.getItems().addAll("100%", "125%", "150%", "175%");
+        zoomComboBox.setValue("100%");
+        zoomComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                double newZoomLevel = Double.parseDouble(newVal.replace("%", "")) / 100;
+                dashboardContentVBox.setScaleX(newZoomLevel);
+                dashboardContentVBox.setScaleY(newZoomLevel);
+            }
+        });
+
+        dashboardScrollPane.viewportBoundsProperty().addListener((obs, oldBounds, newBounds) -> {
+            dashboardContentVBox.setPrefWidth(newBounds.getWidth());
+        });
     }
 
     private void openEnergyStatistics() {
@@ -154,6 +177,7 @@ public class DashboardController {
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
+        axis.setLabel("Time");
         axis.setForceZeroInRange(false);
         axis.setTickUnit(10 * 60);
 
@@ -172,7 +196,7 @@ public class DashboardController {
 
     private void plotDataPoint(EnergyRecord rec) {
         long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
-        double y = rec.getWatts();
+        double y = rec.getTotalLoadKwh();
         latestEpochSec = x;
 
         XYChart.Data<Number, Number> d = new XYChart.Data<>(x, y);
@@ -203,4 +227,3 @@ public class DashboardController {
 
 
 }
-

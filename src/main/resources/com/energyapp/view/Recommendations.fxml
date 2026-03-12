@@ -10,18 +10,18 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationsController">
+<StackPane prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationsController" id="recommendations-auto-1">
    <ScrollPane prefHeight="200.0" prefWidth="200.0">
       <content>
       
-          <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;">
+          <BorderPane prefHeight="800" prefWidth="1200" id="recommendations-auto-2">
       
               <!-- CENTER CONTENT -->
               <center>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" vbarPolicy="AS_NEEDED">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" id="recommendations-auto-3">
       
                       <content>
-                          <VBox spacing="14" style="-fx-background-color: transparent;">
+                          <VBox spacing="14" id="recommendations-auto-4">
                               <padding>
                                   <Insets bottom="16" left="16" right="16" top="16" />
                               </padding>
@@ -29,14 +29,14 @@
                               <!-- Header row (same vibe as your friend's header row) -->
                               <HBox alignment="CENTER_LEFT" spacing="12">
                                   <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                      <Label style="-fx-font-size: 32; -fx-font-weight: bold;" text="Curated Recommendations for you" />
-                                      <Label style="-fx-text-fill: #6B7280;" text="We can help." />
+                                      <Label text="Curated Recommendations for you"  id="recommendations-auto-5"/>
+                                      <Label text="We can help."  id="recommendations-auto-6"/>
                                   </VBox>
       
                                   <!-- Optional little icon button like his settings button -->
-                                  <Button mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                  <Button mnemonicParsing="false" id="recommendations-auto-7">
                                       <graphic>
-                                          <Label style="-fx-font-size: 16;" text="✨" />
+                                          <Label text="✨"  id="recommendations-auto-8"/>
                                       </graphic>
                                   </Button>
                               </HBox>
@@ -45,41 +45,41 @@
                               <HBox spacing="16">
       
                                   <!-- Priority card -->
-                                  <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" HBox.hgrow="ALWAYS">
+                                  <VBox spacing="10" HBox.hgrow="ALWAYS" id="recommendations-auto-9">
                                       <padding>
                                           <Insets bottom="14" left="16" right="16" top="14" />
                                       </padding>
       
-                                      <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="⚡ Priority Recommendations" />
+                                      <Label text="⚡ Priority Recommendations"  id="recommendations-auto-10"/>
       
                                       <Label text="Charge your EV between 02:30–04:00 tonight" wrapText="true" />
       
-                                      <Label style="-fx-font-weight: bold;" text="Why: lowest tariff + low carbon intensity" wrapText="true" />
+                                      <Label text="Why: lowest tariff + low carbon intensity" wrapText="true"  id="recommendations-auto-11"/>
       
-                                      <Label style="-fx-font-weight: bold;" text="Impact: saves ~£0.70 and 0.4 kg CO₂" wrapText="true" />
+                                      <Label text="Impact: saves ~£0.70 and 0.4 kg CO₂" wrapText="true"  id="recommendations-auto-12"/>
       
-                                      <Button maxWidth="170" mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10; -fx-font-weight: bold;" text="Schedule charging" />
+                                      <Button maxWidth="170" mnemonicParsing="false" text="Schedule charging"  id="recommendations-auto-13"/>
                                   </VBox>
       
                                   <!-- Right lists column -->
                                   <VBox spacing="14" HBox.hgrow="ALWAYS">
       
-                                      <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                      <VBox spacing="8" id="recommendations-auto-14">
                                           <padding>
                                               <Insets bottom="14" left="16" right="16" top="14" />
                                           </padding>
       
-                                          <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Smart Savings for Tonight" />
+                                          <Label text="Smart Savings for Tonight"  id="recommendations-auto-15"/>
                                           <Label text="☾  Shift dishwasher" />
                                           <Label text="🔋  Allow battery discharge" />
                                       </VBox>
       
-                                      <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
+                                      <VBox spacing="8" id="recommendations-auto-16">
                                           <padding>
                                               <Insets bottom="14" left="16" right="16" top="14" />
                                           </padding>
       
-                                          <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Solar Opportunities Tomorrow" />
+                                          <Label text="Solar Opportunities Tomorrow"  id="recommendations-auto-17"/>
                                           <Label text="☀  Heat water cylinder" />
                                           <Label text="🔌  Top up EV" />
                                       </VBox>

@@ -1,47 +1,128 @@
 package com.energyapp.controller;  // <--- Note the package name matches your folder
 
+import com.energyapp.model.Device;
+import com.energyapp.model.DeviceType;
+import com.energyapp.model.SmartPlug;
+import com.energyapp.service.DeviceService;
+import com.energyapp.service.SimulationService;
+import com.energyapp.utils.UIUtils;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
+
+import java.io.IOException;
+import java.util.List;
 
 public class DevicesController {
 
-    // --- Buttons ---
-    @FXML private Button btnForDevice1;
-    @FXML private Button btnForDevice2;
-    @FXML private Button btnForDevice3;
-    @FXML private Button btnForDevice4;
-    @FXML private Button btnForDevice5;
+    @FXML private FlowPane deviceContainer;
     @FXML private Button btnForAdd;
 
-    // --- Images ---
-    @FXML private ImageView device1Image;
-    @FXML private ImageView device2Image;
-    @FXML private ImageView device3Image;
-    @FXML private ImageView device4Image;
-    @FXML private ImageView device5Image;
-    @FXML private ImageView addDeviceImage;
-
-    // --- Titled Panes ---
-    @FXML private TitledPane device1;
-    @FXML private TitledPane device2;
-    @FXML private TitledPane device3;
-    @FXML private TitledPane device4;
-    @FXML private TitledPane device5;
+    private DeviceService deviceService;
+    private List<Device> allDevices;
 
     @FXML
     public void initialize() {
-        System.out.println("DevicesController has been loaded successfully.");
+        deviceContainer.setVgap(5.0);
+        deviceContainer.setHgap(5.0);
 
-        // Example: Add a click action to the LG Washer (Device 1)
-        btnForDevice1.setOnAction(event -> {
-            System.out.println("You clicked the LG Washer!");
-        });
+        btnForAdd.setOnAction((event) -> {
+            Stage addDeviceModalStage = new Stage();
+            // setting as app modal means the user can't click the background app while the modal is active
+            addDeviceModalStage.initModality(Modality.APPLICATION_MODAL);
 
-        // Example: Add a click action to the "Add Device" button
-        btnForAdd.setOnAction(event -> {
-            System.out.println("Add Device button clicked");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/AddDevice.fxml"));
+            Parent addDeviceModalRoot;
+            try {
+                addDeviceModalRoot = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            addDeviceModalStage.setTitle("Add New Device");
+            Scene addDeviceScene = new Scene(addDeviceModalRoot, 400, 250);
+            ThemeController.applyTheme(addDeviceScene);
+            addDeviceModalStage.setScene(addDeviceScene);
+
+            addDeviceModalStage.showAndWait();
+
+            AddDeviceController controller = loader.getController();
+            Device newDevice = controller.getNewlyCreatedDevice();
+            if (newDevice != null) {
+                deviceService.addDevice(newDevice);
+                deviceContainer.getChildren().clear();
+                createDeviceButtons();
+            }
         });
+    }
+
+    public void setSimulationService(SimulationService service) {
+        this.deviceService = new DeviceService(service);
+        this.allDevices = this.deviceService.getAllDevices();
+        createDeviceButtons();
+    }
+
+    private void createDeviceButtons() {
+        for (Device device : this.allDevices) {
+            String formattedDeviceType = device.getDeviceType().name().replace("_", " ");
+
+            Label label = new Label(formattedDeviceType);
+            label.getStyleClass().add("device-card-type-label");
+
+            VBox card = new VBox(5);
+            card.getStyleClass().add("device-card");
+
+            Circle indicator = new Circle(5);
+            UIUtils.bindOnOffIndicator(indicator, device.isOnProperty());
+
+            HBox titleBox = new HBox(5);
+            titleBox.getChildren().addAll(indicator, label);
+            titleBox.setAlignment(Pos.CENTER_LEFT);
+
+            Button b = new Button(device.getDeviceName());
+            b.setOnAction(event -> {
+                try {
+                    openDeviceSettings(device);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            card.getChildren().addAll(titleBox, b);
+            deviceContainer.getChildren().add(card);
+        }
+    }
+
+    private void openDeviceSettings(Device device) throws IOException {
+        if (device.getDeviceType() == DeviceType.SMART_PLUG) {
+            Stage settingsModalStage = new Stage();
+            // setting as app modal means the user can't click the background app while the modal is active
+            settingsModalStage.initModality(Modality.APPLICATION_MODAL);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/SmartPlugSettings.fxml"));
+            Parent settingsModalRoot = loader.load();
+            SmartPlugSettingsController controller = loader.getController();
+            controller.initData((SmartPlug) device);
+
+            settingsModalStage.setTitle("Device Settings");
+            Scene settingsScene = new Scene(settingsModalRoot, 500, 275);
+            ThemeController.applyTheme(settingsScene);
+            settingsModalStage.setScene(settingsScene);
+
+            settingsModalStage.showAndWait();
+        } else {
+            System.out.println("settings for this device to be implemented later");
+        }
     }
 }

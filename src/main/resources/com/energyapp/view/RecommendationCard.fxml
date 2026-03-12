@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" spacing="8.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationCardController" style="-fx-background-color: white; -fx-border-width: 1px; -fx-border-color: lightgray; -fx-border-radius: 10; -fx-background-radius: 10;">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" spacing="8.0" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationCardController" id="recommendationcard-auto-1">
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>

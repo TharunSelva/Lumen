@@ -1,8 +1,9 @@
 package com.energyapp.service;
-
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.utils.CsvReadForService;
 import com.energyapp.utils.EnergyCalculator;
+import com.energyapp.db.EnergyIntervalRepository;
+
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -12,8 +13,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class SimulationService {
-
     private List<EnergyRecord> simulationData = new ArrayList<>();
     private int currentDataIndex = 0;
     private List<EnergyRecord> currentData;
@@ -45,8 +47,20 @@ public class SimulationService {
     private double totalAccumulatedCost = 0.0;
     private final List<EnergyRecord> energyStatsSessionHistory = new ArrayList<>();
 
+    private final EnergyIntervalRepository repo = new EnergyIntervalRepository();
+    private static final String HOME_ID = "HOME_1";
+
     public void loadData() {
-        simulationData = CsvReadForService.loadData();
+//        simulationData = CsvReadForService.loadData();
+
+        // Replace CSV loading DB loading
+        simulationData = repo.fetchAll(HOME_ID);
+
+        if (simulationData.isEmpty()) {
+            throw new IllegalStateException(
+                    "No simulation data found in DB. Did DbBootstrap import simulation_data.csv into energy_interval?"
+            );
+        }
     }
 
     public void startSimulation() {
@@ -55,7 +69,7 @@ public class SimulationService {
     }
     private final DoubleProperty currentIntervalCost = new SimpleDoubleProperty();
     private int daysElapsed = 0;
-    private double weeklyEvKwh = 0, weeklyWashKwh = 0, weeklyHeatKwh = 0, weeklyBaseKwh = 0;
+    private double weeklyEvKwh = 0, weeklyWashKwh = 0, weeklyHeatKwh = 0, weeklyBaseKwh = 0, weeklyOtherKwh = 0;
     private void advanceSimulation() {
         if (currentDataIndex < simulationData.size()) {
             EnergyRecord record = simulationData.get(currentDataIndex);
@@ -63,6 +77,7 @@ public class SimulationService {
             weeklyWashKwh += record.getWashingMachineUsageKwh();
             weeklyHeatKwh += record.getHeatingUsageKwh();
             weeklyBaseKwh += record.getBaseloadKwh();
+            weeklyOtherKwh += (record.getBaseloadKwh() * 0.1);
             double costOnThisInterval = EnergyCalculator.calculateCostInPounds(record.getGridImport(), record.getPricePerKwh());
             totalAccumulatedCost += costOnThisInterval;
 
@@ -94,6 +109,7 @@ public class SimulationService {
         weeklyWashKwh = 0;
         weeklyHeatKwh = 0;
         weeklyBaseKwh = 0;
+        weeklyOtherKwh = 0;
         System.out.println("New Week Started: Data Reset.");
     }
 
@@ -103,6 +119,7 @@ public class SimulationService {
         totals.put("Washing Machine", weeklyWashKwh);
         totals.put("Heating", weeklyHeatKwh);
         totals.put("Baseload", weeklyBaseKwh);
+        totals.put("Lighting & Misc", weeklyOtherKwh);
         return totals;
     }
 

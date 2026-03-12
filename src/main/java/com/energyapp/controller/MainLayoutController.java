@@ -13,7 +13,6 @@ public class MainLayoutController {
 
     @FXML private BorderPane rootLayout;
     @FXML private SideBarController mainSideBarController;
-    @FXML private CostCardController weeklyCostCardController;
 
     private SimulationService simulationService;
 
@@ -44,8 +43,11 @@ public class MainLayoutController {
                 ((RecommendationsController) controller).setSimulationService(this.simulationService);
             } else if (controller instanceof EcoStatisticsController) {
                 ((EcoStatisticsController) controller).setSimulationService(this.simulationService);
-        }
-
+            } else if (controller instanceof ForecastingController) {
+                    ((ForecastingController) controller).setSimulationService(this.simulationService);
+            } else if (controller instanceof DevicesController) {
+                ((DevicesController) controller).setSimulationService(this.simulationService);
+            }
         rootLayout.setCenter(root);
 
     } catch(IOException e){

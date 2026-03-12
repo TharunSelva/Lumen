@@ -78,19 +78,7 @@ public final class EnergyCalculator {
         return returnList;
     }
 
-
-/**
- * Calculates the percentage of energy coming from clean/solar sources.
- *
- * @param totalLoad Total energy being used (Solar + Grid)
- * @param solar     Energy provided by solar
- * @return Percentage of clean energy (0.0 to 100.0)
- */
-public static double calculateCleanShare(double totalLoad, double solar) {
-    if (totalLoad <= 0) {
-        return 0.0;
+    public static double calculateCleanShare(double totalLoad, double solar) {
+        return (totalLoad > 0) ? (solar / totalLoad) * 100.0 : 0.0;
     }
-    return (solar / totalLoad) * 100.0;
-
-}
 }

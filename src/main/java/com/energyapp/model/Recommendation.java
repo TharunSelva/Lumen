@@ -6,7 +6,7 @@ public class Recommendation {
 
     private String title;
     private String explanation;
-    Predicate<EnergyRecord> condition;
+    private Predicate<EnergyRecord> condition;
 
     public Recommendation(String t, String e, Predicate<EnergyRecord> c) {
         this.title = t;
