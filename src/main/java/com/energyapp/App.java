@@ -11,6 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.energyapp.controller.ThemeController;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.net.URL;
 
 public class App extends Application {
 
@@ -35,6 +38,22 @@ public class App extends Application {
         Scene scene = new Scene(root, 1280, 720);
         ThemeController.applyTheme(scene);
         primaryStage.setScene(scene);
+        // --- WII SHOP MUSIC INJECTION ---
+        try {
+            URL musicUrl = getClass().getResource("/com/energyapp/wii-shop.mp3");
+            if (musicUrl != null) {
+                Media media = new Media(musicUrl.toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                mediaPlayer.setVolume(0.5); // 50% volume so it doesn't blow out your speakers
+                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
+                mediaPlayer.play();
+            } else {
+                System.out.println("Wii music file not found in resources!");
+            }
+        } catch (Exception e) {
+            System.out.println("Media player error: " + e.getMessage());
+        }
+        // --------------------------------
         primaryStage.show();
     }
 

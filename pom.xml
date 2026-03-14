@@ -52,6 +52,13 @@
             <artifactId>gson</artifactId>
             <version>2.13.2</version>
         </dependency>
+
+        <!--If you aint buy this beat then you gone have to eat this meat!!!-->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>21.0.6</version>
+        </dependency>
     </dependencies>
 
     <profiles>

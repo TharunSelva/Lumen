@@ -1,6 +1,7 @@
 module com.energyapp {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
     requires java.sql;
     requires java.net.http;
     requires org.xerial.sqlitejdbc;
