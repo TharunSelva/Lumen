@@ -24,6 +24,8 @@ public class MainLayoutController {
     @FXML private SideBarController mainSideBarController;
 
     private SimulationService simulationService;
+    private int adCount = 0;
+    private boolean isPlusSubscriber = false;
 
     public void initialize() {
         System.out.println("Main layout controller successfully loaded");
@@ -58,41 +60,45 @@ public class MainLayoutController {
                 ((DevicesController) controller).setSimulationService(this.simulationService);
             }
             // --- its either FIGMA BALLS OR LIGMA BALLS !!!! ---
+            // --- UNSKIPPABLE AD INJECTION ---
             try {
-                URL adUrl = getClass().getResource("/com/energyapp/coc-ad.mp4");
+                URL adUrl = getClass().getResource("/com/energyapp/coc-ad.mp4"); // OR cocad.mp4 if you kept that name!
                 if (adUrl == null) {
-                    rootLayout.setCenter(root); // Fallback: load normal page if video missing
+                    rootLayout.setCenter(root);
                 } else {
+                    if (com.energyapp.App.bgMusicPlayer != null) {
+                        com.energyapp.App.bgMusicPlayer.setVolume(0.1);
+                    }
+
                     Media media = new Media(adUrl.toString());
                     MediaPlayer adPlayer = new MediaPlayer(media);
-                    MediaView mediaView = new MediaView(adPlayer);
+                    adPlayer.setOnError(() -> rootLayout.setCenter(root));
 
-                    // Make the video fill the space
+                    MediaView mediaView = new MediaView(adPlayer);
                     mediaView.setFitWidth(1000);
                     mediaView.setPreserveRatio(true);
 
-                    // Create the skip button
-                    Button skipButton = new Button("Skip Ad in 15s...");
-                    skipButton.setDisable(true); // Disable clicking!
+                    // Check if they paid the ransom (5 seconds vs 15 seconds)
+                    int waitTime = isPlusSubscriber ? 5 : 15;
+
+                    Button skipButton = new Button("Skip Ad in " + waitTime + "s...");
+                    skipButton.setDisable(true);
                     skipButton.setStyle("-fx-font-size: 18px; -fx-background-color: #ff4444; -fx-text-fill: white; -fx-padding: 10px; -fx-font-weight: bold;");
 
-                    // Stack them together
-                    StackPane adPane = new StackPane(mediaView, skipButton);
-                    StackPane.setAlignment(skipButton, Pos.TOP_RIGHT); // Put skip button in top right corner
-                    StackPane.setMargin(skipButton, new javafx.geometry.Insets(20));
+                    javafx.scene.layout.StackPane adPane = new javafx.scene.layout.StackPane(mediaView, skipButton);
+                    javafx.scene.layout.StackPane.setAlignment(skipButton, javafx.geometry.Pos.TOP_RIGHT);
+                    javafx.scene.layout.StackPane.setMargin(skipButton, new javafx.geometry.Insets(20));
 
-                    rootLayout.setCenter(adPane); // Hijack the screen with the ad!
+                    rootLayout.setCenter(adPane);
                     adPlayer.play();
 
-                    // The 15-second countdown timer
                     Thread countdown = new Thread(() -> {
-                        for (int i = 15; i > 0; i--) {
+                        for (int i = waitTime; i > 0; i--) {
                             final int timeLeft = i;
-                            Platform.runLater(() -> skipButton.setText("Skip Ad in " + timeLeft + "s..."));
+                            javafx.application.Platform.runLater(() -> skipButton.setText("Skip Ad in " + timeLeft + "s..."));
                             try { Thread.sleep(1000); } catch (InterruptedException e) {}
                         }
-                        // When it reaches 0, unlock the button
-                        Platform.runLater(() -> {
+                        javafx.application.Platform.runLater(() -> {
                             skipButton.setText("Skip Ad >>");
                             skipButton.setDisable(false);
                         });
@@ -100,15 +106,39 @@ public class MainLayoutController {
                     countdown.setDaemon(true);
                     countdown.start();
 
-                    // When they finally click Skip, stop the video and load the real page
                     skipButton.setOnAction(e -> {
                         adPlayer.stop();
+                        if (com.energyapp.App.bgMusicPlayer != null) {
+                            com.energyapp.App.bgMusicPlayer.setVolume(0.5);
+                        }
                         rootLayout.setCenter(root);
+
+                        // --- THE SUBSCRIPTION POP-UP JOKE ---
+                        adCount++;
+                        if (adCount == 2 && !isPlusSubscriber) {
+                            javafx.application.Platform.runLater(() -> {
+                                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("Premium Offer");
+                                alert.setHeaderText("Tired of seeing these ads?");
+                                alert.setContentText("Subscribe to our convenient Plus Subscription plan for only $99.99/mo to only need to see the ad for 5 seconds to skip!");
+
+                                javafx.scene.control.ButtonType subscribeBtn = new javafx.scene.control.ButtonType("Take my money!");
+                                javafx.scene.control.ButtonType noThanksBtn = new javafx.scene.control.ButtonType("I love ads", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+                                alert.getButtonTypes().setAll(subscribeBtn, noThanksBtn);
+
+                                alert.showAndWait().ifPresent(type -> {
+                                    if (type == subscribeBtn) {
+                                        isPlusSubscriber = true; // They bought it! Next ad is 5 seconds.
+                                        System.out.println("Valued subscriber acquired!");
+                                    }
+                                });
+                            });
+                        }
+                        // ------------------------------------
                     });
                 }
             } catch (Exception e) {
-                System.out.println("Ad failed to load: " + e.getMessage());
-                rootLayout.setCenter(root); // Safe fallback
+                rootLayout.setCenter(root);
             }
             // --------------------------------
 
