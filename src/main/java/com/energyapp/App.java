@@ -11,14 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.energyapp.controller.ThemeController;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import java.net.URL;
 
 public class App extends Application {
-
-    // 1. THIS IS THE NEW LINE THAT LETS THE AD TALK TO THE MUSIC
-    public static MediaPlayer bgMusicPlayer;
 
     private final SimulationService simulationService = new SimulationService();
     private final ApiRefreshService apiRefreshService = new ApiRefreshService();
@@ -41,34 +35,22 @@ public class App extends Application {
         Scene scene = new Scene(root, 1280, 720);
         ThemeController.applyTheme(scene);
         primaryStage.setScene(scene);
-
-        // --- WII SHOP MUSIC INJECTION ---
-        try {
-            URL musicUrl = getClass().getResource("/com/energyapp/wii-shop.mp3");
-            if (musicUrl != null) {
-                Media media = new Media(musicUrl.toString());
-
-                // 2. NOTICE WE ARE USING bgMusicPlayer NOW!
-                bgMusicPlayer = new MediaPlayer(media);
-                bgMusicPlayer.setVolume(0.5); // 50% volume
-                bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
-                bgMusicPlayer.play();
-            } else {
-                System.out.println("Wii music file not found in resources!");
-            }
-        } catch (Exception e) {
-            System.out.println("Media player error: " + e.getMessage());
-        }
-        // --------------------------------
-
         primaryStage.show();
     }
 
+    // overridden stop() method to kill simulation when app is closed via Close Window.
     @Override
     public void stop() {
         apiRefreshService.stop();
-        simulationService.shutdown();
+        simulationService.shutdown(); // if you already have this
     }
+    //    @Override
+//    public void stop() throws Exception {
+//        if (simulationService != null) {
+//            simulationService.shutdown();
+//        }
+//        super.stop();
+//    }
 
     public static void main(String[] args) {
         launch();
