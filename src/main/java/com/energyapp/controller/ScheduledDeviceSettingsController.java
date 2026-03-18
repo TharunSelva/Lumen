@@ -1,5 +1,6 @@
 package com.energyapp.controller;
 
+import com.energyapp.model.ScheduledDevice;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -7,7 +8,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-public class WashingMachineSettingsController {
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class ScheduledDeviceSettingsController {
 
     @FXML private Button closeDeviceViewbtn;
     @FXML private Button deleteDevice;
@@ -36,6 +40,31 @@ public class WashingMachineSettingsController {
     @FXML private Label settingsText;
     @FXML private Label statusLabel;
     @FXML private Label statusText;
-    @FXML private DatePicker timeToReady;
+    @FXML private TextField scheduledTime;
+    @FXML private Button scheduleUpdate;
+
+    private ScheduledDevice scheduledDevice;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+    public void initialize(ScheduledDevice scheduledDevice) {
+        this.scheduledDevice = scheduledDevice;
+        deviceViewTitle.setText(this.scheduledDevice.getDeviceName());
+        if (this.scheduledDevice.getSchedule() != null) {
+            scheduledTime.setText(this.scheduledDevice.getSchedule().format(formatter));
+        }
+    }
+
+    @FXML
+    public void updateSchedule(){
+        LocalDateTime schedule = LocalDateTime.parse(scheduledTime.getText(), formatter);
+        scheduledDevice.setSchedule(schedule);
+    }
+
+    @FXML
+    public void skipSchedule(){
+        scheduledDevice.setSchedule(null);
+        scheduledTime.setText("");
+
+    }
 
 }
