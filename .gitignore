@@ -19,3 +19,5 @@ Thumbs.db
 data/
 *.sqlite
 *.db
+
+!src/main/resources/com/energy_template_db.sqlite

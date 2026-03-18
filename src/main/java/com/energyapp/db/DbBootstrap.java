@@ -26,68 +26,73 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 public final class DbBootstrap {
     private static final String HOME_ID = "HOME_1";
     private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private DbBootstrap() {}
+    private static final String TEMPLATE_DB_RESOURCE = "/com/energy_template_db.sqlite";
 
     public static void init() {
         DbPaths.ensureDataDirExists();
         System.out.println("DB PATH = " + DbPaths.dbFile().toAbsolutePath());
 
-        try (Connection conn = Sqlite.openConnection()) {
-            // 1) Always ensure schema exists
-            SqlScriptRunner.runResource(conn, "/com/schema.sql");
+        try {
+            installTemplateDbIfMissing();
 
-            // 2) Seed only once
-            if (!metaEquals(conn, "seed_applied", "true")) {
-                SqlScriptRunner.runResource(conn, "/com/seed.sql");
-                upsertMeta(conn, "seed_applied", "true");
+            try (Connection conn = Sqlite.openConnection()) {
+                // Optional safety: keeps schema creation idempotent
+                SqlScriptRunner.runResource(conn, "/com/schema.sql");
+
+                // Mark installed-from-template once
+                upsertMeta(conn, "template_installed", "true");
+
+                // Run API caching for current carbon and mix
+                try {
+                    cacheCurrentCarbonAndMix(conn);
+                    upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
+                } catch (Exception e) {
+                    System.err.println("API cache failed (carbon/mix).");
+                    e.printStackTrace();
+                }
+
+                // Run API caching for Octopus API tariffs
+                try {
+                    cacheOctopusTariffs(conn);
+                } catch (Exception e) {
+                    System.err.println("API cache failed (octopus).");
+                    e.printStackTrace();
+                }
+
+                // Run caching for MeteoSolar
+                try {
+                    cacheOpenMeteoSolar(conn);
+                } catch (Exception e) {
+                    System.err.println("API cache failed (open-meteo solar).");
+                    e.printStackTrace();
+                }
             }
-
-            // 3) Import simulation CSV into DB only if empty
-            if (tableIsEmpty(conn, "energy_interval")) {
-                importSimulationCsv(conn);
-                upsertMeta(conn, "csv_imported", "true");
-            }
-
-            // 4) (Optional but recommended) Cache current carbon intensity + generation mix once
-            // If offline, this will just fail quietly and your app still runs with simulated/carbon from CSV.
-//            try {
-//                cacheCurrentCarbonAndMix(conn);
-//                upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
-//            } catch (Exception ignored) {
-//                // Keep app usable offline
-//            }
-            // This doesn't hide any exceptions given it occurs unlike the commented out code above
-            // Run API caching for current carbon and mix
-            try {
-                cacheCurrentCarbonAndMix(conn);
-                upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
-            } catch (Exception e) {
-                System.err.println("API cache failed (carbon/mix).");
-                e.printStackTrace();
-            }
-
-            // Run API caching for Octopus API tariffs
-            try {
-                cacheOctopusTariffs(conn);
-            } catch (Exception e) {
-                System.err.println("API cache failed (octopus).");
-                e.printStackTrace();
-            }
-
-            // Run caching for MeteoSolar
-            try {
-                cacheOpenMeteoSolar(conn);
-            } catch (Exception e) {
-                System.err.println("API cache failed (open-meteo solar).");
-                e.printStackTrace();
-            }
-
         } catch (Exception e) {
             throw new RuntimeException("DB bootstrap failed", e);
+        }
+    }
+
+    // If template DB is not already installed, this helper function will be used
+    private static void installTemplateDbIfMissing() throws Exception {
+        if (DbPaths.dbExists()) {
+            return;
+        }
+
+        try (InputStream in = DbBootstrap.class.getResourceAsStream(TEMPLATE_DB_RESOURCE)) {
+            if (in == null) {
+                throw new IllegalStateException("Missing template DB resource: " + TEMPLATE_DB_RESOURCE);
+            }
+
+            Files.copy(in, DbPaths.dbFile(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Installed template DB to " + DbPaths.dbFile().toAbsolutePath());
         }
     }
 
