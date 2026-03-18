@@ -8,8 +8,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class ScheduledDeviceSettingsController {
 
@@ -46,7 +47,7 @@ public class ScheduledDeviceSettingsController {
     private ScheduledDevice scheduledDevice;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-    public void initialize(ScheduledDevice scheduledDevice) {
+    public void initData(ScheduledDevice scheduledDevice) {
         this.scheduledDevice = scheduledDevice;
         deviceViewTitle.setText(this.scheduledDevice.getDeviceName());
         if (this.scheduledDevice.getSchedule() != null) {
@@ -56,8 +57,28 @@ public class ScheduledDeviceSettingsController {
 
     @FXML
     public void updateSchedule(){
-        LocalDateTime schedule = LocalDateTime.parse(scheduledTime.getText(), formatter);
-        scheduledDevice.setSchedule(schedule);
+        String input = scheduledTime.getText() == null ? "" : scheduledTime.getText().trim();
+
+        if (input.isEmpty()) {
+            showInvalidTimeAlert("Scheduled time cannot be empty. Please use HH:mm format.");
+            return;
+        }
+
+        try {
+            LocalTime schedule = LocalTime.parse(input, formatter);
+            scheduledDevice.setSchedule(schedule);
+            scheduledTime.setText(schedule.format(formatter));
+        } catch (DateTimeParseException ex) {
+            showInvalidTimeAlert("Invalid time. Please enter time as HH:mm, for example 07:30 or 18:45.");
+        }
+    }
+
+    private void showInvalidTimeAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid Time");
+        alert.setHeaderText("Could not update schedule");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

@@ -2,6 +2,7 @@ package com.energyapp.controller;  // <--- Note the package name matches your fo
 
 import com.energyapp.model.Device;
 import com.energyapp.model.DeviceType;
+import com.energyapp.model.ScheduledDevice;
 import com.energyapp.model.SmartPlug;
 import com.energyapp.service.DeviceService;
 import com.energyapp.service.SimulationService;
@@ -118,6 +119,17 @@ public class DevicesController {
             settingsModalStage.setTitle("Device Settings");
             settingsModalStage.setScene(new Scene(settingsModalRoot, 500, 275));
 
+            settingsModalStage.showAndWait();
+        } else if (device.getDeviceType() == DeviceType.WASHING_MACHINE) {
+            Stage settingsModalStage = new Stage();
+            settingsModalStage.initModality(Modality.APPLICATION_MODAL);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/ScheduledDeviceSettings.fxml"));
+            Parent settingsModalRoot = loader.load();
+            ScheduledDeviceSettingsController controller = loader.getController();
+            controller.initData((ScheduledDevice) device);
+
+            settingsModalStage.setTitle("Device Settings");
+            settingsModalStage.setScene(new Scene(settingsModalRoot, 1080, 720));
             settingsModalStage.showAndWait();
         } else {
             System.out.println("settings for this device to be implemented later");

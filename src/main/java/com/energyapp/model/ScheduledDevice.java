@@ -1,21 +1,21 @@
 package com.energyapp.model;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class ScheduledDevice extends Device{
 
-    private LocalDateTime schedule;
+    private LocalTime schedule;
 
     public ScheduledDevice(String deviceName, DeviceType deviceType) {
         super(deviceName, deviceType);
     }
 
-    public LocalDateTime getSchedule() {
+    public LocalTime getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(LocalDateTime schedule) {
+    public void setSchedule(LocalTime schedule) {
         this.schedule = schedule;
     }
 
