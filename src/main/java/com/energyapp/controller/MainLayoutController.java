@@ -13,7 +13,6 @@ public class MainLayoutController {
 
     @FXML private BorderPane rootLayout;
     @FXML private SideBarController mainSideBarController;
-    @FXML private CostCardController weeklyCostCardController;
 
     private SimulationService simulationService;
 
@@ -26,7 +25,8 @@ public class MainLayoutController {
 
     }
 
-    private void switchView(ViewType viewType) {
+
+        private void switchView (ViewType viewType){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(viewType.getFxmlPath()));
             Parent root = loader.load();
@@ -39,15 +39,22 @@ public class MainLayoutController {
                 dc.setSimService(this.simulationService);
             } else if (controller instanceof EnergyStatsController) {
                 ((EnergyStatsController) controller).setSimulationService(this.simulationService);
-            } else if (controller instanceof ForecastController) {
-                ((ForecastController) controller).setSimulationService(this.simulationService);
+            } else if (controller instanceof RecommendationsController) {
+                ((RecommendationsController) controller).setSimulationService(this.simulationService);
+            } else if (controller instanceof EcoStatisticsController) {
+                ((EcoStatisticsController) controller).setSimulationService(this.simulationService);
+            } else if (controller instanceof ForecastingController) {
+                    ((ForecastingController) controller).setSimulationService(this.simulationService);
+            } else if (controller instanceof DevicesController) {
+                ((DevicesController) controller).setSimulationService(this.simulationService);
             }
+        rootLayout.setCenter(root);
 
-            rootLayout.setCenter(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    } catch(IOException e){
+        e.printStackTrace();
     }
+    }
+
 
     @FXML
     public void handleShowDashboard() {
@@ -80,7 +87,6 @@ public class MainLayoutController {
     public void handleShowRecommendations () {
         switchView(ViewType.RECOMMENDATIONS);
     }
-
     public void handleShowEcoStatistics() {
         switchView(ViewType.ECOIMPACT);
     }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Rectangle?>
+
+<HBox spacing="10.0" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.InsightCardController">
+    <children>
+        <Rectangle fx:id="statusIcon" arcHeight="5.0" arcWidth="5.0" fill="LIGHTBLUE" height="20.0" stroke="BLACK" width="20.0" />
+        <Label fx:id="insightLabel" text="This text will be replaced by logic" wrapText="true" maxWidth="250.0" />
+    </children>
+</HBox>

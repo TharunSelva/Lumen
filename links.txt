@@ -1,4 +1,7 @@
 ----KEY LINKS----
 
 -> SIMULATION LINKS
--
+-https://connecteddata.nationalgrid.co.uk/api-guidance
+- https://www.neso.energy/
+- https://www.neso.energy/search#tab=Data%20Portal&f-content_type=Dataset&f-tags=Forecast
+- use API for neso

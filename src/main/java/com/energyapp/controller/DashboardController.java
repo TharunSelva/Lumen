@@ -2,6 +2,8 @@ package com.energyapp.controller;
 
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.service.SimulationService;
+import com.energyapp.utils.EnergyCalculator;
+import com.energyapp.utils.DateTimeUtils;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -75,6 +77,9 @@ public class DashboardController {
         System.out.println("DashboardController loaded successfully.");
         dashboardUsageLineChart.getData().add(series);
         setupTimeAxis(dashboardUsageXAxis);
+        dashboardUsageXAxis.setLabel("Time");
+        dashboardUsageYAxis.setLabel("Power (kWh)");
+        dashboardUsageYAxis.setAutoRanging(true);
 
         // click anywhere on chart opens statistics screen
         dashboardUsageLineChart.setOnMouseClicked(e -> openEnergyStatistics());
@@ -97,7 +102,7 @@ public class DashboardController {
         initUsageMiniChart();
 
         if (simulationService.getCurrentEnergyRecord().get() != null) {
-            double currentCost = (simulationService.getCurrentEnergyRecord().get().getGridImport() * simulationService.getCurrentEnergyRecord().get().getPricePerKwh()) / 100;
+            double currentCost = EnergyCalculator.calculateCostInPounds(simulationService.getCurrentEnergyRecord().get().getGridImport(), simulationService.getCurrentEnergyRecord().get().getPricePerKwh());
             indicatorLogic.updateIndicatorByCost(currentCost);
 
             if (weeklyCostCardController != null) {
@@ -152,28 +157,26 @@ public class DashboardController {
 
     private void setupTimeAxis(NumberAxis axis) {
         axis.setAutoRanging(false);
+        axis.setLabel("Time");
         axis.setForceZeroInRange(false);
         axis.setTickUnit(10 * 60);
 
         axis.setTickLabelFormatter(new StringConverter<>() {
-            @Override public String toString(Number object) {
-                long sec = object.longValue();
-                LocalTime t = Instant.ofEpochSecond(sec)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalTime();
-                return t.toString().substring(0, 5);
+            @Override
+            public String toString(Number object) {
+                return DateTimeUtils.formatTimeFromEpoch(object.longValue());
             }
-            @Override public Number fromString(String string) { return 0; }
+
+            @Override
+            public Number fromString(String string) {
+                return 0;
+            }
         });
     }
 
-    private long toEpochSec(LocalDateTime time) {
-        return time.atZone(ZoneId.systemDefault()).toEpochSecond();
-    }
-
     private void plotDataPoint(EnergyRecord rec) {
-        long x = toEpochSec(rec.getTimestamp());
-        double y = rec.getWatts();
+        long x = DateTimeUtils.toEpochSeconds(rec.getTimestamp());
+        double y = rec.getTotalLoadKwh();
         latestEpochSec = x;
 
         XYChart.Data<Number, Number> d = new XYChart.Data<>(x, y);
@@ -204,4 +207,3 @@ public class DashboardController {
 
 
 }
-
