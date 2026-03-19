@@ -18,28 +18,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<StackPane prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EcoStatisticsController" id="ecostatistics-auto-1">
-    <ScrollPane prefHeight="200.0" prefWidth="200.0" fitToWidth="true" fitToHeight="true">
+<StackPane id="ecostatistics-auto-1" prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EcoStatisticsController">
+    <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
         <content>
 
-            <BorderPane prefHeight="800" prefWidth="1200" id="ecostatistics-auto-2">
+            <BorderPane id="ecostatistics-auto-2" prefHeight="800" prefWidth="1200">
                 <center>
-                    <VBox maxWidth="Infinity" spacing="12" id="ecostatistics-auto-3">
+                    <VBox id="ecostatistics-auto-3" maxWidth="Infinity" spacing="12">
                         <padding>
                             <Insets bottom="14" left="14" right="14" top="14" />
                         </padding>
 
                         <HBox alignment="CENTER_LEFT" maxHeight="64" prefHeight="64" spacing="12">
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
-                                <Label text="Eco Statistics"  id="ecostatistics-auto-4"/>
-                                <Label text="Today • Updated 1 hr ago"  id="ecostatistics-auto-5"/>
+                                <Label id="ecostatistics-auto-4" text="Eco Statistics" />
+                                <Label id="ecostatistics-auto-5" text="Today • Updated 1 hr ago" />
                             </VBox>
       
                           <ComboBox prefWidth="90" promptText="Day" />
       
-                          <Button mnemonicParsing="false" id="ecostatistics-auto-6">
+                          <Button id="ecostatistics-auto-6" mnemonicParsing="false">
                               <graphic>
-                                  <Label text="⚙"  id="ecostatistics-auto-7"/>
+                                  <Label id="ecostatistics-auto-7" text="⚙" />
                               </graphic>
                           </Button>
                       </HBox>
@@ -52,51 +52,52 @@
                           </columnConstraints>
       
                           <!-- KPIs -->
-                          <VBox maxWidth="Infinity" spacing="10" GridPane.columnIndex="0" id="ecostatistics-auto-8">
+                          <VBox id="ecostatistics-auto-8" maxWidth="Infinity" spacing="10" GridPane.columnIndex="0">
                               <padding>
                            <Insets bottom="12" left="14" right="14" top="12" />
                         </padding>
-      
+                        <Label id="ecostatistics-auto-30" text="Key Carbon Metrics" />
+
                               <HBox spacing="10">
-                                  <VBox spacing="2" HBox.hgrow="ALWAYS" id="ecostatistics-auto-9">
+                                  <VBox id="ecostatistics-auto-9" spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
                                       <padding>
-                                 <Insets bottom="8" left="10" right="10" top="8" />
-                              </padding>
-                                      <Label text="211 gCO₂/kWh"  id="ecostatistics-auto-10"/>
-                                      <Label text="UK average right now"  id="ecostatistics-auto-11"/>
+                                          <Insets bottom="8" left="10" right="10" top="8" />
+                                      </padding>
+                                      <Label fx:id="carbonSavedLabel" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #10B981;" text="0.00 kg CO₂" />
+                                      <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Carbon Saved (Solar)" />
                                   </VBox>
-      
-                                  <VBox spacing="2" HBox.hgrow="ALWAYS" id="ecostatistics-auto-12">
+
+                                  <VBox id="ecostatistics-auto-12" spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
                                       <padding>
-                                 <Insets bottom="8" left="10" right="10" top="8" />
-                              </padding>
-                                      <Label text="150 gCO₂/kWh"  id="ecostatistics-auto-13"/>
-                                      <Label text="Your Carbon Footprint"  id="ecostatistics-auto-14"/>
+                                          <Insets bottom="8" left="10" right="10" top="8" />
+                                      </padding>
+                                      <Label fx:id="carbonFootprintLabel" style="-fx-font-size: 16; -fx-font-weight: bold;" text="0 gCO₂/kWh" />
+                                      <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Your Carbon Footprint" />
                                   </VBox>
                               </HBox>
       
-                              <VBox spacing="2" id="ecostatistics-auto-15">
+                              <VBox id="ecostatistics-auto-15" spacing="2">
                                   <padding>
                               <Insets bottom="8" left="10" right="10" top="8" />
                            </padding>
-                                  <Label text="Your Eco Score:"  id="ecostatistics-auto-16"/>
+                                  <Label id="ecostatistics-auto-16" text="Your Eco Score:" />
                                   <HBox alignment="BASELINE_LEFT" spacing="6">
-                                      <Label text="72"  id="ecostatistics-auto-17"/>
-                                      <Label text="/ 100"  id="ecostatistics-auto-18"/>
+                                      <Label id="ecostatistics-auto-17" text="72" />
+                                      <Label id="ecostatistics-auto-18" text="/ 100" />
                                   </HBox>
-                                  <Label text="Better than yesterday (+8)"  id="ecostatistics-auto-19"/>
+                                  <Label id="ecostatistics-auto-19" text="Better than yesterday (+8)" />
                               </VBox>
                           </VBox>
       
                           <!-- Clean Energy Share -->
-                          <VBox maxWidth="Infinity" spacing="8" GridPane.columnIndex="1" id="ecostatistics-auto-20">
+                          <VBox id="ecostatistics-auto-20" maxWidth="Infinity" spacing="8" GridPane.columnIndex="1">
                               <padding>
                            <Insets bottom="12" left="14" right="14" top="12" />
                         </padding>
 
-                              <Label fx:id="cleanEnergyShareLabel" text="Clean Energy Share: 0%"  id="cleanEnergyShareLabel"/>
+                              <Label id="cleanEnergyShareLabel" fx:id="cleanEnergyShareLabel" text="Clean Energy Share: 0%" />
 
-                              <StackPane fx:id="cleanEnergyChartContainer" maxHeight="150" maxWidth="Infinity" prefHeight="150"  id="cleanEnergyChartContainer"/>
+                              <StackPane id="cleanEnergyChartContainer" fx:id="cleanEnergyChartContainer" maxHeight="150" maxWidth="Infinity" prefHeight="150" />
       
                               <GridPane hgap="10" vgap="6">
                                   <columnConstraints>
@@ -105,20 +106,20 @@
                                   </columnConstraints>
       
                                   <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" width="9"  id="ecostatistics-auto-21"/>
-                                      <Label text="Solar (38%)"  id="ecostatistics-auto-22"/>
+                                      <Rectangle id="ecostatistics-auto-21" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                      <Label id="ecostatistics-auto-22" text="Solar (38%)" />
                                   </HBox>
                                   <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" width="9"  id="ecostatistics-auto-23"/>
-                                      <Label text="Low-carbon grid"  id="ecostatistics-auto-24"/>
+                                      <Rectangle id="ecostatistics-auto-23" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                      <Label id="ecostatistics-auto-24" text="Low-carbon grid" />
                                   </HBox>
                                   <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" width="9"  id="ecostatistics-auto-25"/>
-                                      <Label text="Battery (16%)"  id="ecostatistics-auto-26"/>
+                                      <Rectangle id="ecostatistics-auto-25" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                      <Label id="ecostatistics-auto-26" text="Battery (16%)" />
                                   </HBox>
                                   <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" width="9"  id="ecostatistics-auto-27"/>
-                                      <Label text="Fossil grid (54%)"  id="ecostatistics-auto-28"/>
+                                      <Rectangle id="ecostatistics-auto-27" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                      <Label id="ecostatistics-auto-28" text="Fossil grid (54%)" />
                                   </HBox>
                            <rowConstraints>
                               <RowConstraints />
@@ -139,81 +140,81 @@
                           </columnConstraints>
       
                           <!-- Eco Timeline (compressed) -->
-                          <VBox spacing="8" GridPane.columnIndex="0" id="ecostatistics-auto-29">
+                          <VBox id="ecostatistics-auto-29" spacing="8" GridPane.columnIndex="0">
                               <padding>
                            <Insets bottom="12" left="14" right="14" top="12" />
                         </padding>
       
-                              <Label text="Eco Timeline"  id="ecostatistics-auto-30"/>
+                              <Label id="ecostatistics-auto-30" text="Eco Timeline" />
       
-                              <VBox spacing="10" id="ecostatistics-auto-31">
+                              <VBox id="ecostatistics-auto-31" spacing="10">
                                   <padding>
                               <Insets bottom="10" left="10" right="10" top="10" />
                            </padding>
       
                                   <!-- smaller blocks -->
                                   <HBox spacing="6">
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-32">
-                                          <Label text="H"  id="ecostatistics-auto-33"/>
+                                      <StackPane id="ecostatistics-auto-32" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-33" text="H" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-34">
-                                          <Label text="H"  id="ecostatistics-auto-35"/>
+                                      <StackPane id="ecostatistics-auto-34" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-35" text="H" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-36">
-                                          <Label text="M"  id="ecostatistics-auto-37"/>
+                                      <StackPane id="ecostatistics-auto-36" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-37" text="M" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-38">
-                                          <Label text="M"  id="ecostatistics-auto-39"/>
+                                      <StackPane id="ecostatistics-auto-38" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-39" text="M" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-40">
-                                          <Label text="L"  id="ecostatistics-auto-41"/>
+                                      <StackPane id="ecostatistics-auto-40" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-41" text="L" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-42">
-                                          <Label text="L"  id="ecostatistics-auto-43"/>
+                                      <StackPane id="ecostatistics-auto-42" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-43" text="L" />
                                       </StackPane>
                                   </HBox>
       
                                   <HBox spacing="6">
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-44">
-                                          <Label text="L"  id="ecostatistics-auto-45"/>
+                                      <StackPane id="ecostatistics-auto-44" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-45" text="L" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-46">
-                                          <Label text="L"  id="ecostatistics-auto-47"/>
+                                      <StackPane id="ecostatistics-auto-46" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-47" text="L" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-48">
-                                          <Label text="M"  id="ecostatistics-auto-49"/>
+                                      <StackPane id="ecostatistics-auto-48" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-49" text="M" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-50">
-                                          <Label text="H"  id="ecostatistics-auto-51"/>
+                                      <StackPane id="ecostatistics-auto-50" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-51" text="H" />
                                       </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" id="ecostatistics-auto-52">
-                                          <Label text="H"  id="ecostatistics-auto-53"/>
+                                      <StackPane id="ecostatistics-auto-52" prefHeight="34" prefWidth="26">
+                                          <Label id="ecostatistics-auto-53" text="H" />
                                       </StackPane>
                                   </HBox>
       
                                   <!-- smaller callout -->
-                                  <VBox spacing="2" id="ecostatistics-auto-54">
+                                  <VBox id="ecostatistics-auto-54" spacing="2">
                                       <padding>
                                  <Insets bottom="8" left="10" right="10" top="8" />
                               </padding>
-                                      <Label text="13:00 — Low carbon hour"  id="ecostatistics-auto-55"/>
-                                      <Label text="Grid intensity: 142 gCO₂/kWh"  id="ecostatistics-auto-56"/>
-                                      <Label text="Solar contributed 82% of household use"  id="ecostatistics-auto-57"/>
-                                      <Label text="Good time for flexible tasks"  id="ecostatistics-auto-58"/>
+                                      <Label id="ecostatistics-auto-55" text="13:00 — Low carbon hour" />
+                                      <Label id="ecostatistics-auto-56" text="Grid intensity: 142 gCO₂/kWh" />
+                                      <Label id="ecostatistics-auto-57" text="Solar contributed 82% of household use" />
+                                      <Label id="ecostatistics-auto-58" text="Good time for flexible tasks" />
                                   </VBox>
                               </VBox>
                           </VBox>
       
                           <!-- History Graph (compressed height) -->
-                          <VBox spacing="8" GridPane.columnIndex="1" id="ecostatistics-auto-59">
+                          <VBox id="ecostatistics-auto-59" spacing="8" GridPane.columnIndex="1">
                               <padding>
                            <Insets bottom="12" left="14" right="14" top="12" />
                         </padding>
       
-                              <Label text="Eco-Impact History"  id="ecostatistics-auto-60"/>
+                              <Label id="ecostatistics-auto-60" text="Eco-Impact History" />
       
-                              <StackPane VBox.vgrow="ALWAYS" id="ecostatistics-auto-61">
-                                  <Label text="[Graph showing how eco-impact has changed]"  id="ecostatistics-auto-62"/>
+                              <StackPane id="ecostatistics-auto-61" VBox.vgrow="ALWAYS">
+                                  <Label id="ecostatistics-auto-62" text="[Graph showing how eco-impact has changed]" />
                               </StackPane>
                           </VBox>
                      <rowConstraints>
@@ -222,12 +223,12 @@
                       </GridPane>
       
                       <!-- BOTTOM ROW (fixed height) -->
-                      <VBox maxHeight="270" maxWidth="Infinity" prefHeight="270" spacing="10" id="ecostatistics-auto-63">
+                      <VBox id="ecostatistics-auto-63" maxHeight="270" maxWidth="Infinity" prefHeight="270" spacing="10">
                           <padding>
                         <Insets bottom="12" left="14" right="14" top="12" />
                      </padding>
       
-                          <Label text="Environmental Breakdown"  id="ecostatistics-auto-64"/>
+                          <Label id="ecostatistics-auto-64" text="Environmental Breakdown" />
       
                           <GridPane hgap="16" maxWidth="Infinity" vgap="0" VBox.vgrow="ALWAYS">
                               <columnConstraints>
@@ -236,12 +237,12 @@
                               </columnConstraints>
       
                               <!-- Energy Source (short chart) -->
-                              <VBox spacing="8" GridPane.columnIndex="0" id="ecostatistics-auto-65">
+                              <VBox id="ecostatistics-auto-65" spacing="8" GridPane.columnIndex="0">
                                   <padding>
                               <Insets bottom="10" left="10" right="10" top="10" />
                            </padding>
       
-                                  <Label text="By Energy Source"  id="ecostatistics-auto-66"/>
+                                  <Label id="ecostatistics-auto-66" text="By Energy Source" />
 
                                   <BarChart fx:id="environmentalBreakdownChart" animated="false" legendVisible="true" maxHeight="120" prefHeight="120" title="">
                                       <xAxis>
@@ -253,45 +254,45 @@
                                   </BarChart>
       
                                   <HBox>
-                                      <Label text="Total"  id="ecostatistics-auto-67"/>
+                                      <Label id="ecostatistics-auto-67" text="Total" />
                                       <Region HBox.hgrow="ALWAYS" />
-                                      <Label text="3.1 kg CO₂"  id="ecostatistics-auto-68"/>
+                                      <Label id="ecostatistics-auto-68" text="3.1 kg CO₂" />
                                   </HBox>
                               </VBox>
       
                               <!-- Device Category (tighter text) -->
-                              <VBox spacing="8" GridPane.columnIndex="1" id="ecostatistics-auto-69">
+                              <VBox id="ecostatistics-auto-69" spacing="8" GridPane.columnIndex="1">
                                   <padding>
                               <Insets bottom="10" left="10" right="10" top="10" />
                            </padding>
       
-                                  <Label text="By Device Category"  id="ecostatistics-auto-70"/>
+                                  <Label id="ecostatistics-auto-70" text="By Device Category" />
       
                                   <VBox spacing="8">
                                       <HBox>
-                                 <Label text="🚗  EV"  id="ecostatistics-auto-71"/>
+                                 <Label id="ecostatistics-auto-71" text="🚗  EV" />
                                  <Region HBox.hgrow="ALWAYS" />
-                                 <Label text="3.1 kg CO₂"  id="ecostatistics-auto-72"/>
+                                 <Label id="ecostatistics-auto-72" text="3.1 kg CO₂" />
                               </HBox>
                                       <HBox>
-                                 <Label text="♨  Heating"  id="ecostatistics-auto-73"/>
+                                 <Label id="ecostatistics-auto-73" text="♨  Heating" />
                                  <Region HBox.hgrow="ALWAYS" />
-                                 <Label text="10.8 kg CO₂"  id="ecostatistics-auto-74"/>
+                                 <Label id="ecostatistics-auto-74" text="10.8 kg CO₂" />
                               </HBox>
                                       <HBox>
-                                 <Label text="🧺  Laundry"  id="ecostatistics-auto-75"/>
+                                 <Label id="ecostatistics-auto-75" text="🧺  Laundry" />
                                  <Region HBox.hgrow="ALWAYS" />
-                                 <Label text="4.7 kg CO₂"  id="ecostatistics-auto-76"/>
+                                 <Label id="ecostatistics-auto-76" text="4.7 kg CO₂" />
                               </HBox>
                                       <HBox>
-                                 <Label text="🍳  Kitchen"  id="ecostatistics-auto-77"/>
+                                 <Label id="ecostatistics-auto-77" text="🍳  Kitchen" />
                                  <Region HBox.hgrow="ALWAYS" />
-                                 <Label text="1.2 kg CO₂"  id="ecostatistics-auto-78"/>
+                                 <Label id="ecostatistics-auto-78" text="1.2 kg CO₂" />
                               </HBox>
                                       <HBox>
-                                 <Label text="⏻  Standby"  id="ecostatistics-auto-79"/>
+                                 <Label id="ecostatistics-auto-79" text="⏻  Standby" />
                                  <Region HBox.hgrow="ALWAYS" />
-                                 <Label text="0.0 kg CO₂"  id="ecostatistics-auto-80"/>
+                                 <Label id="ecostatistics-auto-80" text="0.0 kg CO₂" />
                               </HBox>
                                   </VBox>
                               </VBox>
