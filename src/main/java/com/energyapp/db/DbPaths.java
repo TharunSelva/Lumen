@@ -10,7 +10,6 @@ public final class DbPaths {
     /** SQLite DB file location (stored safely in the User's Home directory). */
     public static Path dbFile() {
         String userHome = System.getProperty("user.home");
-        // Creates a hidden folder in the home directory: e.g., C:\Users\Marker\.energyapp\data\
         return Paths.get(userHome, ".energyapp", "data", "energy_tool.sqlite");
     }
 
@@ -19,7 +18,11 @@ public final class DbPaths {
             Path parent = dbFile().getParent();
             if (parent != null) Files.createDirectories(parent);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create data/ directory for DB", e);
+            throw new RuntimeException("Failed to create data directory for DB", e);
         }
+    }
+
+    public static boolean dbExists() {
+        return Files.exists(dbFile());
     }
 }

@@ -14,6 +14,12 @@ You will want to clone in to this Gitlab repository on your own machines using I
 4. Copy the token that is given to you, and save it somewhere as you can't access it later. Paste that token into the box in the IntelliJ window.
 5. Hit trust project, and you should be done! Try running the project to ensure everything worked properly.
 
+### DB rules
+- energy_template_db.sqlite is the shared baseline DB
+- AppData DB is local only
+- no one commits runtime DBs
+- if multiple people need DB content changes, one person integrates them into the template DB
+
 ### FXML Ground Rules
 This section outlines some basic ground rules for creating FXML UI blueprints in SceneBuilder. This is **crucial**, because will ensure we don't hit hard to debug Null errors later.
 
