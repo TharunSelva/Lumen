@@ -35,17 +35,29 @@ public final class DbBootstrap {
 
     private DbBootstrap() {}
     private static final String TEMPLATE_DB_RESOURCE = "/com/energy_template_db.sqlite";
+    private static final String APP_SCHEMA_VERSION = "1";
+    private static final String TEMPLATE_DB_NAME = "energy_template_db";
+    private static final String TEMPLATE_DB_VERSION = "1";
 
     public static void init() {
         DbPaths.ensureDataDirExists();
         System.out.println("DB PATH = " + DbPaths.dbFile().toAbsolutePath());
 
         try {
+            // for debugging;
+            boolean existedBeforeInstall = DbPaths.dbExists();
+            System.out.println("DB PATH = " + DbPaths.dbFile().toAbsolutePath());
+            System.out.println("DB already existed before install step? " + existedBeforeInstall);
+
             installTemplateDbIfMissing();
 
+            System.out.println("DB exists after install step? " + DbPaths.dbExists());
+
             try (Connection conn = Sqlite.openConnection()) {
-                // Optional safety: keeps schema creation idempotent
+                // safety: keeps schema creation idempotent
                 SqlScriptRunner.runResource(conn, "/com/schema.sql");
+                ensureVersionMetaIfMissing(conn);
+                verifyInstalledDbVersion(conn);
 
                 // Mark installed-from-template once
                 upsertMeta(conn, "template_installed", "true");
@@ -77,6 +89,60 @@ public final class DbBootstrap {
             }
         } catch (Exception e) {
             throw new RuntimeException("DB bootstrap failed", e);
+        }
+    }
+
+    // helper method to write schema/template versions and template name (metadata) into app_meta in the DB
+    private static void ensureVersionMetaIfMissing(Connection conn) throws SQLException {
+        if (getMeta(conn, "schema_version") == null) {
+            upsertMeta(conn, "schema_version", APP_SCHEMA_VERSION);
+        }
+        if (getMeta(conn, "template_name") == null) {
+            upsertMeta(conn, "template_name", TEMPLATE_DB_NAME);
+        }
+        if (getMeta(conn, "template_version") == null) {
+            upsertMeta(conn, "template_version", TEMPLATE_DB_VERSION);
+        }
+    }
+
+    // If needed, can use this to compare versions after "ensureVersionMeta(conn)" in init()
+    private static String getMeta(Connection conn, String key) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT meta_value FROM app_meta WHERE meta_key = ?")) {
+            ps.setString(1, key);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString(1) : null;
+            }
+        }
+    }
+
+    // Visible check to verify the installed DB version (the one in the hidden folder) using 'app_meta' in DB.
+    private static void verifyInstalledDbVersion(Connection conn) throws SQLException {
+        String schemaVersion = getMeta(conn, "schema_version");
+        String templateName = getMeta(conn, "template_name");
+        String templateVersion = getMeta(conn, "template_version");
+
+        // For debugging purposes:
+        System.out.printf(
+                "Fetched  — schema_version: %s | template_name: %s | template_ver: %s%n" +
+                        "Expected — schema_version: %s | template_name: %s | template_ver: %s%n",
+                schemaVersion, templateName, templateVersion,
+                APP_SCHEMA_VERSION, TEMPLATE_DB_NAME, TEMPLATE_DB_VERSION
+        );
+
+        if (!APP_SCHEMA_VERSION.equals(schemaVersion)) {
+            System.err.println("Warning: local DB schema_version is '" + schemaVersion
+                    + "', expected '" + APP_SCHEMA_VERSION + "'.");
+        }
+
+        if (!TEMPLATE_DB_NAME.equals(templateName)) {
+            System.err.println("Warning: local DB template_name is '" + templateName
+                    + "', expected '" + TEMPLATE_DB_NAME + "'.");
+        }
+
+        if (!TEMPLATE_DB_VERSION.equals(templateVersion)) {
+            System.err.println("Warning: local DB template_version is '" + templateVersion
+                    + "', expected '" + TEMPLATE_DB_VERSION + "'.");
         }
     }
 
