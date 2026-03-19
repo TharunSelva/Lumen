@@ -20,11 +20,7 @@
          <children>
             <VBox>
                <children>
-                  <Label text="Forecasting">
-                     <font>
-                        <Font name="System Bold" size="36.0" />
-                     </font>
-                  </Label>
+                  <Label text="Forecasting" styleClass="screen-title" />
                   <Label fx:id="lastUpdatedLabel" text="Updated x ago" textFill="#a1a1a1">
                      <font>
                         <Font size="16.0" />

@@ -29,8 +29,8 @@
                               <!-- Header row (same vibe as your friend's header row) -->
                               <HBox alignment="CENTER_LEFT" spacing="12">
                                   <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                      <Label text="Curated Recommendations for you"  id="recommendations-auto-5"/>
-                                      <Label text="We can help."  id="recommendations-auto-6"/>
+                                      <Label text="Curated Recommendations for you" id="recommendations-auto-5" styleClass="screen-title" />
+                                      <Label text="We can help." id="recommendations-auto-6"/>
                                   </VBox>
       
                                   <!-- Optional little icon button like his settings button -->

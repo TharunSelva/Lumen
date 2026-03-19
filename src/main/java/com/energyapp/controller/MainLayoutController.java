@@ -3,6 +3,7 @@ package com.energyapp.controller;
 import com.energyapp.model.ViewType;
 import com.energyapp.service.AccessibilityManager;
 import com.energyapp.service.SimulationService;
+import com.energyapp.service.TextToSpeechService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static javafx.application.Platform.runLater;
 
@@ -22,6 +24,7 @@ public class MainLayoutController {
 
     private SimulationService simulationService;
     private ViewType currentView;
+    private TextToSpeechService ttsService = new TextToSpeechService();
 
     public void initialize() {
         if (mainSideBarController != null) {
@@ -60,9 +63,15 @@ public class MainLayoutController {
             }
         });
 
+        AccessibilityManager.customFontSizeProperty().addListener((obs, oldVal, newVal) -> applyGlobalTextSettings());
+        AccessibilityManager.customFontFamilyProperty().addListener((obs, oldVal, newVal) -> applyGlobalTextSettings());
+        AccessibilityManager.customFontBoldProperty().addListener((obs, oldVal, newVal) -> applyGlobalTextSettings());
+
+        applyGlobalTextSettings();
+
     }
 
-    private void switchView (ViewType viewType){
+    private void switchView (ViewType viewType) {
         this.currentView = viewType;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(viewType.getFxmlPath()));
@@ -90,9 +99,14 @@ public class MainLayoutController {
                 runLater(() -> applyCompactToHierarchy(root));
             }
         rootLayout.setCenter(root);
-
+        autoFormatTitles(root);
+        attachScreenReader(root);
         } catch(IOException e) {
             e.printStackTrace();
+        }
+
+        if (rootLayout.getLeft() != null) {
+            attachScreenReader(rootLayout.getLeft());
         }
     }
 
@@ -163,6 +177,67 @@ public class MainLayoutController {
                 GridPane.setColumnIndex(child, 0);
                 nextAvailableRow++;
             }
+        }
+    }
+
+    private void applyGlobalTextSettings() {
+        double size = AccessibilityManager.customFontSizeProperty().get();
+        String family = AccessibilityManager.customFontFamilyProperty().get();
+        boolean isBold = AccessibilityManager.customFontBoldProperty().get();
+
+        String weight = isBold ? "bold" : "normal";
+
+        String cssStyle = String.format("-fx-font-size: %.1fpx; -fx-font-family: \"%s\"; -fx-font-weight: %s;",
+                size, family, weight);
+
+        rootLayout.setStyle(cssStyle);
+    }
+
+    private void autoFormatTitles(Node node) {
+        if (node instanceof javafx.scene.control.Label lbl) {
+            try {
+                if (lbl.getFont() != null && lbl.getFont().getSize() > 18.0 && !lbl.getId().equals("costCardLabel") && !lbl.getId().equals("priceStatusText")) {
+                    lbl.setStyle("");
+                    if (!lbl.getStyleClass().contains("screen-title")) {
+                        lbl.getStyleClass().add("screen-title");
+                    }
+                }
+            } catch (NullPointerException ignored) {
+
+            }
+        }
+
+        if (node instanceof javafx.scene.Parent parent) {
+            for (Node child : parent.getChildrenUnmodifiable()) {
+                autoFormatTitles(child);
+            }
+        }
+
+        if (node instanceof javafx.scene.control.ScrollPane sp && sp.getContent() != null) {
+            autoFormatTitles(sp.getContent());
+        }
+    }
+
+    private void attachScreenReader(javafx.scene.Node node) {
+        if (node instanceof javafx.scene.control.Labeled labeledNode) {
+            labeledNode.setOnMouseEntered(event -> {
+                if (com.energyapp.service.AccessibilityManager.screenReaderProperty().get()) {
+                    String textToSpeak = labeledNode.getText();
+                    if (textToSpeak != null && !textToSpeak.trim().isEmpty()) {
+                        ttsService.speak(textToSpeak);
+                    }
+                }
+            });
+        }
+
+        if (node instanceof javafx.scene.Parent parent) {
+            for (javafx.scene.Node child : parent.getChildrenUnmodifiable()) {
+                attachScreenReader(child);
+            }
+        }
+
+        if (node instanceof javafx.scene.control.ScrollPane sp && sp.getContent() != null) {
+            attachScreenReader(sp.getContent());
         }
     }
 }

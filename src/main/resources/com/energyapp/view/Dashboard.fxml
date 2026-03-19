@@ -28,11 +28,7 @@
                           <children>
                         <HBox>
                            <children>
-                                    <Label fx:id="dashboardGreetingLabel" text="Good Afternoon, Richard!">
-                                        <font>
-                                            <Font name="System Bold" size="30.0" />
-                                        </font>
-                                    </Label>
+                                    <Label fx:id="dashboardGreetingLabel" text="Good Afternoon, Richard!" styleClass="screen-title" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="Zoom: ">
                                  <font>

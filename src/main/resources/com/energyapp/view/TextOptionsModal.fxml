@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.TextOptionsController">
+   <children>
+      <Label text="Text Options">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+      <HBox>
+         <children>
+            <Label text="Font Size:" />
+            <Region prefWidth="10.0" />
+            <Slider fx:id="fontSizeSlider" blockIncrement="1.0" max="24.0" min="10.0" value="14.0" />
+            <Region prefWidth="10.0" />
+         </children>
+      </HBox>
+      <Region prefHeight="10.0" />
+      <HBox>
+         <children>
+            <Label text="Use bold text:" />
+            <Region prefWidth="10.0" />
+            <CheckBox fx:id="boldTextCheckbox" mnemonicParsing="false" />
+         </children>
+      </HBox>
+      <Region prefHeight="10.0" />
+      <HBox>
+         <children>
+            <Label text="Font:" />
+            <Region prefWidth="10.0" />
+            <ComboBox fx:id="fontComboBox" prefWidth="150.0" />
+         </children>
+      </HBox>
+      <Region prefHeight="30.0" />
+      <VBox alignment="CENTER">
+         <children>
+            <Label fx:id="previewLabel" alignment="CENTER" text="This is a preview" textAlignment="CENTER" />
+            <Region prefHeight="30.0" />
+         </children>
+      </VBox>
+      <HBox alignment="TOP_RIGHT">
+         <children>
+            <Button fx:id="restoreDefaultsButton" mnemonicParsing="false" text="Restore Defaults" />
+            <Region prefWidth="10.0" />
+            <Button fx:id="applyButton" mnemonicParsing="false" text="Apply" />
+            <Region prefWidth="5.0" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
