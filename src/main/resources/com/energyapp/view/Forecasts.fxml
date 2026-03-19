@@ -41,11 +41,7 @@
          <children>
             <VBox spacing="10.0" HBox.hgrow="ALWAYS" id="forecasts-auto-2">
                <children>
-                  <Label text="Today's Energy Cost Forecast">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
+                  <Label text="Today's Energy Cost Forecast" styleClass="widget-title"/>
                   <VBox alignment="CENTER">
                      <children>
                         <LineChart fx:id="energyCostForecastLineChart">
@@ -62,11 +58,7 @@
             </VBox>
             <VBox fx:id="insightsContainer" prefWidth="300.0" spacing="15.0" id="insightsContainer">
                <children>
-                  <Label text="Forecast Insights">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
+                  <Label text="Forecast Insights" styleClass="widget-title" />
                </children>
             </VBox>
          </children>
@@ -76,11 +68,7 @@
          <children>
             <VBox HBox.hgrow="ALWAYS" id="forecasts-auto-3">
                <children>
-                  <Label text="Solar Forecast Panel">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
+                  <Label text="Solar Forecast Panel" styleClass="widget-title" />
                   <LineChart createSymbols="false" legendVisible="false" prefHeight="150.0">
                     <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
                     <yAxis><NumberAxis side="LEFT" /></yAxis>
@@ -89,11 +77,7 @@
             </VBox>
             <VBox HBox.hgrow="ALWAYS" id="forecasts-auto-4">
                <children>
-                  <Label text="Battery &amp; Storage Panel">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
+                  <Label text="Battery &amp; Storage Panel" styleClass="widget-title" />
                   <LineChart prefHeight="150.0">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
@@ -106,11 +90,7 @@
             </VBox>
             <VBox prefWidth="400.0" spacing="5.0" id="forecasts-auto-5">
                <children>
-                  <Label text="Tomorrow at a Glance">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
+                  <Label text="Tomorrow at a Glance" styleClass="widget-title" />
                </children>
             </VBox>
          </children>

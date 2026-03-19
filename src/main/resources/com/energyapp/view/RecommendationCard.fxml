@@ -11,11 +11,7 @@
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>
    <children>
-      <Label fx:id="recTitleLabel" text="Recommendation Title">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
+      <Label fx:id="recTitleLabel" text="Recommendation Title" styleClass="widget-title" />
       <Label fx:id="recExplanationLabel" text="Recommendation description goes here" wrapText="true" />
    </children>
 </VBox>
