@@ -14,11 +14,7 @@
     <center>
         <VBox fx:id="devicesPaneMain" alignment="TOP_CENTER" spacing="20" id="devicesPaneMain">
             <children>
-                <Label fx:id="devicesTitle" text="Your Home Devices...">
-                    <font>
-                        <Font name="System Bold" size="40.0" />
-                    </font>
-                </Label>
+                <Label fx:id="devicesTitle" text="Your Home Devices..." styleClass="screen-title" />
 
                 <ScrollPane fx:id="devicesScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" id="devicesScrollPane">
                <content>

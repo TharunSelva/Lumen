@@ -31,7 +31,7 @@
 
                         <HBox alignment="CENTER_LEFT" maxHeight="64" prefHeight="64" spacing="12">
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
-                                <Label text="Eco Statistics"  id="ecostatistics-auto-4"/>
+                                <Label text="Eco Statistics"  id="ecostatistics-auto-4" styleClass="screen-title" />
                                 <Label text="Today • Updated 1 hr ago"  id="ecostatistics-auto-5"/>
                             </VBox>
       

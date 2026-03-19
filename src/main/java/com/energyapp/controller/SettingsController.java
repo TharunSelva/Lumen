@@ -2,11 +2,18 @@ package com.energyapp.controller;
 
 import com.energyapp.service.AccessibilityManager;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class SettingsController {
 
@@ -72,5 +79,50 @@ public class SettingsController {
         settingsDisplaySetting2.selectedProperty().bindBidirectional(AccessibilityManager.isCompactView());
         settingsDisplaySetting3.selectedProperty().bindBidirectional(AccessibilityManager.animationsShowing());
         settingsAccessibilitySetting3.selectedProperty().bindBidirectional(AccessibilityManager.isLargeText());
+
+        settingsAccessibilityButton.setOnAction(event -> {
+                showTextCustomizationModal();
+        });
+
+        settingsAccessibilitySetting2.selectedProperty().bindBidirectional(AccessibilityManager.screenReaderProperty());
     }
+
+    public void showTextCustomizationModal() {
+        Stage textOptionsModalStage = new Stage();
+        textOptionsModalStage.initModality(Modality.APPLICATION_MODAL);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/TextOptionsModal.fxml"));
+        Parent textOptionsModalRoot;
+        try {
+            textOptionsModalRoot = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        textOptionsModalStage.setTitle("Text Options");
+        Scene textOptionsScene = new Scene(textOptionsModalRoot, 400, 250);
+        ThemeController.applyTheme(textOptionsScene);
+        textOptionsModalStage.setScene(textOptionsScene);
+
+        textOptionsModalStage.showAndWait();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

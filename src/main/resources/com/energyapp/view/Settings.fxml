@@ -17,11 +17,7 @@
          <content>
             <VBox fx:id="settingsMainVBox" spacing="20.0" id="settingsMainVBox">
                <children>
-                  <Label fx:id="settingsGreetingLabel" text="What's wrong Richard? :(">
-                     <font>
-                        <Font size="30.0" />
-                     </font>
-                  </Label>
+                  <Label fx:id="settingsGreetingLabel" text="What's wrong Richard? :(" styleClass="screen-title" />
 
                   <GridPane fx:id="settingsMainGridPane" hgap="30.0" vgap="30.0" VBox.vgrow="ALWAYS">
                      <columnConstraints>

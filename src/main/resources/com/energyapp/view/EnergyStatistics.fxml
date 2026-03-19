@@ -38,8 +38,8 @@
                     <!-- Header row -->
                     <HBox alignment="CENTER_LEFT" spacing="12">
                         <VBox spacing="4" HBox.hgrow="ALWAYS">
-                            <Label text="Your energy statistics..."  id="energystatistics-auto-5"/>
-                            <Label text="Today • Updated 3 mins ago"  id="energystatistics-auto-6"/>
+                            <Label text="Your energy statistics..." id="energystatistics-auto-5" styleClass="screen-title" />
+                            <Label text="Today • Updated 3 mins ago" id="energystatistics-auto-6"/>
                         </VBox>
 
                         <ComboBox prefWidth="90" promptText="Day" />
