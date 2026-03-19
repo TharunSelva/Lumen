@@ -1,7 +1,7 @@
 package com.energyapp.db;
 
-import com.energyapp.model.EnergyRecord;
-import com.energyapp.utils.CsvReadForService;
+//import com.energyapp.model.EnergyRecord;
+//import com.energyapp.utils.CsvReadForService;
 import com.energyapp.service.OctopusEnergyTariffService;
 import com.energyapp.service.OpenMeteoSolarService;
 
@@ -163,8 +163,9 @@ public final class DbBootstrap {
     }
 
     // ------------------------
-    // CSV -> DB import
+    // CSV -> DB import (**REDUNDANT** - NOW USING TEMPLATE_DB WHICH HAS BEEN SEEDED ONCE WITH OLD CSV FILE)
     // ------------------------
+    /*
     private static void importSimulationCsv(Connection conn) throws Exception {
         InputStream csv = DbBootstrap.class.getResourceAsStream("/com/simulation_data.csv");
         if (csv == null) throw new IllegalStateException("Missing /com/simulation_data.csv");
@@ -232,6 +233,9 @@ public final class DbBootstrap {
         pd.setDouble(4, kwh);
         pd.addBatch();
     }
+
+     */
+
 
     // ------------------------
     // Carbon Intensity API cache (national)
