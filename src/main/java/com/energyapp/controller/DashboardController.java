@@ -1,32 +1,46 @@
 package com.energyapp.controller;
 
 import com.energyapp.model.EnergyRecord;
+import com.energyapp.model.Recommendation;
+import com.energyapp.service.RecommendationFeedService;
 import com.energyapp.service.SimulationService;
 import com.energyapp.utils.EnergyCalculator;
 import com.energyapp.utils.DateTimeUtils;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.scene.shape.Circle;
 
 public class DashboardController {
+
+    private static final int HOME_VISIBLE_RECOMMENDATIONS = 3;
 
     @FXML private VBox dashboard00VBox;
     @FXML private VBox dashboard10VBox;
@@ -43,9 +57,8 @@ public class DashboardController {
     @FXML private HBox dashboardQuickForecastBarHBox;
     @FXML private Label dashboardQuickForecastTitleLabel;
     @FXML private VBox dashboardQuickForecastVBox;
-    @FXML private Label dashboardQuickRec1Label;
-    @FXML private Label dashboardQuickRec2Label;
-    @FXML private Label dashboardQuickRec3Label;
+    @FXML private VBox dashboardQuickRecommendationsList;
+    @FXML private StackPane dashboardQuickRecommendationsViewport;
     @FXML private VBox dashboardQuickRecContainerVBox;
     @FXML private GridPane dashboardQuickRecGridPane;
     @FXML private Label dashboardQuickRecTitleLabel;
@@ -70,6 +83,7 @@ public class DashboardController {
     private PriceIndicatorController indicatorLogic;
     private MainLayoutController mainController;
     private SimulationService simulationService;
+    private final RecommendationFeedService recommendationFeedService = RecommendationFeedService.getInstance();
 
     private final XYChart.Series<Number, Number> series = new XYChart.Series<>();
 
@@ -103,6 +117,13 @@ public class DashboardController {
         dashboardScrollPane.viewportBoundsProperty().addListener((obs, oldBounds, newBounds) -> {
             dashboardContentVBox.setPrefWidth(newBounds.getWidth());
         });
+
+        if (dashboardQuickRecommendationsViewport != null) {
+            Rectangle clip = new Rectangle();
+            clip.widthProperty().bind(dashboardQuickRecommendationsViewport.widthProperty());
+            clip.heightProperty().bind(dashboardQuickRecommendationsViewport.heightProperty());
+            dashboardQuickRecommendationsViewport.setClip(clip);
+        }
     }
 
     private void openEnergyStatistics() {
@@ -153,6 +174,9 @@ public class DashboardController {
                 weeklyCostCardController.setCost(newTotal);
             }
         });
+
+        updateDashboardRecommendations(simulationService.getCurrentEnergyRecord().get());
+        simulationService.getCurrentEnergyRecord().addListener((obs, oldRecord, newRecord) -> updateDashboardRecommendations(newRecord));
     }
 
 
@@ -223,6 +247,143 @@ public class DashboardController {
             if (t >= lb) break;
             series.getData().remove(0);
         }
+    }
+
+    private void updateDashboardRecommendations(EnergyRecord currentRecord) {
+        if (currentRecord == null) {
+            return;
+        }
+
+        Platform.runLater(() -> renderDashboardRecommendations(
+                recommendationFeedService.updateRecommendations(currentRecord)
+        ));
+    }
+
+    private void renderDashboardRecommendations(RecommendationFeedService.FeedUpdate feedUpdate) {
+        if (dashboardQuickRecommendationsList == null) {
+            return;
+        }
+        List<Recommendation> allRecommendations = feedUpdate.getVisibleRecommendations();
+        List<Recommendation> recommendations = allRecommendations.size() <= HOME_VISIBLE_RECOMMENDATIONS
+                ? allRecommendations
+                : allRecommendations.subList(allRecommendations.size() - HOME_VISIBLE_RECOMMENDATIONS, allRecommendations.size());
+        recommendations = newestFirst(recommendations);
+
+        if (recommendations.isEmpty()) {
+            dashboardQuickRecommendationsList.getChildren().clear();
+            Label emptyState = new Label("No live recommendations just yet. Check back as your energy data updates.");
+            emptyState.getStyleClass().add("recommendation-empty-state");
+            emptyState.setWrapText(true);
+            dashboardQuickRecommendationsList.getChildren().add(emptyState);
+            return;
+        }
+
+        if (dashboardQuickRecommendationsList.getChildren().isEmpty() || feedUpdate.insertedCount() != 1) {
+            replaceRecommendationCards(recommendations);
+            return;
+        }
+
+        Recommendation insertedRecommendation = recommendations.stream()
+                .filter(recommendation -> feedUpdate.isNewlyInserted(recommendation.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (insertedRecommendation == null) {
+            replaceRecommendationCards(recommendations);
+            return;
+        }
+
+        if (dashboardQuickRecommendationsList.getChildren().size() < HOME_VISIBLE_RECOMMENDATIONS) {
+            Region cardNode = createRecommendationCard(insertedRecommendation);
+            animateNewTopCard(cardNode);
+            return;
+        }
+
+        animatePushDownTransition(insertedRecommendation, recommendations);
+    }
+
+    private void replaceRecommendationCards(List<Recommendation> recommendations) {
+        dashboardQuickRecommendationsList.getChildren().clear();
+        for (int i = 0; i < recommendations.size(); i++) {
+            dashboardQuickRecommendationsList.getChildren().add(createRecommendationCard(recommendations.get(i), i == 0));
+        }
+    }
+
+    private Region createRecommendationCard(Recommendation recommendation) {
+        return createRecommendationCard(recommendation, false);
+    }
+
+    private Region createRecommendationCard(Recommendation recommendation, boolean highlightLatest) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/RecommendationCard.fxml"));
+            Region cardNode = loader.load();
+            RecommendationCardController controller = loader.getController();
+            controller.setRecommendation(recommendation);
+            controller.setOnNavigate(() -> {
+                if (mainController != null) {
+                    mainController.handleShowRecommendations();
+                }
+            });
+            cardNode.getStyleClass().remove("recommendation-card-latest");
+            if (highlightLatest) {
+                cardNode.getStyleClass().add("recommendation-card-latest");
+            }
+            cardNode.setUserData(recommendation.getId());
+            return cardNode;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to render recommendation card", e);
+        }
+    }
+
+    private void animateNewTopCard(Region cardNode) {
+        dashboardQuickRecommendationsList.getChildren().add(0, cardNode);
+        cardNode.applyCss();
+        cardNode.layout();
+        cardNode.setOpacity(0);
+        cardNode.setTranslateY(-18);
+
+        FadeTransition fade = new FadeTransition(javafx.util.Duration.millis(240), cardNode);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        TranslateTransition slide = new TranslateTransition(javafx.util.Duration.millis(240), cardNode);
+        slide.setFromY(-18);
+        slide.setToY(0);
+
+        new ParallelTransition(fade, slide).play();
+    }
+
+    private void animatePushDownTransition(Recommendation insertedRecommendation, List<Recommendation> finalRecommendations) {
+        Region newCard = createRecommendationCard(insertedRecommendation, true);
+        dashboardQuickRecommendationsList.getChildren().add(0, newCard);
+        dashboardQuickRecommendationsList.applyCss();
+        dashboardQuickRecommendationsList.layout();
+
+        double cardHeight = newCard.getBoundsInParent().getHeight();
+        double shiftAmount = cardHeight + dashboardQuickRecommendationsList.getSpacing();
+        Region bottomCard = (Region) dashboardQuickRecommendationsList.getChildren().get(dashboardQuickRecommendationsList.getChildren().size() - 1);
+
+        FadeTransition fadeBottom = new FadeTransition(javafx.util.Duration.millis(320), bottomCard);
+        fadeBottom.setFromValue(1);
+        fadeBottom.setToValue(0);
+
+        TranslateTransition pushDown = new TranslateTransition(javafx.util.Duration.millis(420), dashboardQuickRecommendationsList);
+        pushDown.setFromY(-shiftAmount);
+        pushDown.setToY(0);
+        pushDown.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+
+        ParallelTransition transition = new ParallelTransition(fadeBottom, pushDown);
+        transition.setOnFinished(event -> {
+            dashboardQuickRecommendationsList.setTranslateY(0);
+            replaceRecommendationCards(finalRecommendations);
+        });
+        transition.play();
+    }
+
+    private List<Recommendation> newestFirst(List<Recommendation> recommendations) {
+        List<Recommendation> ordered = new ArrayList<>(recommendations);
+        Collections.reverse(ordered);
+        return ordered;
     }
 
 

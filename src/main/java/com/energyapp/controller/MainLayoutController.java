@@ -86,6 +86,7 @@ public class MainLayoutController {
             } else if (controller instanceof EnergyStatsController) {
                 ((EnergyStatsController) controller).setSimulationService(this.simulationService);
             } else if (controller instanceof RecommendationsController) {
+                ((RecommendationsController) controller).setMainController(this);
                 ((RecommendationsController) controller).setSimulationService(this.simulationService);
             } else if (controller instanceof EcoStatisticsController) {
                 ((EcoStatisticsController) controller).setSimulationService(this.simulationService);

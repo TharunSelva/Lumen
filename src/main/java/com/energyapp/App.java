@@ -35,6 +35,7 @@ public class App extends Application {
         Scene scene = new Scene(root, 1280, 720);
         ThemeController.applyTheme(scene);
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
