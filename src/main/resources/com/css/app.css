@@ -112,6 +112,12 @@
     -fx-padding: 10;
 }
 
+#dashboardQuickRecommendationsViewport,
+#recommendationsFeedViewport {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
 #dashboardQuickRecTitleLabel {
     -fx-font-weight: bold;
 }
@@ -893,6 +899,74 @@
     -fx-border-color: lightgray;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.08), 8, 0, 0, 2);
+}
+
+.recommendation-card-active {
+    -fx-border-color: #0f766e;
+    -fx-background-color: #f0fdfa;
+}
+
+.recommendation-card-history {
+    -fx-border-color: #d1d5db;
+    -fx-background-color: #f8fafc;
+}
+
+.recommendation-card-latest {
+    -fx-border-color: #0f766e;
+    -fx-border-width: 2px;
+    -fx-background-color: linear-gradient(to right, #ecfeff, #f8fafc);
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 118, 110, 0.18), 12, 0, 0, 3);
+}
+
+.recommendation-card-timestamp {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.recommendation-card-title {
+    -fx-text-fill: #0f172a;
+}
+
+.recommendation-card-body {
+    -fx-text-fill: #334155;
+}
+
+.recommendation-empty-state {
+    -fx-text-fill: #6b7280;
+    -fx-padding: 10 6 10 6;
+}
+
+.quick-tip-marquee {
+    -fx-background-color: #0f172a;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #1e293b;
+    -fx-padding: 10 0 10 0;
+    -fx-pref-width: Infinity;
+    -fx-max-width: Infinity;
+    -fx-min-width: 0;
+}
+
+.quick-tip-marquee-text {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+#recommendationcard-auto-1 .widget-title {
+    -fx-font-size: 1.12em !important;
+}
+
+#recommendationcard-auto-1 .label {
+    -fx-wrap-text: true;
+}
+
+#dashboardQuickRecommendationsList,
+#recommendationsContainer {
+    -fx-fill-width: true;
 }
 
 /* Recommendations.fxml */
@@ -2095,6 +2169,22 @@
 .app-root.high-contrast #insightcard-auto-1 .text {
     -fx-text-fill: #ffffff;
     -fx-fill: #ffffff;
+}
+
+.app-root.high-contrast .quick-tip-marquee {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+}
+
+.app-root.high-contrast .quick-tip-marquee-text,
+.app-root.high-contrast .recommendation-card-timestamp,
+.app-root.high-contrast .recommendation-empty-state {
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast .recommendation-card-title,
+.app-root.high-contrast .recommendation-card-body {
+    -fx-text-fill: #ffffff;
 }
 
 .large-text {
