@@ -303,6 +303,23 @@ public class RecommendationEngineTest {
             assertNotNull(rec.getCondition());
         }
     }
+
+    @Test
+    public void testRecommendationsExposeStableIdsAndTimestamps() {
+        EnergyRecord record = new EnergyRecord(
+                LocalDateTime.of(2026, 3, 31, 12, 0), "12:00", 0.0, 30.0, 160.0, 0.0,
+                2.0, 20, 0.0, 0.0, 2.5, 0.0
+        );
+
+        List<Recommendation> activeRecs = engine.getActiveRecommendations(record);
+
+        assertFalse(activeRecs.isEmpty());
+        for (Recommendation rec : activeRecs) {
+            assertNotNull(rec.getId());
+            assertNotNull(rec.getShownAt());
+            assertTrue(rec.isActive());
+        }
+    }
 }
 
 

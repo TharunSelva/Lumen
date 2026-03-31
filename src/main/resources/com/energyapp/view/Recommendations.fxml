@@ -4,24 +4,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationsController" id="recommendations-auto-1">
-   <ScrollPane prefHeight="200.0" prefWidth="200.0">
+<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationsController" id="recommendations-auto-1">
       <content>
-      
-          <BorderPane prefHeight="800" prefWidth="1200" id="recommendations-auto-2">
-      
-              <!-- CENTER CONTENT -->
-              <center>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" id="recommendations-auto-3">
-      
-                      <content>
-                          <VBox spacing="14" id="recommendations-auto-4">
+                          <VBox fillWidth="true" spacing="14" id="recommendations-auto-4">
                               <padding>
                                   <Insets bottom="16" left="16" right="16" top="16" />
                               </padding>
@@ -88,12 +78,16 @@
                               </HBox>
       
                               <Region prefHeight="6" />
-                        <VBox fx:id="recommendationsContainer" spacing="10"/>
+                              <Label text="Quick Recommendations" styleClass="widget-title" />
+                              <StackPane fx:id="recommendationsFeedViewport" prefHeight="430.0">
+                                  <children>
+                                      <VBox fx:id="recommendationsContainer" spacing="8"/>
+                                  </children>
+                              </StackPane>
+                              <VBox spacing="8">
+                                  <Label text="Energy-Saving Quick Tips" styleClass="widget-title" />
+                                  <fx:include source="QuickTipMarquee.fxml" />
+                              </VBox>
                           </VBox>
-                      </content>
-                  </ScrollPane>
-              </center>
-          </BorderPane>
       </content>
-   </ScrollPane>
-</StackPane>
+</ScrollPane>

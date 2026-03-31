@@ -3,15 +3,14 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" spacing="8.0" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationCardController" id="recommendationcard-auto-1">
+<VBox fx:id="recommendationCardRoot" maxHeight="-Infinity" maxWidth="Infinity" spacing="6.0" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.RecommendationCardController" id="recommendationcard-auto-1">
    <padding>
-      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+      <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
    </padding>
    <children>
-      <Label fx:id="recTitleLabel" text="Recommendation Title" styleClass="widget-title" />
-      <Label fx:id="recExplanationLabel" text="Recommendation description goes here" wrapText="true" />
+      <Label fx:id="recTimestampLabel" text="Shown 12:00" styleClass="recommendation-card-timestamp" />
+      <Label fx:id="recTitleLabel" text="Recommendation Title" styleClass="widget-title recommendation-card-title" />
+      <Label fx:id="recExplanationLabel" text="Recommendation description goes here" styleClass="recommendation-card-body" wrapText="true" />
    </children>
 </VBox>
