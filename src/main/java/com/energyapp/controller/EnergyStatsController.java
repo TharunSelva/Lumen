@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Circle;
@@ -49,7 +50,7 @@ public class EnergyStatsController {
     @FXML private Label device1holder, device2holder, device3holder;
     @FXML private Label device1useage, device2useage, device3useage;
     @FXML private Label weeklycost1, weeklycost2, weeklycost3;
-    @FXML private Circle page1, page2, page3;
+    @FXML private Label page1, page2, page3;
 
     private List<DeviceData> allDevices = new ArrayList<>();
     private int currentPage = 0;
@@ -70,19 +71,8 @@ public class EnergyStatsController {
     public void initialize() {
         page1.setOnMouseClicked(e -> { currentPage = 0; renderPage(); });
         page2.setOnMouseClicked(e -> { currentPage = 1; renderPage(); });
+        page3.setOnMouseClicked(e -> { currentPage = 2; renderPage(); });
 
-        // Page 1 & 2: Always there, but Page 2 starts "faded"
-        page1.setVisible(true);
-        page1.setManaged(true);
-        page1.setOpacity(1.0);
-
-        page2.setVisible(true);
-        page2.setManaged(true);
-        page2.setOpacity(1); // Faded on launch
-
-        // Page 3: Always gone
-        page3.setVisible(false);
-        page3.setManaged(false);
         // overlay toggling
         graphOverlay.setVisible(false);
         graphOverlay.setManaged(false);
@@ -341,8 +331,6 @@ public class EnergyStatsController {
     public void updateDeviceBreakdown(EnergyRecord currentRec) {
         if (simulationService == null) return;
         Map<String, Double> weeklyTotals = simulationService.getWeeklyAccumulatedUsage();
-
-        // 1. Map the data to our list
         allDevices = weeklyTotals.entrySet().stream()
                 .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
                 .map(entry -> new DeviceData(
@@ -352,28 +340,24 @@ public class EnergyStatsController {
                 ))
                 .collect(Collectors.toList());
 
-        // Just refresh the contents; the circles handle themselves via opacity in renderPage
         Platform.runLater(this::renderPage);
     }
 
     private void renderPage() {
         if (allDevices.isEmpty()) return;
 
-        // PAGE 1 DOT:
-        // Fully visible (1.0) if we are on page 0, otherwise faded (0.3)
-        page1.setOpacity(currentPage == 0 ? 1.0 : 0.3);
-        page1.setVisible(true);
-        page1.setManaged(true);
+        int totalPages = (int) Math.ceil(allDevices.size() / 3.0);
 
-        // PAGE 2 DOT:
-        // Fully visible (1.0) if we are on page 1, otherwise faded (0.3)
-        page2.setOpacity(currentPage == 1 ? 1.0 : 0.3);
-        page2.setVisible(true);
-        page2.setManaged(true);
+        page1.setVisible(totalPages >= 1); page1.setManaged(totalPages >= 1);
+        page2.setVisible(totalPages >= 2); page2.setManaged(totalPages >= 2);
+        page3.setVisible(totalPages >= 3); page3.setManaged(totalPages >= 3);
 
-        // PAGE 3 DOT: Always hidden
-        page3.setVisible(false);
-        page3.setManaged(false);
+        String active   = "-fx-padding: 4 10; -fx-font-size: 13; -fx-font-weight: bold; -fx-underline: true; -fx-opacity: 1.0;";
+        String inactive = "-fx-padding: 4 10; -fx-font-size: 13; -fx-font-weight: normal; -fx-underline: false; -fx-opacity: 0.45;";
+
+        page1.setStyle(currentPage == 0 ? active : inactive);
+        page2.setStyle(currentPage == 1 ? active : inactive);
+        page3.setStyle(currentPage == 2 ? active : inactive);
 
         int startIndex = currentPage * 3;
         updateSlot(device1, device1holder, device1useage, weeklycost1, startIndex);
@@ -391,7 +375,6 @@ public class EnergyStatsController {
             container.setVisible(true);
             container.setManaged(true);
         } else {
-            // This is key: Hide the 3rd box on Page 2
             container.setVisible(false);
             container.setManaged(false);
         }
