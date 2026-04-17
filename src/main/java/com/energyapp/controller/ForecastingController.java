@@ -132,8 +132,8 @@ public class ForecastingController {
         Map<String, Number> forecastPricesBySlot = collectForecastPricesBySlot(historicalPricesBySlot);
 
         List<XYChart.Series<String, Number>> chartSeries = new ArrayList<>();
-        chartSeries.addAll(buildContiguousSeries(historicalPricesBySlot, "Historical (Simulation)"));
-        chartSeries.addAll(buildContiguousSeries(forecastPricesBySlot, "Forecast (DB)"));
+        chartSeries.addAll(buildContiguousSeries(historicalPricesBySlot, "Historical"));
+        chartSeries.addAll(buildContiguousSeries(forecastPricesBySlot, "Forecast"));
 
         energyCostForecastLineChart.getData().setAll(chartSeries);
 
