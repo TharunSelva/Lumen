@@ -1,5 +1,7 @@
 package com.energyapp.controller;
 
+import com.energyapp.db.HomeProfileRepository;
+import com.energyapp.model.Geocode;
 import com.energyapp.model.ViewType;
 import com.energyapp.service.AccessibilityManager;
 import com.energyapp.service.SimulationService;
@@ -8,9 +10,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,6 +29,7 @@ public class MainLayoutController {
     private SimulationService simulationService;
     private ViewType currentView;
     private TextToSpeechService ttsService = new TextToSpeechService();
+    private final HomeProfileRepository homeProfileRepository = new HomeProfileRepository();
 
     public void initialize() {
         if (mainSideBarController != null) {
@@ -68,6 +73,7 @@ public class MainLayoutController {
         AccessibilityManager.customFontBoldProperty().addListener((obs, oldVal, newVal) -> applyGlobalTextSettings());
 
         applyGlobalTextSettings();
+        checkAndShowSetup();
 
     }
 
@@ -239,6 +245,29 @@ public class MainLayoutController {
 
         if (node instanceof javafx.scene.control.ScrollPane sp && sp.getContent() != null) {
             attachScreenReader(sp.getContent());
+        }
+    }
+
+    private void checkAndShowSetup() {
+        Geocode homeProfileCode = homeProfileRepository.getHomeLocation("HOME_1");
+        if (homeProfileCode == null) {
+            Stage setupModalStage = new Stage();
+            setupModalStage.initModality(Modality.APPLICATION_MODAL);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/SetupModal.fxml"));
+            Parent setupModalRoot;
+            try {
+                setupModalRoot = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            setupModalStage.setTitle("Location Setup");
+            Scene setupScene = new Scene(setupModalRoot, 400, 250);
+            ThemeController.applyTheme(setupScene);
+            setupModalStage.setScene(setupScene);
+
+            setupModalStage.showAndWait();
         }
     }
 }

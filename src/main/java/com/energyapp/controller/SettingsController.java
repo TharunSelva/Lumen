@@ -1,6 +1,9 @@
 package com.energyapp.controller;
 
+import com.energyapp.db.HomeProfileRepository;
+import com.energyapp.model.Geocode;
 import com.energyapp.service.AccessibilityManager;
+import com.energyapp.service.OpenMeteoSolarService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -53,6 +57,8 @@ public class SettingsController {
     @FXML private Label settingsPrivacyTitleLabel;
     @FXML private VBox settingsPrivacyVBox;
     @FXML private CheckBox settingsDisplaySetting1;   // Dark Mode
+    @FXML private TextField locationTextField;
+    @FXML private Button saveLocationButton;
 
     @FXML
     public void initialize() {
@@ -85,6 +91,23 @@ public class SettingsController {
         });
 
         settingsAccessibilitySetting2.selectedProperty().bindBidirectional(AccessibilityManager.screenReaderProperty());
+
+        saveLocationButton.setOnAction(event -> {
+            String selectedLocation = locationTextField.getText();
+            if (selectedLocation.equals("Enter City") || selectedLocation.isEmpty()) {
+                return;
+            }
+
+            try {
+                OpenMeteoSolarService solarService = new OpenMeteoSolarService();
+                HomeProfileRepository profileRepository = new HomeProfileRepository();
+                Geocode code = solarService.geocoder(selectedLocation);
+                profileRepository.updateHomeLocation("HOME_1", code);
+                locationTextField.clear();
+            } catch (IllegalArgumentException | InterruptedException | IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void showTextCustomizationModal() {

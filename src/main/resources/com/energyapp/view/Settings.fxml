@@ -11,6 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
 <BorderPane stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SettingsController">
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
@@ -40,7 +42,11 @@
                               </Label>
                               <VBox spacing="5.0">
                                  <children>
-                                    <CheckBox fx:id="settingsAccountSetting1" mnemonicParsing="false" text="Edit Profile" />
+                                    <Label text="Location:"></Label>
+                                    <HBox spacing="10.0">
+                                       <TextField fx:id="locationTextField" promptText="Enter City" HBox.hgrow="ALWAYS"/>
+                                       <Button fx:id="saveLocationButton" text="Save"/>
+                                    </HBox>
                                     <CheckBox fx:id="settingsAccountSetting2" mnemonicParsing="false" text="Change Password" />
                                     <CheckBox fx:id="settingsAccountSetting3" mnemonicParsing="false" text="Notifications" />
                                  </children>
