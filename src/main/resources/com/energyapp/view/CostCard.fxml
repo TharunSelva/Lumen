@@ -11,9 +11,10 @@
       xmlns:fx="http://javafx.com/fxml/1"
       xmlns="http://javafx.com/javafx/8"
       fx:controller="com.energyapp.controller.CostCardController"
-      id="costCardVBox">
+      id="costCardVBox"
+      fillWidth="true">
     <children>
-        <Label fx:id="costCardLabel" alignment="CENTER" prefHeight="44.0" prefWidth="250" text="54 kWh so far this week...">
+        <Label fx:id="costCardLabel" alignment="CENTER" maxWidth="Infinity" wrapText="true" text="54 kWh so far this week...">
             <font>
                 <Font size="20" />
             </font>

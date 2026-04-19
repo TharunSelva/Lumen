@@ -51,17 +51,22 @@
       
                                       <VBox id="dashboard00VBox" fx:id="dashboard00VBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                           <children>
-                                    <HBox prefHeight="2.0" prefWidth="621.0">
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
                                        <children>
-                                                    <Label id="dashboardUsageTitleLabel" fx:id="dashboardUsageTitleLabel" prefHeight="18.0" prefWidth="201.0" text="Today's Usage - Statistics" />
-                                          <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="174.0" visible="false" />
-                                          <Label fx:id="priceStatusText" prefHeight="28.0" prefWidth="179.0" text="Initialising...">
+                                           <Label id="dashboardUsageTitleLabel"
+                                                  fx:id="dashboardUsageTitleLabel"
+                                                  text="Today's Usage - Statistics"
+                                                  wrapText="true"
+                                                  maxWidth="Infinity"
+                                                  HBox.hgrow="ALWAYS" />
+                                           <Label fx:id="priceStatusText"
+                                                  text="Initialising..."
+                                                  wrapText="true">
                                              <font>
-                                                <Font size="19.0" />
+                                                 <Font size="19.0" />
                                              </font>
-                                          </Label>
-                                          <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="19.0" visible="false" />
-                                          <Circle fx:id="priceIndicator" fill="#bbff9c" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+                                           </Label>
+                                           <Circle fx:id="priceIndicator" fill="#bbff9c" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
                                        </children>
                                     </HBox>
                                               <GridPane hgap="10.0">

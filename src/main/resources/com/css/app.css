@@ -960,13 +960,17 @@
     -fx-font-size: 1.12em !important;
 }
 
-#recommendationcard-auto-1 .label {
-    -fx-wrap-text: true;
-}
-
 #dashboardQuickRecommendationsList,
 #recommendationsContainer {
     -fx-fill-width: true;
+}
+
+#recommendationcard-auto-1 {
+    -fx-max-width: Infinity;
+}
+
+#recommendationcard-auto-1 .label {
+    -fx-wrap-text: true;
 }
 
 /* Recommendations.fxml */
