@@ -2,7 +2,7 @@ package com.energyapp.controller;
 
 import com.energyapp.db.HomeProfileRepository;
 import com.energyapp.model.Geocode;
-import com.energyapp.service.OpenMeteoSolarService;
+import com.energyapp.db.OpenMeteoSolarService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

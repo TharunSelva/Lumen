@@ -3,7 +3,7 @@ package com.energyapp.db;
 //import com.energyapp.model.EnergyRecord;
 //import com.energyapp.utils.CsvReadForService;
 import com.energyapp.service.OctopusEnergyTariffService;
-import com.energyapp.service.OpenMeteoSolarService;
+import com.energyapp.db.OpenMeteoSolarService;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

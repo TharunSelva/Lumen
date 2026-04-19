@@ -5,7 +5,7 @@ import com.energyapp.model.EnergyRecord;
 import com.energyapp.model.Geocode;
 import com.energyapp.model.Insight;
 import com.energyapp.service.InsightEngine;
-import com.energyapp.service.OpenMeteoSolarService;
+import com.energyapp.db.OpenMeteoSolarService;
 import com.energyapp.service.SimulationService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

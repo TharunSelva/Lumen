@@ -3,7 +3,7 @@ package com.energyapp.controller;
 import com.energyapp.db.HomeProfileRepository;
 import com.energyapp.model.Geocode;
 import com.energyapp.service.AccessibilityManager;
-import com.energyapp.service.OpenMeteoSolarService;
+import com.energyapp.db.OpenMeteoSolarService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

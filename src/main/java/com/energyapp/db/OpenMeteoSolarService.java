@@ -1,4 +1,4 @@
-package com.energyapp.service;
+package com.energyapp.db;
 
 import com.energyapp.model.Geocode;
 import com.google.gson.JsonArray;

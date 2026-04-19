@@ -63,7 +63,7 @@ public final class ForecastIntervalCacheWriter {
     public static void upsertSolarRadiation(
             Connection conn,
             String homeId,
-            List<com.energyapp.service.OpenMeteoSolarService.SolarPoint> points
+            List<com.energyapp.db.OpenMeteoSolarService.SolarPoint> points
     ) throws SQLException {
 
         String sql = """
