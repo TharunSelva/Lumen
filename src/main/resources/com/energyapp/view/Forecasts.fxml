@@ -69,9 +69,22 @@
             <VBox HBox.hgrow="ALWAYS" id="forecasts-auto-3">
                <children>
                   <Label text="Solar Forecast Panel" styleClass="widget-title" />
-                  <LineChart createSymbols="false" legendVisible="false" prefHeight="150.0">
-                    <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
-                    <yAxis><NumberAxis side="LEFT" /></yAxis>
+                  <LineChart fx:id="solarForecastChart"
+                             title="Solar Forecast"
+                             legendVisible="false"
+                             styleClass="solar-chart"
+                             createSymbols="false"
+                              prefHeight="380.0"
+                              VBox.vgrow="ALWAYS">
+                     <xAxis>
+                        <CategoryAxis label="Time (24-hr)" side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis label="Predicted Solar Generation (kWh)"
+                                    side="LEFT"
+                                    autoRanging="true"
+                                    lowerBound="0" />
+                     </yAxis>
                   </LineChart>
                </children>
             </VBox>
