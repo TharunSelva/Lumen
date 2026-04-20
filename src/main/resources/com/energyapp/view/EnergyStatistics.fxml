@@ -193,12 +193,24 @@
 
                         <!-- RIGHT COLUMN: source mix + assistant card -->
                         <VBox spacing="12" GridPane.columnIndex="2">
-                            <VBox id="energystatistics-auto-32" spacing="8">
-                                <padding><Insets bottom="12" left="12" right="12" top="12" /></padding>
-                                <Label id="energystatistics-auto-33" text="Source Mix (Last 4 Hours)" />
-                                <StackPane id="energystatistics-auto-34" maxHeight="150" prefHeight="150">
-                                    <Label id="energystatistics-auto-35" text="(chart placeholder)" />
-                                </StackPane>
+                            <VBox spacing="8" styleClass="card">
+                                <padding>
+                                    <Insets bottom="12" left="12" right="12" top="12" />
+                                </padding>
+                                <Label text="Environmental breakdown by energy source" styleClass="widget-title" />
+                                <BarChart fx:id="energySourceBreakdownChart"
+                                          title="Personal vs Grid Sources (kWh)"
+                                          legendVisible="true"
+                                          prefHeight="460.0"
+                                          minHeight="380.0"
+                                          VBox.vgrow="ALWAYS">
+                                    <xAxis>
+                                        <NumberAxis label="Energy (kWh)" side="BOTTOM" lowerBound="0" autoRanging="true" />
+                                    </xAxis>
+                                    <yAxis>
+                                        <CategoryAxis label="Energy Source" side="LEFT" />
+                                    </yAxis>
+                                </BarChart>
                             </VBox>
 
                             <fx:include fx:id="solarStatusCard" source="SolarGenCard.fxml" VBox.vgrow="ALWAYS" />

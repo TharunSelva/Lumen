@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import com.energyapp.utils.DateTimeUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -51,6 +52,7 @@ public class EnergyStatsController {
     @FXML private Label device1useage, device2useage, device3useage;
     @FXML private Label weeklycost1, weeklycost2, weeklycost3;
     @FXML private Label page1, page2, page3;
+    @FXML private BarChart<Number, String> energySourceBreakdownChart;
 
     private List<DeviceData> allDevices = new ArrayList<>();
     private int currentPage = 0;
@@ -287,6 +289,15 @@ public class EnergyStatsController {
 
     public void setSimulationService(SimulationService service) {
         this.simulationService = service;
+
+        // Safe call for ADD-08
+        if (energySourceBreakdownChart != null) {
+            loadEnergySourceBreakdown();
+        } else {
+            // Fallback - run after FXML is ready
+            javafx.application.Platform.runLater(this::loadEnergySourceBreakdown);
+        }
+
         if (this.simulationService != null) {
             initServiceConnection();
 
@@ -387,5 +398,47 @@ public class EnergyStatsController {
             this.usage = usage;
             this.weeklyCost = weeklyCost;
         }
+    }
+    // ====================== ADD-08: GRID SOURCES BREAKDOWN ======================
+    private void loadEnergySourceBreakdown() {
+        System.out.println("DEBUG: loadEnergySourceBreakdown() called");
+
+        if (energySourceBreakdownChart == null) {
+            System.out.println("ERROR: energySourceBreakdownChart is NULL");
+            return;
+        }
+
+        XYChart.Series<Number, String> series = new XYChart.Series<>();
+        series.setName("Energy Usage (kWh)");
+
+        double[] values = getEnergySourceBreakdownValues();
+
+        String[] categories = {
+                "Solar (Personal)",
+                "Solar (Grid)",
+                "Wind (Personal)",
+                "Wind (Grid)",
+                "Battery (Personal)",
+                "Fossil (Grid)",
+                "Hydroelectric (Grid)"
+        };
+
+        for (int i = 0; i < categories.length; i++) {
+            series.getData().add(new XYChart.Data<>(values[i], categories[i]));
+        }
+
+        energySourceBreakdownChart.getData().clear();
+        energySourceBreakdownChart.getData().add(series);
+
+        if (series.getNode() != null) {
+            series.getNode().setStyle("-fx-bar-fill: #4CAF50;");
+        }
+
+        energySourceBreakdownChart.requestLayout();
+        System.out.println("DEBUG: ADD-08 chart loaded successfully with " + series.getData().size() + " bars");
+    }
+
+    private double[] getEnergySourceBreakdownValues() {
+        return new double[]{12.4, 3.8, 0.0, 8.2, 5.1, 14.7, 2.9};
     }
 }
