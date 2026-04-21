@@ -105,6 +105,11 @@ public class SimulationServiceTest {
     }
 
     @Test
+    void testGetWeeklyAccumulatedCost_InitiallyZero() {
+        assertEquals(0.0, service.getWeeklyAccumulatedCost(), 0.001);
+    }
+
+    @Test
     void testMultipleSimulationAdvancements() throws Exception {
         List<EnergyRecord> mockData = new ArrayList<>();
         mockData.add(new EnergyRecord(LocalDateTime.now(), "12:00", 5.0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0));
@@ -231,6 +236,63 @@ public class SimulationServiceTest {
         advanceMethod.invoke(service);
         waitForFxEvents();
         assertEquals(8.0, service.getCurrentEnergyRecord().get().getGridImport());
+    }
+
+    @Test
+    void testAdvanceSimulation_TracksWeeklyAccumulatedCost() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        mockData.add(new EnergyRecord(LocalDateTime.now(), "12:00", 5.0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0));
+        mockData.add(new EnergyRecord(LocalDateTime.now().plusMinutes(30), "12:30", 3.0, 15.0, 0, 0, 0, 0, 0, 0, 0, 0));
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+
+        assertEquals(0.95, service.getWeeklyAccumulatedCost(), 0.001);
+        assertEquals(0.95, service.weeklyAccumulatedCostProperty().get(), 0.001);
+    }
+
+    @Test
+    void testAdvanceSimulation_ResetsWeeklyAccumulatorAtInterval336Boundary() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        LocalDateTime start = LocalDateTime.of(2024, 1, 1, 0, 0);
+        for (int i = 0; i < 337; i++) {
+            mockData.add(new EnergyRecord(
+                    start.plusMinutes(i * 30L), "T" + i,
+                    10.0, 10.0,
+                    0, 0, 0, 0, 0, 0, 0, 0
+            ));
+        }
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+
+        for (int i = 0; i < 336; i++) {
+            advanceMethod.invoke(service);
+        }
+        waitForFxEvents();
+
+        assertEquals(336.0, service.getWeeklyAccumulatedCost(), 0.001, "Interval 335 should still belong to the old week");
+        assertEquals(336.0, service.getTotalAccumulatedCost(), 0.001);
+
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+
+        assertEquals(1.0, service.getWeeklyAccumulatedCost(), 0.001, "Interval 336 should start the new week");
+        assertEquals(337.0, service.getTotalAccumulatedCost(), 0.001, "Total cost should still count every interval exactly once");
+        assertEquals(1.0, service.weeklyAccumulatedCostProperty().get(), 0.001);
     }
 
     private void waitForFxEvents() throws InterruptedException {
