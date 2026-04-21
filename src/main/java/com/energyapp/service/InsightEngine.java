@@ -1,8 +1,12 @@
 package com.energyapp.service;
 
 import com.energyapp.db.QuickTipRepository;
+import com.energyapp.model.EnergyRecord;
 import com.energyapp.model.Insight;
 import com.energyapp.model.QuickTip;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,5 +57,43 @@ public class InsightEngine {
         }
         QuickTip tip = allTips.get(random.nextInt(allTips.size()));
         return new Insight(tip.getTitle(), tip.getBody(), "bulb-icon", 0.5);
+    }
+
+    public Insight generateGreenForecastInsight(List<EnergyRecord> upcomingRecords) {
+        if (upcomingRecords == null || upcomingRecords.size() < 3) {
+            return null;
+        }
+
+        int windowSize = 3;
+        double minScore = Double.MAX_VALUE;
+        int bestIdx = -1;
+
+        for (int i = 0; i <= upcomingRecords.size() - windowSize; i++) {
+            double windowPrice = 0;
+            double windowCarbon = 0;
+            for (int j = 0; j < windowSize; j++) {
+                windowPrice += upcomingRecords.get(i + j).getPricePerKwh();
+                windowCarbon += upcomingRecords.get(i + j).getCarbon();
+            }
+
+            double score = windowPrice + (windowCarbon / 10.0);
+
+            if (score < minScore) {
+                minScore = score;
+                bestIdx = i;
+            }
+        }
+
+        if (bestIdx != -1) {
+            LocalDateTime startTime = upcomingRecords.get(bestIdx).getTimestamp();
+            LocalDateTime endTime = startTime.plusMinutes(30 * windowSize);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            String timeWindow = startTime.format(formatter) + " - " + endTime.format(formatter);
+            String msg = String.format("Optimal time for heavy appliances is %s. This window offers lowest combined cost +" +
+                    " carbon intensity.", timeWindow);
+
+            return new Insight("Green Forecast", msg, "leaf-icon", 1.0);
+        }
+        return null;
     }
 }

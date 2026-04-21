@@ -213,4 +213,15 @@ public class SimulationService {
     public int getCurrentDataIndex() {
         return currentDataIndex;
     }
+
+    public List<EnergyRecord> getUpcomingRecords(int limit) {
+        if (simulationData == null || simulationData.isEmpty()) {
+            return Collections.emptyList();
+        }
+        int end = Math.min(currentDataIndex + limit, simulationData.size());
+        if (currentDataIndex >= end) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(simulationData.subList(currentDataIndex, end));
+    }
 }
