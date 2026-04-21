@@ -334,13 +334,15 @@ public final class DbBootstrap {
     private static void cacheOctopusTariffs(Connection conn) throws Exception {
         // --------------
         // OCTOPUS: choose from/to here
-        // from = now (UTC) rounded down to 30-min boundary
+        // from = start of current UTC day
         // to   = from + 48h (you can change to 24h if you want)
         // --------------------------
 
-        OffsetDateTime from = OctopusEnergyTariffService.roundDownToHalfHourUtc(
-                OffsetDateTime.now(ZoneOffset.UTC)
-        );
+        OffsetDateTime nowUtc = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime from = nowUtc
+            .toLocalDate()
+            .atStartOfDay()
+            .atOffset(ZoneOffset.UTC);
         OffsetDateTime to = from.plusHours(48);
 
         OctopusEnergyTariffService octopus = new OctopusEnergyTariffService();
