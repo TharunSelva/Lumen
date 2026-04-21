@@ -63,6 +63,10 @@ public final class DbBootstrap {
                 // Mark installed-from-template once
                 upsertMeta(conn, "template_installed", "true");
 
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate("UPDATE home_profile SET lat = NULL, lon = NULL WHERE home_id = 'HOME_1'");
+                }
+
                 // Run API caching for current carbon and mix
                 try {
                     cacheCurrentCarbonAndMix(conn);
