@@ -2,6 +2,7 @@ package com.energyapp.service;
 
 import com.energyapp.model.EnergyRecord;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,6 +87,150 @@ public class SimulationServiceTest {
 
         assertTrue(listenerFired[0], "Controllers listening to the service should be notified of updates");
         assertEquals(5.0, service.getCurrentEnergyRecord().get().getGridImport());
+    }
+
+    @Test
+    void testGetCurrentEnergyRecord_NotNull() {
+        assertNotNull(service.getCurrentEnergyRecord());
+    }
+
+    @Test
+    void testGetEnergyStatsSessionHistory_InitiallyEmpty() {
+        assertTrue(service.getEnergyStatsSessionHistory().isEmpty());
+    }
+
+    @Test
+    void testGetTotalAccumulatedCost_InitiallyZero() {
+        assertEquals(0.0, service.getTotalAccumulatedCost(), 0.001);
+    }
+
+    @Test
+    void testMultipleSimulationAdvancements() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        mockData.add(new EnergyRecord(LocalDateTime.now(), "12:00", 5.0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0));
+        mockData.add(new EnergyRecord(LocalDateTime.now().plusMinutes(30), "12:30", 3.0, 15.0, 0, 0, 0, 0, 0, 0, 0, 0));
+        mockData.add(new EnergyRecord(LocalDateTime.now().plusHours(1), "13:00", 7.0, 20.0, 0, 0, 0, 0, 0, 0, 0, 0));
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+
+        assertEquals(3, service.getEnergyStatsSessionHistory().size());
+        // Cost: (5*10 + 3*15 + 7*20) / 100 = (50 + 45 + 140) / 100 = 2.35
+        assertEquals(2.35, service.getTotalAccumulatedCost(), 0.001);
+    }
+
+    @Test
+    void testSessionHistoryOrder() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        LocalDateTime time1 = LocalDateTime.of(2024, 1, 1, 12, 0);
+        LocalDateTime time2 = LocalDateTime.of(2024, 1, 1, 12, 30);
+        mockData.add(new EnergyRecord(time1, "12:00", 5.0, 10.0, 100, 5, 2, 50, 1, 1, 1, 0.5));
+        mockData.add(new EnergyRecord(time2, "12:30", 3.0, 15.0, 120, 4, 1.5, 60, 0.5, 0.5, 0.5, 0.3));
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+
+        List<EnergyRecord> history = service.getEnergyStatsSessionHistory();
+        assertEquals(2, history.size());
+        assertEquals(time1, history.get(0).getTimestamp());
+        assertEquals(time2, history.get(1).getTimestamp());
+    }
+
+    @Test
+    void testZeroGridImportCost() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        mockData.add(new EnergyRecord(LocalDateTime.now(), "12:00", 0.0, 25.0, 100, 10, 5, 50, 2, 1, 1, 0.5));
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+        advanceMethod.invoke(service);
+
+        waitForFxEvents();
+
+        assertEquals(0.0, service.getTotalAccumulatedCost(), 0.001, "Cost should be £0.00 with zero grid import");
+    }
+
+    @Test
+    void testZeroPriceCost() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        mockData.add(new EnergyRecord(LocalDateTime.now(), "12:00", 10.0, 0.0, 100, 10, 5, 50, 2, 1, 1, 0.5));
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+        advanceMethod.invoke(service);
+
+        waitForFxEvents();
+
+        assertEquals(0.0, service.getTotalAccumulatedCost(), 0.001, "Cost should be £0.00 with zero price");
+    }
+
+    @Test
+    void testHighValueCostCalculation() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        mockData.add(new EnergyRecord(LocalDateTime.now(), "12:00", 100.0, 50.0, 100, 10, 5, 50, 2, 1, 1, 0.5));
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+        advanceMethod.invoke(service);
+
+        waitForFxEvents();
+
+        // Cost = 100 * 50 / 100 = 50.0
+        assertEquals(50.0, service.getTotalAccumulatedCost(), 0.001);
+    }
+
+    @Test
+    void testCurrentRecordUpdatesCorrectly() throws Exception {
+        List<EnergyRecord> mockData = new ArrayList<>();
+        mockData.add(new EnergyRecord(LocalDateTime.now(), "First", 5.0, 10.0, 100, 5, 2, 50, 1, 1, 1, 0.5));
+        mockData.add(new EnergyRecord(LocalDateTime.now(), "Second", 8.0, 15.0, 120, 4, 1.5, 60, 0.5, 0.5, 0.5, 0.3));
+
+        Field dataField = SimulationService.class.getDeclaredField("simulationData");
+        dataField.setAccessible(true);
+        dataField.set(service, mockData);
+
+        Method advanceMethod = SimulationService.class.getDeclaredMethod("advanceSimulation");
+        advanceMethod.setAccessible(true);
+
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+        assertEquals(5.0, service.getCurrentEnergyRecord().get().getGridImport());
+
+        advanceMethod.invoke(service);
+        waitForFxEvents();
+        assertEquals(8.0, service.getCurrentEnergyRecord().get().getGridImport());
     }
 
     private void waitForFxEvents() throws InterruptedException {

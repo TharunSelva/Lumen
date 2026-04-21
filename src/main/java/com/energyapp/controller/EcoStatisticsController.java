@@ -16,6 +16,10 @@ public class EcoStatisticsController {
     @FXML private StackPane cleanEnergyChartContainer;
     @FXML private BarChart<String, Number> environmentalBreakdownChart;
     @FXML private Label cleanEnergyShareLabel;
+    @FXML private Label carbonSavedLabel;
+    @FXML private Label carbonFootprintLabel;
+    private double accumulatedGridCarbon = 0.0;
+    private double accumulatedSolarCarbonSaved = 0.0;
 
     private LineChart<String, Number> cleanEnergyLineChart;
     private XYChart.Series<String, Number> cleanEnergySeries;
@@ -75,6 +79,8 @@ public class EcoStatisticsController {
     private void populateFromHistory() {
         accumulatedSolar = 0.0;
         accumulatedGrid = 0.0;
+        accumulatedGridCarbon = 0.0;
+        accumulatedSolarCarbonSaved = 0.0;
         cleanEnergySeries.getData().clear();
         solarBarSeries.getData().clear();
         gridBarSeries.getData().clear();
@@ -101,6 +107,18 @@ public class EcoStatisticsController {
 
         accumulatedSolar += solar;
         accumulatedGrid += grid;
+
+        double currentGridIntensity = record.getCarbon();
+
+        accumulatedGridCarbon += (grid * currentGridIntensity);
+        accumulatedSolarCarbonSaved += (solar * currentGridIntensity);
+
+        double avgFootprint = (accumulatedGrid > 0) ? (accumulatedGridCarbon / accumulatedGrid) : 0.0;
+
+        double savedKg = accumulatedSolarCarbonSaved / 1000.0;
+
+        carbonFootprintLabel.setText(String.format("%.0f gCO₂/kWh", avgFootprint));
+        carbonSavedLabel.setText(String.format("%.2f kg CO₂", savedKg));
 
         if (solarBarSeries.getData().isEmpty()) {
             solarBarSeries.getData().add(new XYChart.Data<>("Total kWh", accumulatedSolar));

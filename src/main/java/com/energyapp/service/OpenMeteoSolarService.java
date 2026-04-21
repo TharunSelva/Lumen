@@ -1,14 +1,17 @@
-package com.energyapp.service;
+package com.energyapp.db;
 
+import com.energyapp.model.Geocode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,4 +87,51 @@ public class OpenMeteoSolarService {
 
         return out;
     }
+
+    public Geocode geocoder(String cityName) throws IOException, IllegalArgumentException, InterruptedException {
+        String encodedCity = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
+        String url = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodedCity + "&count=1&format=json";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new IOException("Open-Meteo Geocoding failed with exit code: " + response.statusCode() + ": " + response.body());
+        }
+
+        JsonObject jsonResponse = JsonParser.parseString(response.body()).getAsJsonObject();
+        JsonArray resultsArray = jsonResponse.getAsJsonArray("results");
+
+        double lat = 0;
+        double lon = 0;
+        if (resultsArray != null && !resultsArray.isEmpty()) {
+            JsonObject firstResult = resultsArray.get(0).getAsJsonObject();
+            lat = firstResult.get("latitude").getAsDouble();
+            lon = firstResult.get("longitude").getAsDouble();
+        } else {
+            throw new IllegalArgumentException("City not found");
+        }
+
+        return new Geocode(
+                lat,
+                lon
+        );
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

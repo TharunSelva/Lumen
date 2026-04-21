@@ -3,6 +3,9 @@ package com.energyapp.controller;
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.service.SimulationService;
 
+import com.energyapp.db.HomeProfileRepository;
+import com.energyapp.model.Geocode;
+import com.energyapp.db.OpenMeteoSolarService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -16,16 +19,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import java.util.List;
+
 public class ForecastController {
 
-    @FXML
-    private LineChart<String, Number> energyCostForecastLineChart;
-
-    @FXML
-    private Button forecastingReload;
-
-    @FXML
-    private Label lastUpdatedLabel;
+    @FXML private LineChart<?, ?> energyCostForecastLineChart;
+    @FXML private Button forecastingReload;
+    @FXML private Label lastUpdatedLabel;
 
     private XYChart.Series<String, Number> energyCostSeries = new XYChart.Series<>();
 

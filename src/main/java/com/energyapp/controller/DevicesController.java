@@ -52,7 +52,9 @@ public class DevicesController {
             }
 
             addDeviceModalStage.setTitle("Add New Device");
-            addDeviceModalStage.setScene(new Scene(addDeviceModalRoot, 400, 250));
+            Scene addDeviceScene = new Scene(addDeviceModalRoot, 400, 250);
+            ThemeController.applyTheme(addDeviceScene);
+            addDeviceModalStage.setScene(addDeviceScene);
 
             addDeviceModalStage.showAndWait();
 
@@ -77,12 +79,10 @@ public class DevicesController {
             String formattedDeviceType = device.getDeviceType().name().replace("_", " ");
 
             Label label = new Label(formattedDeviceType);
-            label.setStyle("-fx-text-fill: #333333; -fx-font-weight: bold; -fx-font-size: 12px;");
+            label.getStyleClass().add("device-card-type-label");
 
             VBox card = new VBox(5);
-            card.setStyle("-fx-padding: 10; -fx-border-color: #cccccc; -fx-border-radius: 8; " +
-                    "-fx-background-radius: 8; -fx-background-color: white; " +
-                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+            card.getStyleClass().add("device-card");
 
             Circle indicator = new Circle(5);
             UIUtils.bindOnOffIndicator(indicator, device.isOnProperty());
@@ -116,7 +116,9 @@ public class DevicesController {
             controller.initData((SmartPlug) device);
 
             settingsModalStage.setTitle("Device Settings");
-            settingsModalStage.setScene(new Scene(settingsModalRoot, 500, 275));
+            Scene settingsScene = new Scene(settingsModalRoot, 500, 275);
+            ThemeController.applyTheme(settingsScene);
+            settingsModalStage.setScene(settingsScene);
 
             settingsModalStage.showAndWait();
         } else {

@@ -1,15 +1,20 @@
 package com.energyapp.controller;
 
 import com.energyapp.db.ForecastIntervalRepository;
+import com.energyapp.db.HomeProfileRepository;
 import com.energyapp.model.EnergyRecord;
+import com.energyapp.model.Geocode;
 import com.energyapp.model.Insight;
 import com.energyapp.service.InsightEngine;
+import com.energyapp.db.OpenMeteoSolarService;
 import com.energyapp.service.SimulationService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,11 +38,15 @@ public class ForecastingController {
     @FXML private Label lastUpdatedLabel;
     @FXML private VBox insightsContainer;
     @FXML private Button forecastingReload;
+    @FXML private XYChart<Number, Number> solarForecastChart;
 
     private SimulationService simulationService;
     private final ForecastIntervalRepository forecastIntervalRepository = new ForecastIntervalRepository();
     private static final String HOME_ID = "HOME_1";
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
+
+    private final HomeProfileRepository homeRepo = new HomeProfileRepository();
+    private final OpenMeteoSolarService solarService = new OpenMeteoSolarService();
 
     @FXML
     public void initialize() {
@@ -48,6 +57,7 @@ public class ForecastingController {
         }
 
         refreshInsights();
+        loadSolarForecast();
 
         if (lastUpdatedLabel != null) {
             lastUpdatedLabel.setText("Waiting for simulation data...");
@@ -59,6 +69,8 @@ public class ForecastingController {
                 refreshEnergyPriceChart();
             });
         }
+
+        forecastingReload.setOnAction(event -> loadSolarForecast());
     }
 
     public void setSimulationService(SimulationService service) {
@@ -230,5 +242,44 @@ public class ForecastingController {
             slots.add(formatSlot(slot));
         }
         return slots;
+    }
+
+    private void loadSolarForecast() {
+        Geocode loc = homeRepo.getHomeLocation("HOME_1");
+        if (loc == null) return;
+
+        List<OpenMeteoSolarService.SolarPoint> forecast = null;
+        try {
+            forecast = solarService.fetchHourlyShortwave(loc.latitude(), loc.longitude(), 2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (forecast == null) return;
+
+        List<OpenMeteoSolarService.SolarPoint> finalForecast = forecast;
+        Platform.runLater(() -> {
+            solarForecastChart.getData().clear();
+
+            // Lock the X axis to exactly your data range
+            javafx.scene.chart.NumberAxis xAxis =
+                    (javafx.scene.chart.NumberAxis) solarForecastChart.getXAxis();
+            xAxis.setAutoRanging(false);
+            xAxis.setLowerBound(0);
+            xAxis.setUpperBound(47);
+            xAxis.setTickUnit(1); // one tick per hour
+
+            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+            series.setName("Solar Generation (W/m²)");
+
+            for (int i = 0; i < finalForecast.size(); i++) {
+                OpenMeteoSolarService.SolarPoint point = finalForecast.get(i);
+                int hour = Integer.parseInt(point.timeIso.substring(11, 13));
+                boolean isDay2 = i >= 24;
+                series.getData().add(new XYChart.Data<>(isDay2 ? hour + 24 : hour, point.shortwaveWm2));
+            }
+
+            solarForecastChart.getData().add(series);
+        });
     }
 }

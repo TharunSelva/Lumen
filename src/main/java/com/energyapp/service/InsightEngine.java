@@ -1,10 +1,27 @@
 package com.energyapp.service;
 
+import com.energyapp.db.QuickTipRepository;
 import com.energyapp.model.Insight;
+import com.energyapp.model.QuickTip;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class InsightEngine {
+
+    private final QuickTipRepository tipRepository;
+    private final Random random;
+
+    public InsightEngine() {
+        this.tipRepository = new QuickTipRepository();
+        this.random = new Random();
+    }
+
+    // Constructor for testing (allows dependency injection)
+    InsightEngine(QuickTipRepository repository, Random random) {
+        this.tipRepository = repository;
+        this.random = random;
+    }
 
     public List<Insight> generateInsights(double current, double previous) {
         List<Insight> results = new ArrayList<>();
@@ -23,20 +40,18 @@ public class InsightEngine {
             }
         }
 
-        // Logic 2: Contextual Advice (Simulation Templates)
-        results.add(getRandomAdvice());
+        // Logic 2: Contextual Advice – now from database
+        results.add(getRandomAdviceFromDb());
 
         return results;
     }
 
-    private Insight getRandomAdvice() {
-        String[] titles = {"Solar Tip", "Battery Tip", "Grid Saving"};
-        String[] tips = {
-                "High solar production expected at 12:00. Schedule your wash then!",
-                "Your battery is currently discharging to save you peak-time costs.",
-                "Energy prices are low tonight. Best time to charge the EV."
-        };
-        int index = (int) (Math.random() * tips.length);
-        return new Insight(titles[index], tips[index], "bulb-icon", 0.5);
+    private Insight getRandomAdviceFromDb() {
+        List<QuickTip> allTips = tipRepository.fetchAllTips();
+        if (allTips.isEmpty()) {
+            return new Insight("Energy Tip", "Check your appliance usage to save energy.", "bulb-icon", 0.5);
+        }
+        QuickTip tip = allTips.get(random.nextInt(allTips.size()));
+        return new Insight(tip.getTitle(), tip.getBody(), "bulb-icon", 0.5);
     }
 }
