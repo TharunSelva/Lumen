@@ -86,7 +86,7 @@ public final class ForecastIntervalRepository {
         }
     }
 
-    private ZoneId resolveHomeZone(String homeId) {
+    public ZoneId resolveHomeZone(String homeId) {
         String sql = "SELECT timezone FROM home_profile WHERE home_id = ?";
 
         try (Connection conn = Sqlite.openConnection();

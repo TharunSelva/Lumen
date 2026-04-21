@@ -56,7 +56,6 @@ public class ForecastingController {
             axis.setCategories(FXCollections.observableArrayList(buildAllSlots()));
         }
 
-        refreshInsights();
         loadSolarForecast();
 
         if (lastUpdatedLabel != null) {
@@ -64,26 +63,30 @@ public class ForecastingController {
         }
 
         if (forecastingReload != null) {
-            forecastingReload.setOnAction(event -> {
-                refreshInsights();
-                refreshEnergyPriceChart();
-            });
+            forecastingReload.setOnAction(event -> refreshAllForecastPanels());
         }
-
-        forecastingReload.setOnAction(event -> loadSolarForecast());
     }
 
     public void setSimulationService(SimulationService service) {
         this.simulationService = service;
-        refreshInsights();
-        refreshEnergyPriceChart();
+        refreshForecastDataPanels();
 
         service.getCurrentEnergyRecord().addListener((obs, oldRec, newRec) -> {
             if (newRec != null) {
-                refreshInsights();
-                refreshEnergyPriceChart();
+                refreshForecastDataPanels();
             }
         });
+    }
+
+    private void refreshAllForecastPanels() {
+        loadSolarForecast();
+        refreshForecastDataPanels();
+    }
+
+    private void refreshForecastDataPanels() {
+        refreshInsights();
+        refreshEnergyPriceChart();
+        updateLastUpdatedLabel();
     }
 
     private void refreshInsights() {
@@ -140,21 +143,13 @@ public class ForecastingController {
         EnergyRecord currentRecord = simulationService.getCurrentEnergyRecord().get();
 
         LocalDate chartDay = resolveChartDay(history, currentRecord);
-        Map<String, Number> historicalPricesBySlot = collectPricesBySlot(history, chartDay);
-        Map<String, Number> forecastPricesBySlot = collectForecastPricesBySlot(historicalPricesBySlot);
-
-        List<XYChart.Series<String, Number>> chartSeries = new ArrayList<>();
-        chartSeries.addAll(buildContiguousSeries(historicalPricesBySlot, "Historical"));
-        chartSeries.addAll(buildContiguousSeries(forecastPricesBySlot, "Forecast"));
+        List<EnergyRecord> forecastRecords = forecastIntervalRepository.fetchTodayTariffForecast();
+        List<XYChart.Series<String, Number>> chartSeries = buildPriceChartSeries(history, forecastRecords, chartDay);
 
         energyCostForecastLineChart.getData().setAll(chartSeries);
 
         if (chartSeries.isEmpty()) {
             energyCostForecastLineChart.getData().clear();
-        }
-
-        if (lastUpdatedLabel != null) {
-            lastUpdatedLabel.setText("Updated " + LocalTime.now().format(TIME_FMT));
         }
     }
 
@@ -198,6 +193,20 @@ public class ForecastingController {
         return LocalDate.now();
     }
 
+    List<XYChart.Series<String, Number>> buildPriceChartSeries(
+            List<EnergyRecord> history,
+            List<EnergyRecord> forecastRecords,
+            LocalDate chartDay
+    ) {
+        Map<String, Number> actualPricesBySlot = collectPricesBySlot(history, chartDay);
+        Map<String, Number> forecastPricesBySlot = collectForecastPricesBySlot(actualPricesBySlot, forecastRecords);
+
+        List<XYChart.Series<String, Number>> chartSeries = new ArrayList<>();
+        chartSeries.addAll(buildContiguousSeries(actualPricesBySlot, "Actual Price"));
+        chartSeries.addAll(buildContiguousSeries(forecastPricesBySlot, "Forecast Price"));
+        return chartSeries;
+    }
+
     private Map<String, Number> collectPricesBySlot(List<EnergyRecord> history, LocalDate chartDay) {
         Map<String, Number> pricesBySlot = new HashMap<>();
 
@@ -210,10 +219,12 @@ public class ForecastingController {
         return pricesBySlot;
     }
 
-    private Map<String, Number> collectForecastPricesBySlot(Map<String, Number> historicalPricesBySlot) {
+    private Map<String, Number> collectForecastPricesBySlot(
+            Map<String, Number> historicalPricesBySlot,
+            List<EnergyRecord> forecastRecords
+    ) {
         Map<String, Number> pricesBySlot = new HashMap<>();
 
-        List<EnergyRecord> forecastRecords = forecastIntervalRepository.fetchTodayTariffForecast();
         for (EnergyRecord record : forecastRecords) {
             LocalDateTime timestamp = record.getTimestamp();
             if (timestamp != null) {
@@ -242,6 +253,12 @@ public class ForecastingController {
             slots.add(formatSlot(slot));
         }
         return slots;
+    }
+
+    private void updateLastUpdatedLabel() {
+        if (lastUpdatedLabel != null) {
+            lastUpdatedLabel.setText("Updated " + LocalTime.now().format(TIME_FMT));
+        }
     }
 
     private void loadSolarForecast() {
