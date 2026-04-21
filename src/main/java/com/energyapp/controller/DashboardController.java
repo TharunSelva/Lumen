@@ -38,7 +38,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
-
+import javafx.scene.Group;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,6 +93,7 @@ public class DashboardController {
     @FXML private Label priceStatusText;
     @FXML private Circle priceIndicator;
 
+    private Group zoomWrapper;
     private PriceIndicatorController indicatorLogic;
     private MainLayoutController mainController;
     private SimulationService simulationService;
@@ -134,6 +135,9 @@ public class DashboardController {
 
         dashboardUsageLineChart.setOnMouseClicked(e -> openEnergyStatistics());
 
+        zoomWrapper = new Group(dashboardContentVBox);
+        dashboardScrollPane.setContent(zoomWrapper);
+
         zoomComboBox.getItems().addAll("100%", "125%", "150%", "175%");
         zoomComboBox.setValue("100%");
         zoomComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -141,11 +145,14 @@ public class DashboardController {
                 double newZoomLevel = Double.parseDouble(newVal.replace("%", "")) / 100;
                 dashboardContentVBox.setScaleX(newZoomLevel);
                 dashboardContentVBox.setScaleY(newZoomLevel);
+                dashboardScrollPane.requestLayout();
             }
         });
 
-        dashboardScrollPane.viewportBoundsProperty().addListener((obs, oldBounds, newBounds) ->
-                dashboardContentVBox.setPrefWidth(newBounds.getWidth()));
+        dashboardScrollPane.viewportBoundsProperty().addListener((obs, oldBounds, newBounds) -> {
+            dashboardContentVBox.setPrefWidth(newBounds.getWidth());
+            dashboardScrollPane.requestLayout();
+        });
 
         if (dashboardQuickRecommendationsViewport != null) {
             Rectangle clip = new Rectangle();
