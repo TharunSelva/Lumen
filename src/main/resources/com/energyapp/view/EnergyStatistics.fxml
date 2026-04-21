@@ -19,7 +19,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <StackPane id="energystatistics-auto-1" prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EnergyStatsController">
@@ -107,9 +106,9 @@
                     <!-- IMPORTANT: no RowConstraints -> prevents the “cut off” you saw -->
                     <GridPane hgap="16" vgap="16">
                         <columnConstraints>
-                            <ColumnConstraints hgrow="ALWAYS" percentWidth="44" />
-                            <ColumnConstraints hgrow="ALWAYS" percentWidth="36" />
-                            <ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="44.0" />
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="24.0" />
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="32.0" />
                         </columnConstraints>
 
                         <!-- COSTS PANEL -->
@@ -120,9 +119,9 @@
 
                             <Label id="energystatistics-auto-23" text="Costs" />
 
-                            <BarChart animated="false" legendVisible="false" maxHeight="150" prefHeight="150" title="">
-                                <xAxis><CategoryAxis label="" /></xAxis>
-                                <yAxis><NumberAxis label="" /></yAxis>
+                            <BarChart fx:id="costsChart" animated="false" legendVisible="false" maxHeight="150" prefHeight="150" title="">
+                                <xAxis><CategoryAxis fx:id="costsXAxis" label="" /></xAxis>
+                                <yAxis><NumberAxis fx:id="costsYAxis" label="" /></yAxis>
                             </BarChart>
 
                             <VBox id="energystatistics-auto-24" spacing="6">
@@ -132,18 +131,18 @@
                                 <HBox>
                                     <Label text="Total Cost Today:" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label id="energystatistics-auto-25" text="£3.40" />
+                                    <Label id="energystatistics-auto-25" fx:id="totalCostTodayLabel" text="£3.40" />
                                 </HBox>
                                 <HBox>
                                     <Label text="Projected daily cost:" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label id="energystatistics-auto-26" text="£4.10" />
+                                    <Label id="energystatistics-auto-26" fx:id="projectedDailyCostLabel" text="£4.10" />
                                 </HBox>
                             </VBox>
                         </VBox>
 
                         <!-- DEVICE-LEVEL BREAKDOWN -->
-                        <VBox id="energystatistics-auto-27" spacing="10" GridPane.columnIndex="1">
+                        <VBox id="energystatistics-auto-27" prefHeight="595.0" prefWidth="189.0" spacing="10" GridPane.columnIndex="1">
                             <padding>
                                 <Insets bottom="14" left="16" right="16" top="14" />
                             </padding>
@@ -176,29 +175,51 @@
                             <!-- dots (kept near bottom by adding a small spacer) -->
                             <Region prefHeight="6" />
                             <HBox fx:id="selection" alignment="CENTER" spacing="6">
-                                <Label fx:id="page1" text="1" styleClass="page-indicator"
-                                       style="-fx-padding: 4 10; -fx-font-weight: bold; -fx-font-size: 13;">
+                                <Label fx:id="page1" style="-fx-padding: 4 10; -fx-font-weight: bold; -fx-font-size: 13;" styleClass="page-indicator" text="1">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Label>
-                                <Label fx:id="page2" text="2" styleClass="page-indicator"
-                                       style="-fx-padding: 4 10; -fx-font-size: 13;">
+                                <Label fx:id="page2" style="-fx-padding: 4 10; -fx-font-size: 13;" styleClass="page-indicator" text="2">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Label>
-                                <Label fx:id="page3" text="3" styleClass="page-indicator"
-                                       style="-fx-padding: 4 10; -fx-font-size: 13;">
+                                <Label fx:id="page3" style="-fx-padding: 4 10; -fx-font-size: 13;" styleClass="page-indicator" text="3">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Label>
                             </HBox>
                         </VBox>
 
-                        <!-- RIGHT COLUMN: source mix + assistant card -->
-                        <VBox spacing="12" GridPane.columnIndex="2">
-                            <VBox id="energystatistics-auto-32" spacing="8">
-                                <padding><Insets bottom="12" left="12" right="12" top="12" /></padding>
-                                <Label id="energystatistics-auto-33" text="Source Mix (Last 4 Hours)" />
-                                <StackPane id="energystatistics-auto-34" maxHeight="150" prefHeight="150">
-                                    <Label id="energystatistics-auto-35" text="(chart placeholder)" />
-                                </StackPane>
+                        <!-- RIGHT COLUMN: Personal + Grid Sources (ADD-08) -->
+                        <VBox spacing="16" GridPane.columnIndex="2">
+
+                            <!-- PERSONAL SOURCES -->
+                            <VBox spacing="8" styleClass="card">
+                                <padding>
+                                    <Insets bottom="12" left="12" right="12" top="12" />
+                                </padding>
+                                <Label styleClass="widget-title" text="Personal Sources" />
+                                <BarChart fx:id="personalSourcesChart" animated="false" legendVisible="false" prefHeight="240.0" title="Personal Energy Usage (kWh)" VBox.vgrow="ALWAYS">
+                                    <xAxis>
+                                        <NumberAxis autoRanging="true" label="Energy (kWh)" lowerBound="0" side="BOTTOM" />
+                                    </xAxis>
+                                    <yAxis>
+                                        <CategoryAxis label="Source" side="LEFT" />
+                                    </yAxis>
+                                </BarChart>
+                            </VBox>
+
+                            <!-- GRID SOURCES -->
+                            <VBox spacing="8" styleClass="card">
+                                <padding>
+                                    <Insets bottom="12" left="12" right="12" top="12" />
+                                </padding>
+                                <Label styleClass="widget-title" text="Grid Sources" />
+                                <BarChart fx:id="gridSourcesChart" animated="false" legendVisible="false" prefHeight="240.0" title="National Grid Mix (%)" VBox.vgrow="ALWAYS">
+                                    <xAxis>
+                                        <NumberAxis autoRanging="true" label="Percentage (%)" lowerBound="0" side="BOTTOM" />
+                                    </xAxis>
+                                    <yAxis>
+                                        <CategoryAxis label="Source" side="LEFT" />
+                                    </yAxis>
+                                </BarChart>
                             </VBox>
 
                             <fx:include fx:id="solarStatusCard" source="SolarGenCard.fxml" VBox.vgrow="ALWAYS" />

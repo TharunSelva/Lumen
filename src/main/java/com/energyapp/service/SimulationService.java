@@ -25,6 +25,11 @@ import java.util.Collections;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class SimulationService {
     private List<EnergyRecord> simulationData = new ArrayList<>();
@@ -146,5 +151,51 @@ public class SimulationService {
 
     public DoubleProperty currentIntervalCostProperty() {
         return currentIntervalCost;
+    }
+
+    private Connection getDbConnection() {
+        String dbPath = System.getProperty("user.home") + "/.energyapp/data/energy_tool.sqlite";
+        String url = "jdbc:sqlite:" + dbPath;
+        try{
+            return DriverManager.getConnection(url);
+        } catch (SQLException e){
+            System.err.println("Error connecting to database." + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * Gets grid fuel percentage for the current simulation step (cycles through different time intervals)
+     */
+    public double getGridFuelPercentageForStep(String fuelType, int step) {
+        String sql = """
+            SELECT perc
+            FROM grid_generation_mix_interval
+            WHERE LOWER(fuel) = LOWER(?)
+            ORDER BY ts_start DESC
+            LIMIT 1 OFFSET ?
+            """;
+
+        try (Connection conn = getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, fuelType);
+            stmt.setInt(2, step % 8);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                double perc = rs.getDouble("perc");
+                System.out.println("DEBUG: Grid " + fuelType + " (step " + step + ") = " + perc + "%");
+                return perc;
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching grid fuel '" + fuelType + "': " + e.getMessage());
+        }
+        return 0.0;
+    }
+
+    public int getCurrentDataIndex() {
+        return currentDataIndex;
     }
 }
