@@ -120,9 +120,9 @@
 
                             <Label id="energystatistics-auto-23" text="Costs" />
 
-                            <BarChart animated="false" legendVisible="false" maxHeight="150" prefHeight="150" title="">
-                                <xAxis><CategoryAxis label="" /></xAxis>
-                                <yAxis><NumberAxis label="" /></yAxis>
+                            <BarChart fx:id="costsChart" animated="false" legendVisible="false" maxHeight="150" prefHeight="150" title="">
+                                <xAxis><CategoryAxis fx:id="costsXAxis" label="" /></xAxis>
+                                <yAxis><NumberAxis fx:id="costsYAxis" label="" /></yAxis>
                             </BarChart>
 
                             <VBox id="energystatistics-auto-24" spacing="6">
@@ -132,12 +132,12 @@
                                 <HBox>
                                     <Label text="Total Cost Today:" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label id="energystatistics-auto-25" text="£3.40" />
+                                    <Label id="energystatistics-auto-25" fx:id="totalCostTodayLabel" text="£3.40" />
                                 </HBox>
                                 <HBox>
                                     <Label text="Projected daily cost:" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label id="energystatistics-auto-26" text="£4.10" />
+                                    <Label id="energystatistics-auto-26" fx:id="projectedDailyCostLabel" text="£4.10" />
                                 </HBox>
                             </VBox>
                         </VBox>
