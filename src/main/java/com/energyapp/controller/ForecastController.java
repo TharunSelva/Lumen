@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ForecastController {
 
-    @FXML private LineChart<?, ?> energyCostForecastLineChart;
+    @FXML private LineChart<String, Number> energyCostForecastLineChart;
     @FXML private Button forecastingReload;
     @FXML private Label lastUpdatedLabel;
 

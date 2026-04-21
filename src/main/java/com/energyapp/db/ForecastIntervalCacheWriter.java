@@ -1,7 +1,7 @@
 package com.energyapp.db;
 
 import com.energyapp.service.OctopusEnergyTariffService;
-import com.energyapp.service.OpenMeteoSolarService.SolarPoint;
+import com.energyapp.db.OpenMeteoSolarService.SolarPoint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
