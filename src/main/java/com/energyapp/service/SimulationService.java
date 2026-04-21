@@ -5,6 +5,7 @@ import com.energyapp.utils.EnergyCalculator;
 import com.energyapp.db.EnergyIntervalRepository;
 
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -50,6 +51,7 @@ public class SimulationService {
     private final ObjectProperty<EnergyRecord> currentEnergyRecord = new SimpleObjectProperty<>();
     private ScheduledExecutorService scheduler;
     private double totalAccumulatedCost = 0.0;
+    private double weeklyAccumulatedCost = 0.0;
     private final List<EnergyRecord> energyStatsSessionHistory = new ArrayList<>();
 
     private final EnergyIntervalRepository repo = new EnergyIntervalRepository();
@@ -73,10 +75,16 @@ public class SimulationService {
         scheduler.scheduleAtFixedRate(this::advanceSimulation, 0, 2, TimeUnit.SECONDS);
     }
     private final DoubleProperty currentIntervalCost = new SimpleDoubleProperty();
+    private final DoubleProperty weeklyAccumulatedCostProperty = new SimpleDoubleProperty();
     private int daysElapsed = 0;
     private double weeklyEvKwh = 0, weeklyWashKwh = 0, weeklyHeatKwh = 0, weeklyBaseKwh = 0, weeklyOtherKwh = 0;
     private void advanceSimulation() {
         if (currentDataIndex < simulationData.size()) {
+            if (currentDataIndex > 0 && currentDataIndex % 336 == 0) {
+                System.out.println("Week boundary reached. Starting a new simulated week.");
+                resetWeeklyCounters();
+            }
+
             EnergyRecord record = simulationData.get(currentDataIndex);
             weeklyEvKwh += record.getEvChargerUsageKwh();
             weeklyWashKwh += record.getWashingMachineUsageKwh();
@@ -85,11 +93,7 @@ public class SimulationService {
             weeklyOtherKwh += (record.getBaseloadKwh() * 0.1);
             double costOnThisInterval = EnergyCalculator.calculateCostInPounds(record.getGridImport(), record.getPricePerKwh());
             totalAccumulatedCost += costOnThisInterval;
-
-            if (currentDataIndex > 0 && currentDataIndex % 336 == 0) {
-                System.out.println("Week 1 Finished. Resetting Breakdown for Week 2.");
-                resetWeeklyCounters();
-            }
+            weeklyAccumulatedCost += costOnThisInterval;
 
             synchronized (energyStatsSessionHistory) {
                 energyStatsSessionHistory.add(record);
@@ -99,6 +103,7 @@ public class SimulationService {
             Platform.runLater(() -> {
                 currentEnergyRecord.set(record);
                 currentIntervalCost.set(costOnThisInterval);
+                weeklyAccumulatedCostProperty.set(weeklyAccumulatedCost);
             });
             currentDataIndex++;
 
@@ -115,6 +120,8 @@ public class SimulationService {
         weeklyHeatKwh = 0;
         weeklyBaseKwh = 0;
         weeklyOtherKwh = 0;
+        weeklyAccumulatedCost = 0;
+        Platform.runLater(() -> weeklyAccumulatedCostProperty.set(0));
         System.out.println("New Week Started: Data Reset.");
     }
 
@@ -143,6 +150,10 @@ public class SimulationService {
         return totalAccumulatedCost;
     }
 
+    public double getWeeklyAccumulatedCost() {
+        return weeklyAccumulatedCost;
+    }
+
     public List<EnergyRecord> getEnergyStatsSessionHistory() {
         synchronized (energyStatsSessionHistory) {
             return new ArrayList<>(energyStatsSessionHistory);
@@ -151,6 +162,10 @@ public class SimulationService {
 
     public DoubleProperty currentIntervalCostProperty() {
         return currentIntervalCost;
+    }
+
+    public ReadOnlyDoubleProperty weeklyAccumulatedCostProperty() {
+        return weeklyAccumulatedCostProperty;
     }
 
     private Connection getDbConnection() {
