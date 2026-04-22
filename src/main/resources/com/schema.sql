@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS home_profile (
     postcode_outcode TEXT,
     lat              REAL,
     lon              REAL,
+    weekly_budget_gbp REAL,
     created_at       TEXT NOT NULL
 );
 

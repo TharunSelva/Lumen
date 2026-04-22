@@ -128,8 +128,102 @@
     -fx-padding: 10;
 }
 
+#dashboardWeeklyBudgetVBox {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
 #dashboardEcoImpactTitleLabel {
     -fx-font-weight: bold;
+}
+
+#dashboardWeeklyBudgetTitleLabel {
+    -fx-font-weight: bold;
+}
+
+#dashboardWeeklyBudgetSpentLabel {
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+}
+
+#dashboardWeeklyBudgetBudgetLabel,
+#dashboardWeeklyBudgetRemainingLabel,
+#dashboardWeeklyBudgetHelperLabel {
+    -fx-text-fill: #5f6368;
+}
+
+#dashboardWeeklyBudgetStatusLabel {
+    -fx-font-weight: bold;
+    -fx-padding: 4 10 4 10;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-max-width: -fx-pref;
+}
+
+#dashboardWeeklyBudgetEditButton {
+    -fx-cursor: hand;
+    -fx-background-color: #eef2f7;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: transparent;
+    -fx-padding: 6 12 6 12;
+}
+
+#dashboardWeeklyBudgetEditButton:hover {
+    -fx-background-color: #e2e8f0;
+}
+
+#dashboardWeeklyBudgetProgressBar {
+    -fx-pref-height: 7;
+    -fx-max-width: Infinity;
+}
+
+#dashboardWeeklyBudgetProgressBar .track {
+    -fx-background-color: #e5e7eb;
+    -fx-background-radius: 999;
+}
+
+#dashboardWeeklyBudgetProgressBar .bar {
+    -fx-background-color: #16a34a;
+    -fx-background-radius: 999;
+    -fx-padding: 0.18em;
+}
+
+.budget-status-within {
+    -fx-text-fill: #166534;
+    -fx-background-color: #dcfce7;
+}
+
+.budget-status-close {
+    -fx-text-fill: #92400e;
+    -fx-background-color: #fef3c7;
+}
+
+.budget-status-over {
+    -fx-text-fill: #991b1b;
+    -fx-background-color: #fee2e2;
+}
+
+.budget-status-neutral {
+    -fx-text-fill: #334155;
+    -fx-background-color: #e2e8f0;
+}
+
+.budget-progress-within .bar {
+    -fx-background-color: #16a34a;
+}
+
+.budget-progress-close .bar {
+    -fx-background-color: #d97706;
+}
+
+.budget-progress-over .bar {
+    -fx-background-color: #dc2626;
+}
+
+.budget-progress-neutral .bar {
+    -fx-background-color: #94a3b8;
 }
 
 #dashboardEcoImpactCleanLabel {
@@ -1380,6 +1474,7 @@
 .app-root.dark #dashboard00VBox,
 .app-root.dark #dashboard10VBox,
 .app-root.dark #dashboardEcoImpactVBox,
+.app-root.dark #dashboardWeeklyBudgetVBox,
 .app-root.dark #dashboardQuickForecastVBox,
 .app-root.dark #costCardVBox,
 .app-root.dark #forecasts-auto-2,
@@ -1396,6 +1491,55 @@
 
 .app-root.dark #dashboardQuickForecastBarHBox {
     -fx-background-color: -app-surface-alt;
+}
+
+.app-root.dark #dashboardWeeklyBudgetSpentLabel,
+.app-root.dark #dashboardWeeklyBudgetTitleLabel {
+    -fx-text-fill: #f8f8f8;
+}
+
+.app-root.dark #dashboardWeeklyBudgetBudgetLabel,
+.app-root.dark #dashboardWeeklyBudgetRemainingLabel,
+.app-root.dark #dashboardWeeklyBudgetHelperLabel {
+    -fx-text-fill: #d7dce3;
+}
+
+.app-root.dark #dashboardWeeklyBudgetEditButton {
+    -fx-background-color: #3a4452;
+    -fx-border-color: transparent;
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark #dashboardWeeklyBudgetEditButton:hover {
+    -fx-background-color: #475569;
+}
+
+.app-root.dark #dashboardWeeklyBudgetEditButton:pressed {
+    -fx-background-color: #334155;
+}
+
+.app-root.dark #dashboardWeeklyBudgetProgressBar .track {
+    -fx-background-color: #4b5563;
+}
+
+.app-root.dark .budget-status-neutral {
+    -fx-text-fill: #e2e8f0;
+    -fx-background-color: #475569;
+}
+
+.app-root.dark .budget-status-within {
+    -fx-text-fill: #dcfce7;
+    -fx-background-color: #166534;
+}
+
+.app-root.dark .budget-status-close {
+    -fx-text-fill: #fef3c7;
+    -fx-background-color: #b45309;
+}
+
+.app-root.dark .budget-status-over {
+    -fx-text-fill: #fee2e2;
+    -fx-background-color: #b91c1c;
 }
 
 .app-root.dark #ecostatistics-auto-5,
@@ -1607,6 +1751,7 @@
 .app-root.dark #dashboard00VBox,
 .app-root.dark #dashboard10VBox,
 .app-root.dark #dashboardEcoImpactVBox,
+.app-root.dark #dashboardWeeklyBudgetVBox,
 .app-root.dark #dashboardQuickForecastVBox,
 .app-root.dark #costCardVBox {
     -fx-background-color: -app-surface;
@@ -1834,6 +1979,7 @@
 .app-root.high-contrast #dashboard00VBox,
 .app-root.high-contrast #dashboard10VBox,
 .app-root.high-contrast #dashboardEcoImpactVBox,
+.app-root.high-contrast #dashboardWeeklyBudgetVBox,
 .app-root.high-contrast #dashboardQuickForecastVBox,
 .app-root.high-contrast #dashboardQuickRecVBox,
 .app-root.high-contrast #costCardVBox,
@@ -1886,6 +2032,7 @@
 .app-root.high-contrast #dashboard00VBox .label,
 .app-root.high-contrast #dashboard10VBox .label,
 .app-root.high-contrast #dashboardEcoImpactVBox .label,
+.app-root.high-contrast #dashboardWeeklyBudgetVBox .label,
 .app-root.high-contrast #dashboardQuickForecastVBox .label,
 .app-root.high-contrast #dashboardQuickRecVBox .label,
 .app-root.high-contrast #forecasts-auto-2 .label,

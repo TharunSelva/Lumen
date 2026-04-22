@@ -56,11 +56,16 @@ public final class DbBootstrap {
             try (Connection conn = Sqlite.openConnection()) {
                 // safety: keeps schema creation idempotent
                 SqlScriptRunner.runResource(conn, "/com/schema.sql");
+                ensureWeeklyBudgetColumn(conn);
                 ensureVersionMetaIfMissing(conn);
                 verifyInstalledDbVersion(conn);
 
                 // Mark installed-from-template once
                 upsertMeta(conn, "template_installed", "true");
+
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate("UPDATE home_profile SET lat = NULL, lon = NULL WHERE home_id = 'HOME_1'");
+                }
 
                 // Run API caching for current carbon and mix
                 try {
@@ -90,6 +95,28 @@ public final class DbBootstrap {
         } catch (Exception e) {
             throw new RuntimeException("DB bootstrap failed", e);
         }
+    }
+
+    private static void ensureWeeklyBudgetColumn(Connection conn) throws SQLException {
+        if (hasColumn(conn, "home_profile", "weekly_budget_gbp")) {
+            return;
+        }
+
+        try (Statement statement = conn.createStatement()) {
+            statement.execute("ALTER TABLE home_profile ADD COLUMN weekly_budget_gbp REAL");
+        }
+    }
+
+    private static boolean hasColumn(Connection conn, String tableName, String columnName) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("PRAGMA table_info(" + tableName + ")");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                if (columnName.equalsIgnoreCase(rs.getString("name"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // helper method to write schema/template versions and template name (metadata) into app_meta in the DB

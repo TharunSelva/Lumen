@@ -19,10 +19,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        DbBootstrap.init();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/MainLayout.fxml"));
         Parent root = loader.load();
 
-        DbBootstrap.init();  // DB initialisation
+          // DB initialisation
         apiRefreshService.start();
         simulationService.loadData();
         simulationService.startSimulation();

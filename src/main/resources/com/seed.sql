@@ -4,7 +4,7 @@ INSERT OR IGNORE INTO app_meta(meta_key, meta_value) VALUES ('seed_applied', 'tr
 
 -- Home profile
 INSERT OR IGNORE INTO home_profile(home_id, first_name, timezone, postcode_outcode, lat, lon, created_at)
-VALUES ('HOME_1', 'Richard', 'Europe/London', 'SO14', 50.9097, -1.4044, datetime('now'));
+VALUES ('HOME_1', 'Richard', 'Europe/London', 'SO14', NULL, NULL, datetime('now'));
 
 -- Assets
 INSERT OR IGNORE INTO home_energy_assets(home_id, has_ev, has_solar, has_battery, battery_capacity_kwh, min_soc_pct, max_discharge_kw)

@@ -4,8 +4,10 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
@@ -119,20 +121,47 @@
                                           </children>
                                       </VBox>
       
-                                      <VBox id="dashboardEcoImpactVBox" fx:id="dashboardEcoImpactVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                      <GridPane hgap="20.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                          <columnConstraints>
+                                              <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                              <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                          </columnConstraints>
                                           <children>
-                                              <Label id="dashboardEcoImpactTitleLabel" fx:id="dashboardEcoImpactTitleLabel" text="Today's Eco-Impact..." />
-                                              <HBox spacing="10.0" VBox.vgrow="ALWAYS">
-      
-                                                  <VBox alignment="CENTER_LEFT" minWidth="120.0" spacing="10.0">
-                                                      <Label id="dashboardEcoImpactCleanLabel" fx:id="dashboardEcoImpactCleanLabel" text="67% CLEAN" />
-                                                      <Label id="dashboardEcoImpactFossilLabel" fx:id="dashboardEcoImpactFossilLabel" text="33% FOSSIL" />
-                                                  </VBox>
-      
-                                                  <PieChart fx:id="dashboardEcoImpactPieChart" labelsVisible="false" maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-                                              </HBox>
+                                              <VBox id="dashboardEcoImpactVBox" fx:id="dashboardEcoImpactVBox" spacing="10.0">
+                                                  <children>
+                                                      <Label id="dashboardEcoImpactTitleLabel" fx:id="dashboardEcoImpactTitleLabel" text="Today's Eco-Impact..." />
+                                                      <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                                                          <VBox alignment="CENTER_LEFT" minWidth="120.0" spacing="10.0">
+                                                              <Label id="dashboardEcoImpactCleanLabel" fx:id="dashboardEcoImpactCleanLabel" text="67% CLEAN" />
+                                                              <Label id="dashboardEcoImpactFossilLabel" fx:id="dashboardEcoImpactFossilLabel" text="33% FOSSIL" />
+                                                          </VBox>
+                                                          <PieChart fx:id="dashboardEcoImpactPieChart" labelsVisible="false" maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
+                                                  </children>
+                                              </VBox>
+                                              <VBox id="dashboardWeeklyBudgetVBox" fx:id="dashboardWeeklyBudgetVBox" spacing="10.0" GridPane.columnIndex="1">
+                                                  <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                          <children>
+                                                              <Label id="dashboardWeeklyBudgetTitleLabel" fx:id="dashboardWeeklyBudgetTitleLabel" text="Weekly Budget" />
+                                                              <Region HBox.hgrow="ALWAYS" />
+                                                              <Button id="dashboardWeeklyBudgetEditButton" fx:id="dashboardWeeklyBudgetEditButton" mnemonicParsing="false" onAction="#handleWeeklyBudgetEdit" text="Set Budget" />
+                                                          </children>
+                                                      </HBox>
+                                                      <VBox id="dashboardWeeklyBudgetSummaryVBox" spacing="8.0">
+                                                          <children>
+                                                              <Label id="dashboardWeeklyBudgetSpentLabel" fx:id="dashboardWeeklyBudgetSpentLabel" text="£0.00 spent" wrapText="true" />
+                                                              <ProgressBar id="dashboardWeeklyBudgetProgressBar" fx:id="dashboardWeeklyBudgetProgressBar" prefWidth="Infinity" progress="0.0" />
+                                                              <Label id="dashboardWeeklyBudgetBudgetLabel" fx:id="dashboardWeeklyBudgetBudgetLabel" text="Budget Not set" wrapText="true" />
+                                                              <Label id="dashboardWeeklyBudgetRemainingLabel" fx:id="dashboardWeeklyBudgetRemainingLabel" text="Remaining --" wrapText="true" />
+                                                              <Label id="dashboardWeeklyBudgetStatusLabel" fx:id="dashboardWeeklyBudgetStatusLabel" text="Set a budget" wrapText="true" />
+                                                              <Label id="dashboardWeeklyBudgetHelperLabel" fx:id="dashboardWeeklyBudgetHelperLabel" text="Budget resets at the start of each simulated week." wrapText="true" />
+                                                          </children>
+                                                      </VBox>
+                                                  </children>
+                                              </VBox>
                                           </children>
-                                      </VBox>
+                                      </GridPane>
       
                                       <VBox id="dashboardQuickForecastVBox" fx:id="dashboardQuickForecastVBox" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                           <children>

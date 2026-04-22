@@ -10,8 +10,10 @@ import com.energyapp.service.SimulationService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -91,6 +93,13 @@ public class ForecastingController {
         InsightEngine engine = new InsightEngine();
         List<Insight> activeInsights = engine.generateInsights(currentUsageTotal, previousUsageTotal);
 
+        List<EnergyRecord> upcomingRecords = simulationService.getUpcomingRecords(48);
+        Insight greenInsight = engine.generateGreenForecastInsight(upcomingRecords);
+        if (greenInsight != null) {
+            activeInsights.add(0, greenInsight);
+        }
+
+        boolean isFirstCard = true;
         for (Insight insight : activeInsights) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/InsightCard.fxml"));
@@ -102,6 +111,14 @@ public class ForecastingController {
                 cardController.setContent(insight.getDescription(), statusColor);
 
                 insightsContainer.getChildren().add(card);
+
+                if (isFirstCard && insight.getTitle().equals("Green Forecast")) {
+                    Separator divider = new Separator();
+                    divider.setPadding(new Insets(5, 0, 5, 0));
+                    insightsContainer.getChildren().add(divider);
+                    isFirstCard = false;
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
