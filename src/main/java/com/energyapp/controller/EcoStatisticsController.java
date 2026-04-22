@@ -20,6 +20,10 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import java.time.LocalDate;
+import java.util.List;
+import javafx.scene.control.Tooltip;
+import javafx.scene.Node;
 
 public class EcoStatisticsController {
 
@@ -29,6 +33,11 @@ public class EcoStatisticsController {
     @FXML private Label carbonFootprintLabel;
     @FXML private BarChart<Number, String> personalSourcesChart;
     @FXML private BarChart<Number, String> gridSourcesChart;
+    @FXML private Label currentHourStatusLabel;
+    @FXML private Label currentGridIntensityLabel;
+    @FXML private Label carbonRecommendationLabel;
+    @FXML private BarChart<String, Number> carbonHistoryChart;
+
     private double accumulatedGridCarbon = 0.0;
     private double accumulatedSolarCarbonSaved = 0.0;
 
@@ -42,12 +51,16 @@ public class EcoStatisticsController {
     private double accumulatedSolar = 0.0;
     private double accumulatedGrid = 0.0;
 
+    private XYChart.Series<String, Number> todayCarbonSeries;
+    private int currentDayOfYear = -1;
+
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @FXML
     public void initialize() {
         setupCleanEnergyLineChart();
         setupEnvironmentalBreakdownChart();
+        setupCarbonHistoryChart();
     }
 
     private void setupCleanEnergyLineChart() {
@@ -142,6 +155,36 @@ public class EcoStatisticsController {
             solarBarSeries.getData().get(0).setYValue(accumulatedSolar);
             gridBarSeries.getData().get(0).setYValue(accumulatedGrid);
         }
+
+        double currentCarbon = record.getCarbon();
+        String timeStrOnlyHour = record.getTimestamp().format(DateTimeFormatter.ofPattern("HH:mm"));
+
+        String status;
+        String recommendation;
+
+        if (currentCarbon < 100) {
+            status = "Low carbon hour";
+            recommendation = "Great time for flexible tasks (e.g., Laundry, EV charging)";
+        } else if (currentCarbon < 200) {
+            status = "Moderate carbon hour";
+            recommendation = "Okay to use energy, but shift heavy loads if possible";
+        } else {
+            status = "High carbon hour";
+            recommendation = "Avoid heavy energy usage right now";
+        }
+
+        if (currentHourStatusLabel != null) {
+            currentHourStatusLabel.setText(timeStrOnlyHour + " — " + status);
+            currentGridIntensityLabel.setText(String.format("Grid intensity: %.0f gCO₂/kWh", currentCarbon));
+            carbonRecommendationLabel.setText(recommendation);
+        }
+
+        int recordDayOfYear = record.getTimestamp().getDayOfYear();
+
+        if (currentDayOfYear != recordDayOfYear) {
+            currentDayOfYear = recordDayOfYear;
+            loadPredictedEcoImpactForDay(record.getTimestamp().toLocalDate());
+        }
     }
     private void loadEnergySourceBreakdown() {
         loadPersonalSourcesChart();
@@ -211,5 +254,57 @@ public class EcoStatisticsController {
         gridSourcesChart.requestLayout();
         gridSourcesChart.layout();
         System.out.println("DEBUG: Grid chart visually updated at step " + step);
+    }
+
+    private void setupCarbonHistoryChart() {
+        todayCarbonSeries = new XYChart.Series<>();
+        todayCarbonSeries.setName("Grid Carbon Intensity");
+
+        if (carbonHistoryChart != null) {
+            carbonHistoryChart.getData().add(todayCarbonSeries);
+            carbonHistoryChart.setAnimated(false);
+        }
+    }
+
+    private void loadPredictedEcoImpactForDay(LocalDate date) {
+        if (simulationService == null || carbonHistoryChart == null || todayCarbonSeries == null) return;
+
+        List<EnergyRecord> dailyRecords = simulationService.getRecordsForDate(date);
+        todayCarbonSeries.getData().clear();
+
+        double[] carbonSums = new double[24];
+        int[] carbonCounts = new int[24];
+
+        for (EnergyRecord r : dailyRecords) {
+            int hour = r.getTimestamp().getHour();
+            carbonSums[hour] += r.getCarbon();
+            carbonCounts[hour]++;
+        }
+
+        for (int i = 0; i < 24; i++) {
+            double avgCarbon = carbonCounts[i] > 0 ? (carbonSums[i] / carbonCounts[i]) : 0.0;
+            String hourLabel = String.format("%02d:00", i);
+
+            XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(hourLabel, avgCarbon);
+
+            dataPoint.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    String tooltipText = String.format("Time: %s\nPredicted Intensity: %.0f gCO₂/kWh", hourLabel, avgCarbon);
+                    Tooltip tooltip = new Tooltip(tooltipText);
+                    tooltip.setShowDelay(javafx.util.Duration.millis(200));
+                    Tooltip.install(newNode, tooltip);
+
+                    if (avgCarbon < 100) {
+                        newNode.setStyle("-fx-bar-fill: #10B981;"); // Green for Low
+                    } else if (avgCarbon < 200) {
+                        newNode.setStyle("-fx-bar-fill: #F59E0B;"); // Amber for Moderate
+                    } else {
+                        newNode.setStyle("-fx-bar-fill: #EF4444;"); // Red for High
+                    }
+                }
+            });
+
+            todayCarbonSeries.getData().add(dataPoint);
+        }
     }
 }

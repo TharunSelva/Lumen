@@ -224,4 +224,16 @@ public class SimulationService {
         }
         return new ArrayList<>(simulationData.subList(currentDataIndex, end));
     }
+
+    public List<EnergyRecord> getRecordsForDate(java.time.LocalDate date) {
+        List<EnergyRecord> dayRecords = new ArrayList<>();
+        if (simulationData == null) return dayRecords;
+
+        for (EnergyRecord r : simulationData) {
+            if (r.getTimestamp().toLocalDate().equals(date)) {
+                dayRecords.add(r);
+            }
+        }
+        return dayRecords;
+    }
 }
