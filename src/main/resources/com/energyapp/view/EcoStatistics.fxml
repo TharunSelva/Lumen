@@ -211,11 +211,9 @@
                            <Insets bottom="12" left="14" right="14" top="12" />
                         </padding>
       
-                              <Label id="ecostatistics-auto-60" text="Eco-Impact History" />
+                              <Label id="ecostatistics-auto-60" text="Eco-Recommendations" />
       
-                              <StackPane id="ecostatistics-auto-61" VBox.vgrow="ALWAYS">
-                                  <Label id="ecostatistics-auto-62" text="[Graph showing how eco-impact has changed]" />
-                              </StackPane>
+                              <StackPane id="ecostatistics-auto-61" fx:id="ecoRecStack" VBox.vgrow="ALWAYS" />
                           </VBox>
                      <rowConstraints>
                         <RowConstraints />
@@ -245,12 +243,7 @@
                                           <Insets bottom="12" left="12" right="12" top="12" />
                                       </padding>
                                       <Label styleClass="widget-title" text="Personal Sources" />
-                                      <BarChart fx:id="personalSourcesChart"
-                                                animated="false"
-                                                legendVisible="false"
-                                                prefHeight="260.0"
-                                                title="Personal Energy Usage (kWh)"
-                                                VBox.vgrow="ALWAYS">
+                                      <BarChart fx:id="personalSourcesChart" animated="false" legendVisible="false" prefHeight="260.0" title="Personal Energy Usage (kWh)" VBox.vgrow="ALWAYS">
                                           <xAxis>
                                               <!-- personalSourcesChart xAxis — was missing upperBound and tickUnit -->
                                               <NumberAxis autoRanging="true" label="Energy (kWh)" lowerBound="0" side="BOTTOM" />
@@ -267,12 +260,7 @@
                                           <Insets bottom="12" left="12" right="12" top="12" />
                                       </padding>
                                       <Label styleClass="widget-title" text="Grid Sources" />
-                                      <BarChart fx:id="gridSourcesChart"
-                                                animated="false"
-                                                legendVisible="false"
-                                                prefHeight="260.0"
-                                                title="National Grid Mix (%)"
-                                                VBox.vgrow="ALWAYS">
+                                      <BarChart fx:id="gridSourcesChart" animated="false" legendVisible="false" prefHeight="260.0" title="National Grid Mix (%)" VBox.vgrow="ALWAYS">
                                           <xAxis>
                                               <!-- gridSourcesChart xAxis — same fix -->
                                               <NumberAxis autoRanging="true" label="Percentage (%)" lowerBound="0" side="BOTTOM" />
