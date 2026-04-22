@@ -15,11 +15,13 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <StackPane id="energystatistics-auto-1" prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EnergyStatsController">
     <BorderPane id="energystatistics-auto-2" prefHeight="800" prefWidth="1200" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
@@ -189,38 +191,11 @@
 
                         <!-- RIGHT COLUMN: Personal + Grid Sources (ADD-08) -->
                         <VBox spacing="16" GridPane.columnIndex="2">
-
-                            <!-- PERSONAL SOURCES -->
-                            <VBox spacing="8" styleClass="card">
-                                <padding>
-                                    <Insets bottom="12" left="12" right="12" top="12" />
-                                </padding>
-                                <Label styleClass="widget-title" text="Personal Sources" />
-                                <BarChart fx:id="personalSourcesChart" animated="false" legendVisible="false" prefHeight="240.0" title="Personal Energy Usage (kWh)" VBox.vgrow="ALWAYS">
-                                    <xAxis>
-                                        <NumberAxis autoRanging="true" label="Energy (kWh)" lowerBound="0" side="BOTTOM" />
-                                    </xAxis>
-                                    <yAxis>
-                                        <CategoryAxis label="Source" side="LEFT" />
-                                    </yAxis>
-                                </BarChart>
-                            </VBox>
-
-                            <!-- GRID SOURCES -->
-                            <VBox spacing="8" styleClass="card">
-                                <padding>
-                                    <Insets bottom="12" left="12" right="12" top="12" />
-                                </padding>
-                                <Label styleClass="widget-title" text="Grid Sources" />
-                                <BarChart fx:id="gridSourcesChart" animated="false" legendVisible="false" prefHeight="240.0" title="National Grid Mix (%)" VBox.vgrow="ALWAYS">
-                                    <xAxis>
-                                        <NumberAxis autoRanging="true" label="Percentage (%)" lowerBound="0" side="BOTTOM" />
-                                    </xAxis>
-                                    <yAxis>
-                                        <CategoryAxis label="Source" side="LEFT" />
-                                    </yAxis>
-                                </BarChart>
-                            </VBox>
+                        <Pane prefHeight="128.0" prefWidth="359.0">
+                           <children>
+                              <Text layoutX="88.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[Placeholder for Source mix graph]" />
+                           </children>
+                        </Pane>
 
                             <fx:include fx:id="solarStatusCard" source="SolarGenCard.fxml" VBox.vgrow="ALWAYS" />
                         </VBox>

@@ -223,41 +223,65 @@
                       </GridPane>
       
                       <!-- BOTTOM ROW (fixed height) -->
-                      <VBox id="ecostatistics-auto-63" maxHeight="270" maxWidth="Infinity" prefHeight="270" spacing="10">
+                      <VBox id="ecostatistics-auto-63" maxHeight="520" maxWidth="Infinity" prefHeight="520" spacing="16" VBox.vgrow="ALWAYS">
                           <padding>
                         <Insets bottom="12" left="14" right="14" top="12" />
                      </padding>
       
                           <Label id="ecostatistics-auto-64" text="Environmental Breakdown" />
       
-                          <GridPane hgap="16" maxWidth="Infinity" vgap="0" VBox.vgrow="ALWAYS">
+                          <GridPane hgap="16" vgap="12" VBox.vgrow="ALWAYS">
                               <columnConstraints>
                                   <ColumnConstraints hgrow="ALWAYS" percentWidth="64" />
                                   <ColumnConstraints hgrow="ALWAYS" percentWidth="36" />
                               </columnConstraints>
-      
-                              <!-- Energy Source (short chart) -->
-                              <VBox id="ecostatistics-auto-65" spacing="8" GridPane.columnIndex="0">
-                                  <padding>
-                              <Insets bottom="10" left="10" right="10" top="10" />
-                           </padding>
-      
-                                  <Label id="ecostatistics-auto-66" text="By Energy Source" />
 
-                                  <BarChart fx:id="environmentalBreakdownChart" animated="false" legendVisible="true" maxHeight="120" prefHeight="120" title="">
-                                      <xAxis>
-                                 <CategoryAxis label="" />
-                              </xAxis>
-                                      <yAxis>
-                                 <NumberAxis label="" />
-                              </yAxis>
-                                  </BarChart>
-      
-                                  <HBox>
-                                      <Label id="ecostatistics-auto-67" text="Total" />
-                                      <Region HBox.hgrow="ALWAYS" />
-                                      <Label id="ecostatistics-auto-68" text="3.1 kg CO₂" />
-                                  </HBox>
+                              <!-- Energy Source (short chart) -->
+                              <VBox spacing="16" GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
+
+                                  <!-- PERSONAL SOURCES -->
+                                  <VBox spacing="8" styleClass="card">
+                                      <padding>
+                                          <Insets bottom="12" left="12" right="12" top="12" />
+                                      </padding>
+                                      <Label styleClass="widget-title" text="Personal Sources" />
+                                      <BarChart fx:id="personalSourcesChart"
+                                                animated="false"
+                                                legendVisible="false"
+                                                prefHeight="260.0"
+                                                title="Personal Energy Usage (kWh)"
+                                                VBox.vgrow="ALWAYS">
+                                          <xAxis>
+                                              <!-- personalSourcesChart xAxis — was missing upperBound and tickUnit -->
+                                              <NumberAxis autoRanging="true" label="Energy (kWh)" lowerBound="0" side="BOTTOM" />
+                                          </xAxis>
+                                          <yAxis>
+                                              <CategoryAxis label="Source" side="LEFT" />
+                                          </yAxis>
+                                      </BarChart>
+                                  </VBox>
+
+                                  <!-- GRID SOURCES -->
+                                  <VBox spacing="8" styleClass="card">
+                                      <padding>
+                                          <Insets bottom="12" left="12" right="12" top="12" />
+                                      </padding>
+                                      <Label styleClass="widget-title" text="Grid Sources" />
+                                      <BarChart fx:id="gridSourcesChart"
+                                                animated="false"
+                                                legendVisible="false"
+                                                prefHeight="260.0"
+                                                title="National Grid Mix (%)"
+                                                VBox.vgrow="ALWAYS">
+                                          <xAxis>
+                                              <!-- gridSourcesChart xAxis — same fix -->
+                                              <NumberAxis autoRanging="true" label="Percentage (%)" lowerBound="0" side="BOTTOM" />
+                                          </xAxis>
+                                          <yAxis>
+                                              <CategoryAxis label="Source" side="LEFT" />
+                                          </yAxis>
+                                      </BarChart>
+                                  </VBox>
                               </VBox>
       
                               <!-- Device Category (tighter text) -->

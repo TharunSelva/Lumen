@@ -60,8 +60,6 @@ public class EnergyStatsController {
     @FXML private Label device1useage, device2useage, device3useage;
     @FXML private Label weeklycost1, weeklycost2, weeklycost3;
     @FXML private Label page1, page2, page3;
-    @FXML private BarChart<Number, String> personalSourcesChart;
-    @FXML private BarChart<Number, String> gridSourcesChart;
 
     private List<DeviceData> allDevices = new ArrayList<>();
     private int currentPage = 0;
@@ -389,11 +387,6 @@ public class EnergyStatsController {
 
     public void setSimulationService(SimulationService service) {
         this.simulationService = service;
-        loadEnergySourceBreakdown();
-        service.getCurrentEnergyRecord().addListener((obs, oldVal, newVal) -> {
-            Platform.runLater(this::loadEnergySourceBreakdown);
-        });
-
         if (this.simulationService != null) {
             initServiceConnection();
             if (solarStatusCardController != null) {
@@ -495,71 +488,5 @@ public class EnergyStatsController {
             this.usage = usage;
             this.weeklyCost = weeklyCost;
         }
-    }
-
-    private void loadEnergySourceBreakdown() {
-        loadPersonalSourcesChart();
-        loadGridSourcesChart();
-    }
-
-    private void loadPersonalSourcesChart() {
-        if (personalSourcesChart == null) return;
-
-        XYChart.Series<Number, String> series = new XYChart.Series<>();
-        series.setName("Personal Sources");
-
-        EnergyRecord current = simulationService.getCurrentEnergyRecord().get();
-
-        double solarPersonal = 0.0;
-        double batteryPersonal = 0.0;
-
-        if (current != null) {
-            solarPersonal = EnergyCalculator.calculateSolarUsed(
-                    current.getTotalLoadKwh(), current.getSolarGenKwh());
-
-            batteryPersonal = EnergyCalculator.calculateBatteryUsed(
-                    current.getTotalLoadKwh(), current.getSolarGenKwh(), current.getGridImport());
-        }
-
-        String[] categories = {"Solar (Personal)", "Wind (Personal)", "Battery (Personal)"};
-        double[] values     = {solarPersonal, 0.0, batteryPersonal};
-
-        for (int i = 0; i < categories.length; i++) {
-            series.getData().add(new XYChart.Data<>(values[i], categories[i]));
-        }
-
-        personalSourcesChart.getData().clear();
-        personalSourcesChart.getData().add(series);
-        personalSourcesChart.requestLayout();
-    }
-
-    private void loadGridSourcesChart() {
-        if (gridSourcesChart == null) return;
-        int step = simulationService.getCurrentDataIndex();
-
-        XYChart.Series<Number, String> series = new XYChart.Series<>();
-        series.setName("Grid Sources");
-
-        double solarGrid = simulationService.getGridFuelPercentageForStep("solar", step);
-        double windGrid  = simulationService.getGridFuelPercentageForStep("wind", step);
-        double hydroGrid = simulationService.getGridFuelPercentageForStep("hydro", step);
-
-        double biomassGrid = simulationService.getGridFuelPercentageForStep("biomass",step);
-        double gasGrid     = simulationService.getGridFuelPercentageForStep("gas",step);
-        double coalGrid    = simulationService.getGridFuelPercentageForStep("coal",step);
-        double fossilGrid  = biomassGrid + gasGrid + coalGrid;
-
-        String[] categories = {"Solar (Grid)", "Wind (Grid)", "Fossil (Grid)", "Hydroelectric (Grid)"};
-        double[] values     = {solarGrid, windGrid, fossilGrid, hydroGrid};
-
-        for (int i = 0; i < categories.length; i++) {
-            series.getData().add(new XYChart.Data<>(values[i], categories[i]));
-        }
-
-        gridSourcesChart.getData().clear();
-        gridSourcesChart.getData().add(series);
-        gridSourcesChart.requestLayout();
-        gridSourcesChart.layout();
-        System.out.println("DEBUG: Grid chart visually updated at step " + step);
     }
 }
