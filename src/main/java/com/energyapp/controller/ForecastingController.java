@@ -1,5 +1,6 @@
 package com.energyapp.controller;
 
+import com.energyapp.db.ForecastIntervalRepository;
 import com.energyapp.db.HomeProfileRepository;
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.model.Geocode;
@@ -11,18 +12,32 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.collections.FXCollections;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import java.time.ZoneId;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ForecastingController {
 
+    @FXML private LineChart<String, Number> energyCostForecastLineChart;
+    @FXML private Label lastUpdatedLabel;
     @FXML private VBox insightsContainer;
     @FXML private Button forecastingReload;
     @FXML private XYChart<Number, Number> solarForecastChart;
@@ -30,37 +45,68 @@ public class ForecastingController {
     private SimulationService simulationService;
     private int lastRefreshRecordCount = 0;
     private static final int REFRESH_THRESHOLD = 5;
+    private final ForecastIntervalRepository forecastIntervalRepository = new ForecastIntervalRepository();
+    private static final String HOME_ID = "HOME_1";
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     private final HomeProfileRepository homeRepo = new HomeProfileRepository();
     private final OpenMeteoSolarService solarService = new OpenMeteoSolarService();
 
     @FXML
     public void initialize() {
-        refreshInsights();
-        loadSolarForecast();
+        if (energyCostForecastLineChart != null) {
+            energyCostForecastLineChart.setAnimated(false);
 
-        if (forecastingReload != null) {
-            forecastingReload.setOnAction(event -> refreshInsights());
+            CategoryAxis axis = (CategoryAxis) energyCostForecastLineChart.getXAxis();
+            axis.setCategories(FXCollections.observableArrayList(buildAllSlots()));
+
+            javafx.scene.chart.NumberAxis yAxis =
+                    (javafx.scene.chart.NumberAxis) energyCostForecastLineChart.getYAxis();
+            yAxis.setForceZeroInRange(false);
         }
 
-        forecastingReload.setOnAction(event -> loadSolarForecast());
+        loadSolarForecast();
+
+        if (lastUpdatedLabel != null) {
+            lastUpdatedLabel.setText("Waiting for simulation data...");
+        }
+
+        if (forecastingReload != null) {
+            forecastingReload.setOnAction(event -> refreshAllForecastPanels());
+        }
     }
 
     public void setSimulationService(SimulationService service) {
         this.simulationService = service;
-        refreshInsights();
+
+        refreshForecastDataPanels();
         lastRefreshRecordCount = service.getEnergyStatsSessionHistory().size();
+
         service.getCurrentEnergyRecord().addListener((obs, oldRec, newRec) -> {
             if (newRec != null) {
-                int currentSize = service.getEnergyStatsSessionHistory().size();
-                if (currentSize - lastRefreshRecordCount >= REFRESH_THRESHOLD) {
-                    javafx.application.Platform.runLater(() -> {
+                Platform.runLater(() -> {
+                    refreshEnergyPriceChart();
+                    updateLastUpdatedLabel();
+
+                    int currentSize = service.getEnergyStatsSessionHistory().size();
+                    if (currentSize - lastRefreshRecordCount >= REFRESH_THRESHOLD) {
                         refreshInsights();
                         lastRefreshRecordCount = currentSize;
-                    });
-                }
+                    }
+                });
             }
         });
+    }
+
+    private void refreshAllForecastPanels() {
+        loadSolarForecast();
+        refreshForecastDataPanels();
+    }
+
+    private void refreshForecastDataPanels() {
+        refreshInsights();
+        refreshEnergyPriceChart();
+        updateLastUpdatedLabel();
     }
 
     private void refreshInsights() {
@@ -122,6 +168,145 @@ public class ForecastingController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void refreshEnergyPriceChart() {
+        if (simulationService == null || energyCostForecastLineChart == null) return;
+
+        List<EnergyRecord> history = new ArrayList<>(simulationService.getEnergyStatsSessionHistory());
+        EnergyRecord currentRecord = simulationService.getCurrentEnergyRecord().get();
+
+        LocalDate chartDay = resolveChartDay(history, currentRecord);
+        ZoneId homeZone = forecastIntervalRepository.resolveHomeZone(HOME_ID);
+
+        List<EnergyRecord> forecastRecords = loadForecastRecords(chartDay, homeZone);
+        List<XYChart.Series<String, Number>> chartSeries =
+                buildPriceChartSeries(history, forecastRecords, chartDay);
+
+        energyCostForecastLineChart.getData().setAll(chartSeries);
+
+        if (chartSeries.isEmpty()) {
+            energyCostForecastLineChart.getData().clear();
+        }
+    }
+
+    private List<EnergyRecord> loadForecastRecords(LocalDate chartDay, ZoneId homeZone) {
+        List<EnergyRecord> forecastRecords =
+                forecastIntervalRepository.fetchTariffForecast(HOME_ID, chartDay, homeZone);
+
+        if (!forecastRecords.isEmpty()) {
+            return forecastRecords;
+        }
+
+        return forecastIntervalRepository.fetchTodayTariffForecast();
+    }
+
+    private List<XYChart.Series<String, Number>> buildContiguousSeries(Map<String, Number> valuesBySlot, String seriesName) {
+        List<XYChart.Series<String, Number>> seriesList = new ArrayList<>();
+        XYChart.Series<String, Number> currentSeries = null;
+
+        for (int slot = 0; slot < 48; slot++) {
+            String slotLabel = formatSlot(slot);
+            Number value = valuesBySlot.get(slotLabel);
+
+            if (value == null) {
+                currentSeries = null;
+                continue;
+            }
+
+            if (currentSeries == null) {
+                currentSeries = new XYChart.Series<>();
+                currentSeries.setName(seriesName);
+                seriesList.add(currentSeries);
+            }
+
+            currentSeries.getData().add(new XYChart.Data<>(slotLabel, value));
+        }
+
+        return seriesList;
+    }
+
+    private LocalDate resolveChartDay(List<EnergyRecord> history, EnergyRecord currentRecord) {
+        if (currentRecord != null && currentRecord.getTimestamp() != null) {
+            return currentRecord.getTimestamp().toLocalDate();
+        }
+
+        for (int i = history.size() - 1; i >= 0; i--) {
+            EnergyRecord record = history.get(i);
+            if (record.getTimestamp() != null) {
+                return record.getTimestamp().toLocalDate();
+            }
+        }
+
+        return LocalDate.now();
+    }
+
+    List<XYChart.Series<String, Number>> buildPriceChartSeries(
+            List<EnergyRecord> history,
+            List<EnergyRecord> forecastRecords,
+            LocalDate chartDay
+    ) {
+        Map<String, Number> actualPricesBySlot = collectPricesBySlot(history, chartDay);
+        Map<String, Number> forecastPricesBySlot = collectForecastPricesBySlot(actualPricesBySlot, forecastRecords);
+
+        List<XYChart.Series<String, Number>> chartSeries = new ArrayList<>();
+        chartSeries.addAll(buildContiguousSeries(actualPricesBySlot, "Actual Price"));
+        chartSeries.addAll(buildContiguousSeries(forecastPricesBySlot, "Forecast Price"));
+        return chartSeries;
+    }
+
+    private Map<String, Number> collectPricesBySlot(List<EnergyRecord> history, LocalDate chartDay) {
+        Map<String, Number> pricesBySlot = new HashMap<>();
+
+        for (EnergyRecord record : history) {
+            if (record.getTimestamp() != null && record.getTimestamp().toLocalDate().equals(chartDay)) {
+                pricesBySlot.put(formatTime(record.getTimestamp()), record.getPricePerKwh());
+            }
+        }
+
+        return pricesBySlot;
+    }
+
+    private Map<String, Number> collectForecastPricesBySlot(
+            Map<String, Number> historicalPricesBySlot,
+            List<EnergyRecord> forecastRecords
+    ) {
+        Map<String, Number> pricesBySlot = new HashMap<>();
+
+        for (EnergyRecord record : forecastRecords) {
+            LocalDateTime timestamp = record.getTimestamp();
+            if (timestamp != null) {
+                String slotLabel = formatTime(timestamp);
+                if (!historicalPricesBySlot.containsKey(slotLabel)) {
+                    pricesBySlot.put(slotLabel, record.getPricePerKwh());
+                }
+            }
+        }
+
+        return pricesBySlot;
+    }
+
+    private String formatTime(LocalDateTime timestamp) {
+        return timestamp.toLocalTime().format(TIME_FMT);
+    }
+
+    private String formatSlot(int slotIndex) {
+        LocalTime time = LocalTime.MIDNIGHT.plusMinutes(slotIndex * 30L);
+        return time.format(TIME_FMT);
+    }
+
+    private List<String> buildAllSlots() {
+        List<String> slots = new ArrayList<>();
+        for (int slot = 0; slot < 48; slot++) {
+            slots.add(formatSlot(slot));
+        }
+        return slots;
+    }
+
+    private void updateLastUpdatedLabel() {
+        if (lastUpdatedLabel != null) {
+            lastUpdatedLabel.setText("Updated " + LocalTime.now().format(TIME_FMT));
         }
     }
 

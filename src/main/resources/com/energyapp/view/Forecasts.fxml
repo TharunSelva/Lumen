@@ -41,15 +41,15 @@
          <children>
             <VBox spacing="10.0" HBox.hgrow="ALWAYS" id="forecasts-auto-2">
                <children>
-                  <Label text="Today's Energy Cost Forecast" styleClass="widget-title"/>
+                  <Label text="Today's Energy Price Forecast" styleClass="widget-title"/>
                   <VBox alignment="CENTER">
                      <children>
                         <LineChart fx:id="energyCostForecastLineChart">
                           <xAxis>
-                            <CategoryAxis side="BOTTOM" />
+                            <CategoryAxis side="BOTTOM" label="Time" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis side="LEFT" />
+                            <NumberAxis side="LEFT" label="Price (p/kWh)" />
                           </yAxis>
                         </LineChart>
                      </children>

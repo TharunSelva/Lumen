@@ -20,7 +20,10 @@ import java.net.http.HttpResponse;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -32,6 +35,7 @@ import java.nio.file.StandardCopyOption;
 public final class DbBootstrap {
     private static final String HOME_ID = "HOME_1";
     private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final ZoneId DEFAULT_HOME_ZONE = ZoneId.of("Europe/London");
 
     private DbBootstrap() {}
     private static final String TEMPLATE_DB_RESOURCE = "/com/energy_template_db.sqlite";
@@ -434,16 +438,12 @@ public final class DbBootstrap {
     }
 
     private static void cacheOctopusTariffs(Connection conn) throws Exception {
-        // --------------
-        // OCTOPUS: choose from/to here
-        // from = now (UTC) rounded down to 30-min boundary
-        // to   = from + 48h (you can change to 24h if you want)
-        // --------------------------
-
-        OffsetDateTime from = OctopusEnergyTariffService.roundDownToHalfHourUtc(
-                OffsetDateTime.now(ZoneOffset.UTC)
-        );
-        OffsetDateTime to = from.plusHours(48);
+        ZoneId homeZone = resolveHomeZone(conn, HOME_ID);
+        LocalDate localDay = LocalDate.now(homeZone);
+        ZonedDateTime localStart = localDay.atStartOfDay(homeZone);
+        ZonedDateTime localEnd = localStart.plusHours(48);
+        OffsetDateTime from = localStart.withZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
+        OffsetDateTime to = localEnd.withZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
 
         OctopusEnergyTariffService octopus = new OctopusEnergyTariffService();
         var rates = octopus.getUnitRates(from, to);
@@ -478,6 +478,25 @@ public final class DbBootstrap {
 
         ForecastIntervalCacheWriter.upsertSolarRadiation(conn, HOME_ID, points);
         upsertMeta(conn, "last_solar_cache_at", LocalDateTime.now().format(TS_FMT));
+    }
+
+    private static ZoneId resolveHomeZone(Connection conn, String homeId) {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT timezone FROM home_profile WHERE home_id = ?")) {
+            ps.setString(1, homeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String timezone = rs.getString("timezone");
+                    if (timezone != null && !timezone.isBlank()) {
+                        return ZoneId.of(timezone);
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+            // Fall through to UTC when the configured home zone is unavailable during bootstrap.
+        }
+
+        return DEFAULT_HOME_ZONE;
     }
 
     private static String toAppTs(String iso) {

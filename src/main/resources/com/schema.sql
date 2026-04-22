@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS home_profile (
     lat              REAL,
     lon              REAL,
     weekly_budget_gbp REAL,
+--     weekly_budget    INTEGER,
     created_at       TEXT NOT NULL
 );
 
