@@ -62,6 +62,10 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
+        settingsLogOutProceedButton.setOnAction(event -> {
+            handleExitApplication();
+        });
+
         settingsMainVBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 settingsDisplaySetting1.setSelected(ThemeController.isDarkModeEnabled());
@@ -130,7 +134,10 @@ public class SettingsController {
         textOptionsModalStage.showAndWait();
     }
 
-
+    public void handleExitApplication(){
+        javafx.application.Platform.exit();
+        System.exit(0);
+    }
 
 
 
