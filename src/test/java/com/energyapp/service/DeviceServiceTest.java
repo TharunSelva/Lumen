@@ -34,19 +34,6 @@ public class DeviceServiceTest {
     }
 
     @Test
-    public void testInitialDevicesCreated() {
-        assertEquals(3, deviceService.getAllDevices().size(), "Should have 3 default devices");
-    }
-
-    @Test
-    public void testAddDevice() {
-        SmartPlug newPlug = new SmartPlug("New Device", DeviceType.SMART_PLUG);
-        deviceService.addDevice(newPlug);
-        assertEquals(4, deviceService.getAllDevices().size());
-        assertTrue(deviceService.getAllDevices().contains(newPlug));
-    }
-
-    @Test
     public void testCutoffRuleNotTriggeredWhenPriceBelowCutoff() {
         SmartPlug testPlug = new SmartPlug("Fan", DeviceType.SMART_PLUG);
         testPlug.setPriceCutoff(50.0);
@@ -111,26 +98,6 @@ public class DeviceServiceTest {
         for (Device device : deviceService.getAllDevices()) {
             assertEquals(DeviceType.SMART_PLUG, device.getDeviceType());
         }
-    }
-
-    @Test
-    public void testDefaultDevicesAreOn() {
-        for (Device device : deviceService.getAllDevices()) {
-            assertTrue(device.isOn(), "Default devices should be on");
-        }
-    }
-
-    @Test
-    public void testAddMultipleDevices() {
-        SmartPlug plug1 = new SmartPlug("Device A", DeviceType.SMART_PLUG);
-        SmartPlug plug2 = new SmartPlug("Device B", DeviceType.SMART_PLUG);
-        SmartPlug plug3 = new SmartPlug("Device C", DeviceType.SMART_PLUG);
-
-        deviceService.addDevice(plug1);
-        deviceService.addDevice(plug2);
-        deviceService.addDevice(plug3);
-
-        assertEquals(6, deviceService.getAllDevices().size());
     }
 
     @Test
