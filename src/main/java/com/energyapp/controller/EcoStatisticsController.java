@@ -1,11 +1,13 @@
 package com.energyapp.controller;
 
 import com.energyapp.model.EnergyRecord;
+import com.energyapp.model.Recommendation;
 import com.energyapp.service.SimulationService;
 import com.energyapp.utils.EnergyCalculator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -15,10 +17,14 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
@@ -40,6 +46,7 @@ public class EcoStatisticsController {
     @FXML private Label currentGridIntensityLabel;
     @FXML private Label carbonRecommendationLabel;
     @FXML private BarChart<String, Number> carbonHistoryChart;
+    @FXML private StackPane ecoRecStack;
 
     private double accumulatedGridCarbon = 0.0;
     private double accumulatedSolarCarbonSaved = 0.0;
@@ -66,12 +73,14 @@ public class EcoStatisticsController {
         this.simulationService = simulationService;
         populateFromHistory();
         loadEnergySourceBreakdown();
+        updateEcoRecommendations();
 
         simulationService.getCurrentEnergyRecord().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 Platform.runLater(() -> {
                     updateCharts(newVal);
                     loadEnergySourceBreakdown();
+                    updateEcoRecommendations();
                 });
             }
         });
@@ -281,6 +290,56 @@ public class EcoStatisticsController {
         );
     }
 
+    static List<Recommendation> buildEcoRecommendations(EnergyRecord record) {
+        if (record == null) {
+            return List.of();
+        }
+
+        double carbon = Math.max(record.getCarbon(), 0.0);
+        LocalDateTime shownAt = record.getTimestamp() == null ? LocalDateTime.now() : record.getTimestamp();
+        List<Recommendation> recommendations = new ArrayList<>();
+
+        if (carbon < 100) {
+            recommendations.add(new Recommendation(
+                    "eco-low-flexible-devices",
+                    "Great time to run flexible devices",
+                    String.format(
+                            "Grid carbon intensity is low at %.0f gCO2/kWh, so this is a cleaner window for EV charging, laundry, or dishwasher cycles.",
+                            carbon
+                    ),
+                    rec -> true,
+                    shownAt,
+                    true
+            ));
+        } else if (carbon < 200) {
+            recommendations.add(new Recommendation(
+                    "eco-moderate-shift-loads",
+                    "Shift heavy loads if possible",
+                    String.format(
+                            "Grid carbon intensity is moderate at %.0f gCO2/kWh. Everyday use is fine, but delaying heavy appliances could lower impact.",
+                            carbon
+                    ),
+                    rec -> true,
+                    shownAt,
+                    true
+            ));
+        } else {
+            recommendations.add(new Recommendation(
+                    "eco-high-delay-appliances",
+                    "Delay heavy appliance use",
+                    String.format(
+                            "Grid carbon intensity is high at %.0f gCO2/kWh. If you can, wait for a cleaner hour before running energy-heavy devices.",
+                            carbon
+                    ),
+                    rec -> true,
+                    shownAt,
+                    true
+            ));
+        }
+
+        return recommendations;
+    }
+
     private static double safeLookup(Function<String, Double> fuelLookup, String fuel) {
         Double value = fuelLookup.apply(fuel);
         return value == null ? 0.0 : value;
@@ -305,6 +364,54 @@ public class EcoStatisticsController {
 
         List<EnergyRecord> history = simulationService.getEnergyStatsSessionHistory();
         return history.isEmpty() ? null : history.get(history.size() - 1);
+    }
+
+    private void updateEcoRecommendations() {
+        if (ecoRecStack == null) {
+            return;
+        }
+
+        EnergyRecord record = getLatestAvailableRecord();
+        renderEcoRecommendationCards(buildEcoRecommendations(record));
+    }
+
+    private void renderEcoRecommendationCards(List<Recommendation> recommendations) {
+        ecoRecStack.getChildren().clear();
+
+        if (recommendations.isEmpty()) {
+            showEcoRecommendationEmptyState();
+            return;
+        }
+
+        VBox container = new VBox(10);
+        container.getStyleClass().add("eco-recommendations-list");
+        container.setFillWidth(true);
+
+        for (Recommendation recommendation : recommendations) {
+            container.getChildren().add(createRecommendationCard(recommendation));
+        }
+
+        ecoRecStack.getChildren().setAll(container);
+    }
+
+    private void showEcoRecommendationEmptyState() {
+        Label emptyState = new Label("Eco recommendations will appear as grid conditions change.");
+        emptyState.getStyleClass().add("recommendation-empty-state");
+        emptyState.setWrapText(true);
+        ecoRecStack.getChildren().setAll(emptyState);
+    }
+
+    private Node createRecommendationCard(Recommendation recommendation) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/RecommendationCard.fxml"));
+            Node cardNode = loader.load();
+            RecommendationCardController controller = loader.getController();
+            controller.setRecommendation(recommendation);
+            controller.setOnNavigate(null);
+            return cardNode;
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to render eco recommendation card", e);
+        }
     }
 
     private void setCurrentHourStatusStyle(String modifierClass) {
