@@ -120,6 +120,7 @@ public class DevicesController {
             settingsModalStage.setScene(new Scene(settingsModalRoot, 500, 275));
 
             settingsModalStage.showAndWait();
+            deviceService.saveDevice(device);
         } else if (device.getDeviceType() == DeviceType.WASHING_MACHINE) {
             Stage settingsModalStage = new Stage();
             settingsModalStage.initModality(Modality.APPLICATION_MODAL);
@@ -131,6 +132,7 @@ public class DevicesController {
             settingsModalStage.setTitle("Device Settings");
             settingsModalStage.setScene(new Scene(settingsModalRoot, 1080, 720));
             settingsModalStage.showAndWait();
+            deviceService.saveDevice(device);
         } else {
             System.out.println("settings for this device to be implemented later");
         }
