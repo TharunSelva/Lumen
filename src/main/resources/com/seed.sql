@@ -7,8 +7,10 @@ INSERT OR IGNORE INTO home_profile(home_id, first_name, timezone, postcode_outco
 VALUES ('HOME_1', 'Richard', 'Europe/London', 'SO14', NULL, NULL, datetime('now'));
 
 -- Assets
-INSERT OR IGNORE INTO home_energy_assets(home_id, has_ev, has_solar, has_battery, battery_capacity_kwh, min_soc_pct, max_discharge_kw)
-VALUES ('HOME_1', 1, 1, 1, 10.5, 20, 5.0);
+INSERT OR IGNORE INTO home_energy_assets(
+  home_id, has_ev, has_solar, has_battery, solar_capacity_kw, battery_capacity_kwh, min_soc_pct, max_discharge_kw
+)
+VALUES ('HOME_1', 1, 1, 1, 4.0, 10.5, 20, 5.0);
 
 -- Default devices (for CSV import + device page)
 INSERT OR IGNORE INTO device(

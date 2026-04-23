@@ -36,12 +36,13 @@ public final class DbBootstrap {
     private static final String HOME_ID = "HOME_1";
     private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final ZoneId DEFAULT_HOME_ZONE = ZoneId.of("Europe/London");
+    private static final double DEFAULT_SOLAR_CAPACITY_KW = 4.0;
 
     private DbBootstrap() {}
     private static final String TEMPLATE_DB_RESOURCE = "/com/energy_template_db.sqlite";
-    private static final String APP_SCHEMA_VERSION = "1";
+    private static final String APP_SCHEMA_VERSION = "2";
     private static final String TEMPLATE_DB_NAME = "energy_template_db";
-    private static final String TEMPLATE_DB_VERSION = "1";
+    private static final String TEMPLATE_DB_VERSION = "2";
 
     public static void init() {
         DbPaths.ensureDataDirExists();
@@ -61,6 +62,7 @@ public final class DbBootstrap {
                 // safety: keeps schema creation idempotent
                 SqlScriptRunner.runResource(conn, "/com/schema.sql");
                 ensureWeeklyBudgetColumn(conn);
+                ensureSolarCapacityColumn(conn);
                 ensureVersionMetaIfMissing(conn);
                 verifyInstalledDbVersion(conn);
 
@@ -111,6 +113,24 @@ public final class DbBootstrap {
         }
     }
 
+    private static void ensureSolarCapacityColumn(Connection conn) throws SQLException {
+        if (!hasColumn(conn, "home_energy_assets", "solar_capacity_kw")) {
+            try (Statement statement = conn.createStatement()) {
+                statement.execute("ALTER TABLE home_energy_assets ADD COLUMN solar_capacity_kw REAL");
+            }
+        }
+
+        try (PreparedStatement ps = conn.prepareStatement("""
+                UPDATE home_energy_assets
+                SET solar_capacity_kw = ?
+                WHERE home_id = ? AND solar_capacity_kw IS NULL
+                """)) {
+            ps.setDouble(1, DEFAULT_SOLAR_CAPACITY_KW);
+            ps.setString(2, HOME_ID);
+            ps.executeUpdate();
+        }
+    }
+
     private static boolean hasColumn(Connection conn, String tableName, String columnName) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("PRAGMA table_info(" + tableName + ")");
              ResultSet rs = ps.executeQuery()) {
@@ -125,15 +145,9 @@ public final class DbBootstrap {
 
     // helper method to write schema/template versions and template name (metadata) into app_meta in the DB
     private static void ensureVersionMetaIfMissing(Connection conn) throws SQLException {
-        if (getMeta(conn, "schema_version") == null) {
-            upsertMeta(conn, "schema_version", APP_SCHEMA_VERSION);
-        }
-        if (getMeta(conn, "template_name") == null) {
-            upsertMeta(conn, "template_name", TEMPLATE_DB_NAME);
-        }
-        if (getMeta(conn, "template_version") == null) {
-            upsertMeta(conn, "template_version", TEMPLATE_DB_VERSION);
-        }
+        upsertMeta(conn, "schema_version", APP_SCHEMA_VERSION);
+        upsertMeta(conn, "template_name", TEMPLATE_DB_NAME);
+        upsertMeta(conn, "template_version", TEMPLATE_DB_VERSION);
     }
 
     // If needed, can use this to compare versions after "ensureVersionMeta(conn)" in init()
