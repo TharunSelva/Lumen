@@ -95,5 +95,17 @@ public class SideBarController {
             mainController.handleShowForecasting();
         }
     }
+    @FXML
+    public void handleShowRecommendations() {
+        if (mainController != null) {
+            mainController.handleShowRecommendations();
+        }
+    }
+    @FXML
+    public void handleShowEcoStatistics() {
+        if (mainController != null) {
+            mainController.handleShowEcoStatistics();
+        }
+    }
 
 }

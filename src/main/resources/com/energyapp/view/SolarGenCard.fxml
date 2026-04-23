@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox id="solarGenCardRoot" spacing="14.0" styleClass="solar-status-card" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SolarStatusCardController">
+   <padding>
+      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+   </padding>
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="10.0">
+         <Label id="solarGenCardTitle" styleClass="solar-card-title" text="Solar Array Status" />
+         <Region HBox.hgrow="ALWAYS" />
+         <Label fx:id="solarStatusLabel" id="solarStatusValueLabel" styleClass="solar-status-pill" text="Status: Pending" />
+      </HBox>
+
+      <VBox spacing="4.0">
+         <Label fx:id="solarGenerationLabel" id="solarGenerationValueLabel" styleClass="solar-generation-value" text="0.0 kW live output" />
+         <Label fx:id="solarCapacityLabel" styleClass="solar-generation-detail" text="0% of 4.0 kW capacity" />
+      </VBox>
+
+      <ProgressBar fx:id="generationProgressBar" id="solarGenerationProgressBar" maxWidth="1.7976931348623157E308" progress="0.0" styleClass="solar-status-progress" />
+
+      <Label fx:id="diagnosticHelperLabel" styleClass="solar-diagnostic-helper" text="Run a demo diagnostic to simulate a panel alert state." wrapText="true" />
+      <Button fx:id="simulateFaultButton" id="solarSimulateFaultButton" mnemonicParsing="false" styleClass="solar-diagnostic-button" text="Run panel diagnostic" />
+   </children>
+</VBox>

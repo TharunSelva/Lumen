@@ -14,3 +14,11 @@ target/
 # OS junk
 .DS_Store
 Thumbs.db
+
+## DB
+data/
+*.sqlite
+*.db
+
+## Only want the template DB to be tracked:
+!src/main/resources/com/energy_template_db.sqlite

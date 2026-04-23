@@ -14,6 +14,12 @@ You will want to clone in to this Gitlab repository on your own machines using I
 4. Copy the token that is given to you, and save it somewhere as you can't access it later. Paste that token into the box in the IntelliJ window.
 5. Hit trust project, and you should be done! Try running the project to ensure everything worked properly.
 
+### DB rules
+- energy_template_db.sqlite is the shared baseline DB
+- AppData DB is local only
+- no one commits runtime DBs
+- if multiple people need DB content changes, one person integrates them into the template DB
+
 ### FXML Ground Rules
 This section outlines some basic ground rules for creating FXML UI blueprints in SceneBuilder. This is **crucial**, because will ensure we don't hit hard to debug Null errors later.
 
@@ -59,3 +65,22 @@ private Button submitButton; // Name must be an exact match to the fx:id
 When you modify `App.java` to test run a feature you have created, make sure you DON'T push your changes to `App.java` to main. The version of `App.java` on main is build specifically to load the main layout and start the time simulation - don't change this unless you are specifically making changes to `App.java`
 
 Therefore, when you modify this file in your own branch, make sure you **do not tick `App.java` when you commit and push**.
+
+## Installation and Execution (for marker)
+
+### Prerequisites
+
+Ensure you have the following installed on your machine:
+- **Java Development Kit 17** (or higher)
+- **Maven 3.6.0** (or higher)
+
+### Running via Fat Jar
+We've included a fat jar file that you can find in the project root. You can just double-click this and the project should run!
+
+### Running via Command Line
+1. Open terminal or cmd
+2. Navigate to root directory of project
+3. Run this command:
+   ```bash
+   mvn clean javafx:run
+   ```
