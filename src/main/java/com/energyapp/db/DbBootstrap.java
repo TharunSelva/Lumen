@@ -66,6 +66,14 @@ public final class DbBootstrap {
                 ensureVersionMetaIfMissing(conn);
                 verifyInstalledDbVersion(conn);
 
+            // Keep UI devices available on first run and after schema upgrades.
+            seedUiDevicesIfEmpty(conn);
+
+            // 2) Seed only once
+            if (!metaEquals(conn, "seed_applied", "true")) {
+                SqlScriptRunner.runResource(conn, "/com/seed.sql");
+                upsertMeta(conn, "seed_applied", "true");
+            }
                 // Mark installed-from-template once
                 upsertMeta(conn, "template_installed", "true");
 
@@ -549,6 +557,48 @@ public final class DbBootstrap {
             ps.setString(2, value);
             ps.executeUpdate();
         }
+    }
+
+    private static void seedUiDevicesIfEmpty(Connection conn) throws SQLException {
+        if (!tableIsEmpty(conn, "ui_device")) {
+            return;
+        }
+
+        String sql = """
+            INSERT INTO ui_device(
+              home_id, device_name, device_type, price_cutoff, schedule_time, is_on, created_at, updated_at
+            ) VALUES(?,?,?,?,?,?,datetime('now'),datetime('now'))
+            """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            insertUiDeviceSeed(ps, "Living Room", "SMART_PLUG", 20.0, null, 1);
+            insertUiDeviceSeed(ps, "Kitchen", "SMART_PLUG", 20.0, null, 1);
+            insertUiDeviceSeed(ps, "Bedroom", "SMART_PLUG", 20.0, null, 1);
+            ps.executeBatch();
+        }
+    }
+
+    private static void insertUiDeviceSeed(PreparedStatement ps,
+                                           String name,
+                                           String type,
+                                           Double cutoff,
+                                           String schedule,
+                                           int isOn) throws SQLException {
+        ps.setString(1, HOME_ID);
+        ps.setString(2, name);
+        ps.setString(3, type);
+        if (cutoff == null) {
+            ps.setNull(4, Types.REAL);
+        } else {
+            ps.setDouble(4, cutoff);
+        }
+        if (schedule == null) {
+            ps.setNull(5, Types.VARCHAR);
+        } else {
+            ps.setString(5, schedule);
+        }
+        ps.setInt(6, isOn);
+        ps.addBatch();
     }
 
     // ------------------------
