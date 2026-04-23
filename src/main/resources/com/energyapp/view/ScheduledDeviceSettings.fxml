@@ -12,16 +12,15 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.text.Font?>
-<BorderPane id="washingMachineSettingsRoot" fx:id="deviceView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+
+<BorderPane id="washingMachineSettingsRoot" fx:id="deviceView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.ScheduledDeviceSettingsController">
    <center>
       <Pane id="washingMachineSettingsMainPane" fx:id="deviewViewMainPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="deviceViewTitle" layoutX="13.0" prefHeight="68.0" prefWidth="989.0" text="Samsung Series 5+ AddWash Washing Machine">
                <font>
-                  <Font/>
+                  <Font />
                </font>
             </Label>
             <GridPane fx:id="gridForDeviceView" layoutY="69.0" prefHeight="659.0" prefWidth="1080.0">
@@ -36,10 +35,10 @@
                <children>
                   <Pane fx:id="pane1" prefHeight="262.0" prefWidth="540.0">
                      <children>
-                        <Label fx:id="statusText" id="deviceViewStatusText" layoutX="98.0" layoutY="55.0" text="Status:" />
-                        <Label fx:id="statusLabel" id="deviceViewStatusLabel" layoutX="233.0" layoutY="55.0" text="[place holder]" />
-                        <Label fx:id="powerText" id="deviceViewCurrentDrawText" layoutX="98.0" layoutY="165.0" text="Current Draw:" />
-                        <Label fx:id="powerLabel" id="deviceViewCurrentDrawLabel" layoutX="354.0" layoutY="165.0" text="0W" />
+                        <Label id="deviceViewStatusText" fx:id="statusText" layoutX="98.0" layoutY="55.0" text="Status:" />
+                        <Label id="deviceViewStatusLabel" fx:id="statusLabel" layoutX="233.0" layoutY="55.0" text="[place holder]" />
+                        <Label id="deviceViewCurrentDrawText" fx:id="powerText" layoutX="98.0" layoutY="165.0" text="Current Draw:" />
+                        <Label id="deviceViewCurrentDrawLabel" fx:id="powerLabel" layoutX="354.0" layoutY="165.0" text="0W" />
                         <ImageView fx:id="powerIcon" fitHeight="60.0" fitWidth="60.0" layoutX="28.0" layoutY="164.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/power.png" />
@@ -54,30 +53,28 @@
                   </Pane>
                   <Pane fx:id="pane2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <Label fx:id="settingsText" id="deviceViewSettingsText" layoutX="252.0" layoutY="153.0" text="Settings" />
+                        <Label id="deviceViewSettingsText" fx:id="settingsText" layoutX="252.0" layoutY="153.0" text="Settings" />
                         <ImageView fx:id="settingsIcon" fitHeight="60.0" fitWidth="60.0" layoutX="181.0" layoutY="152.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/settings.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="deviceStatusLabel" id="deviceViewDeviceStatusLabel" layoutX="117.0" layoutY="53.0" text="This device is in idle" />
+                        <Label id="deviceViewDeviceStatusLabel" fx:id="deviceStatusLabel" layoutX="117.0" layoutY="53.0" text="This device is in idle" />
                      </children>
                   </Pane>
                   <Pane fx:id="pane3" prefHeight="381.0" prefWidth="524.0" GridPane.rowIndex="1">
                      <children>
-                        <Button fx:id="forceRun" id="deviceViewForceRunButton" layoutX="63.0" layoutY="115.0" mnemonicParsing="false" prefWidth="378.0" text="FORCE RUN NOW" />
-                        <Label fx:id="estimateText" id="deviceViewEstimateText" layoutX="14.0" layoutY="302.0" text="Estimated Cost for next run:" />
-                        <ToggleButton fx:id="powerToggle" id="deviceViewPowerToggle" layoutX="187.0" layoutY="25.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="117.0" text="Power: ON" />
-                        <Label fx:id="estimateLabel" id="deviceViewEstimateLabel" layoutX="390.0" layoutY="302.0" text="£0.12" />
+                        <Button id="deviceViewForceRunButton" fx:id="forceRun" layoutX="63.0" layoutY="115.0" mnemonicParsing="false" prefWidth="378.0" text="FORCE RUN NOW" />
+                        <Label id="deviceViewEstimateText" fx:id="estimateText" layoutX="14.0" layoutY="302.0" text="Estimated Cost for next run:" />
+                        <ToggleButton id="deviceViewPowerToggle" fx:id="powerToggle" layoutX="187.0" layoutY="25.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="117.0" text="Power: ON" />
+                        <Label id="deviceViewEstimateLabel" fx:id="estimateLabel" layoutX="390.0" layoutY="302.0" text="£0.12" />
                      </children>
                   </Pane>
                   <Pane fx:id="pane4" prefHeight="369.0" prefWidth="540.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <Label fx:id="powerText1" id="deviceViewOptimizationText" layoutY="14.0" text="Optimization:" />
-                        <Label fx:id="powerText11" id="deviceViewReadyByText" layoutY="126.0" text="Ready By:" />
-                        <CheckBox fx:id="greenEnergy" id="deviceViewGreenEnergyCheckbox" layoutX="255.0" layoutY="14.0" mnemonicParsing="false" text="Green Energy" />
-                        <DatePicker fx:id="timeToReady" id="deviceViewReadyByPicker" accessibleRole="LIST_VIEW" layoutX="201.0" layoutY="131.0" prefHeight="47.0" prefWidth="331.0" />
-                        <Button fx:id="deleteDevice" id="deviceViewDeleteButton" layoutX="385.0" layoutY="300.0" mnemonicParsing="false" text="Delete Device" />
+                        <Label id="deviceViewOptimizationText" fx:id="powerText1" layoutY="14.0" text="Optimization:" />
+                        <CheckBox id="deviceViewGreenEnergyCheckbox" fx:id="greenEnergy" layoutX="255.0" layoutY="14.0" mnemonicParsing="false" text="Green Energy" />
+                        <Button id="deviceViewDeleteButton" fx:id="deleteDevice" layoutX="385.0" layoutY="300.0" mnemonicParsing="false" text="Delete Device" />
                         <Label fx:id="powerText1" layoutY="14.0" text="Optimization:">
                            <font>
                               <Font size="40.0" />
