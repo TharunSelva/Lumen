@@ -1,6 +1,7 @@
 package com.energyapp.db;
 
 import com.energyapp.service.OctopusEnergyTariffService;
+import com.energyapp.db.OpenMeteoSolarService.SolarPoint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,7 +64,7 @@ public final class ForecastIntervalCacheWriter {
     public static void upsertSolarRadiation(
             Connection conn,
             String homeId,
-            List<com.energyapp.service.OpenMeteoSolarService.SolarPoint> points
+            List<com.energyapp.db.OpenMeteoSolarService.SolarPoint> points
     ) throws SQLException {
 
         String sql = """

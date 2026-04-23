@@ -18,295 +18,250 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EcoStatisticsController">
-   <ScrollPane prefHeight="200.0" prefWidth="200.0">
-      <content>
-      
-          <BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #F6F7F9;">
-      
-              <!-- ONE SCREEN CONTENT (no ScrollPane) -->
-              <center>
-                  <VBox maxWidth="Infinity" spacing="12" style="-fx-background-color: transparent;">
-                      <padding>
-                          <Insets bottom="14" left="14" right="14" top="14" />
-                      </padding>
-      
-                      <!-- Header (smaller) -->
-                      <HBox alignment="CENTER_LEFT" maxHeight="64" prefHeight="64" spacing="12">
-                          <VBox spacing="3" HBox.hgrow="ALWAYS">
-                              <Label style="-fx-font-size: 30; -fx-font-weight: bold;" text="Eco-Impact" />
-                              <Label style="-fx-text-fill: #6B7280;" text="Today • Updated 1 hr ago" />
-                          </VBox>
-      
-                          <ComboBox prefWidth="90" promptText="Day" />
-      
-                          <Button mnemonicParsing="false" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-background-radius: 10; -fx-border-radius: 10;">
-                              <graphic>
-                                  <Label style="-fx-font-size: 16;" text="⚙" />
-                              </graphic>
-                          </Button>
-                      </HBox>
-      
-                      <!-- TOP ROW (fixed smaller height) -->
-                      <GridPane hgap="16" maxHeight="160" maxWidth="Infinity" prefHeight="160" vgap="0">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
-                              <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
-                          </columnConstraints>
-      
-                          <!-- KPIs -->
-                          <VBox maxWidth="Infinity" spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="0">
-                              <padding>
-                           <Insets bottom="12" left="14" right="14" top="12" />
-                        </padding>
-      
-                              <HBox spacing="10">
-                                  <VBox spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
-                                      <padding>
-                                 <Insets bottom="8" left="10" right="10" top="8" />
-                              </padding>
-                                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="211 gCO₂/kWh" />
-                                      <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="UK average right now" />
-                                  </VBox>
-      
-                                  <VBox spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
-                                      <padding>
-                                 <Insets bottom="8" left="10" right="10" top="8" />
-                              </padding>
-                                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="150 gCO₂/kWh" />
-                                      <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Your Carbon Footprint" />
-                                  </VBox>
-                              </HBox>
-      
-                              <VBox spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
-                                  <padding>
-                              <Insets bottom="8" left="10" right="10" top="8" />
-                           </padding>
-                                  <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Your Eco Score:" />
-                                  <HBox alignment="BASELINE_LEFT" spacing="6">
-                                      <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="72" />
-                                      <Label style="-fx-text-fill: #6B7280;" text="/ 100" />
-                                  </HBox>
-                                  <Label style="-fx-text-fill: #16A34A; -fx-font-size: 11;" text="Better than yesterday (+8)" />
-                              </VBox>
-                          </VBox>
-      
-                          <!-- Clean Energy Share -->
-                          <VBox maxWidth="Infinity" spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="1">
-                              <padding>
-                           <Insets bottom="12" left="14" right="14" top="12" />
+<StackPane id="ecostatistics-auto-1" prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EcoStatisticsController">
+    <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+        <content>
+            <BorderPane id="ecostatistics-auto-2" prefHeight="800" prefWidth="1200">
+                <center>
+                    <VBox id="ecostatistics-auto-3" maxWidth="Infinity" spacing="12">
+                        <padding>
+                            <Insets bottom="14" left="14" right="14" top="14" />
                         </padding>
 
-                              <Label fx:id="cleanEnergyShareLabel" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Clean Energy Share: 0%" />
+                        <HBox alignment="CENTER_LEFT" maxHeight="64" prefHeight="64" spacing="12">
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label id="ecostatistics-auto-4" text="Eco Statistics" />
+                                <Label id="ecostatistics-auto-5" text="Today - Updated 1 hr ago" />
+                            </VBox>
 
-                              <StackPane fx:id="cleanEnergyChartContainer" maxHeight="150" maxWidth="Infinity" prefHeight="150" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 10; -fx-background-radius: 10;" />
-      
-                              <GridPane hgap="10" vgap="6">
-                                  <columnConstraints>
-                                      <ColumnConstraints percentWidth="50" />
-                                      <ColumnConstraints percentWidth="50" />
-                                  </columnConstraints>
-      
-                                  <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" style="-fx-fill: #FBBF24;" width="9" />
-                                      <Label style="-fx-font-size: 11;" text="Solar (38%)" />
-                                  </HBox>
-                                  <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" style="-fx-fill: #10B981;" width="9" />
-                                      <Label style="-fx-font-size: 11;" text="Low-carbon grid" />
-                                  </HBox>
-                                  <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" style="-fx-fill: #60A5FA;" width="9" />
-                                      <Label style="-fx-font-size: 11;" text="Battery (16%)" />
-                                  </HBox>
-                                  <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                      <Rectangle arcHeight="3" arcWidth="3" height="9" style="-fx-fill: #EF4444;" width="9" />
-                                      <Label style="-fx-font-size: 11;" text="Fossil grid (54%)" />
-                                  </HBox>
-                           <rowConstraints>
-                              <RowConstraints />
-                              <RowConstraints />
-                           </rowConstraints>
-                              </GridPane>
-                          </VBox>
-                     <rowConstraints>
-                        <RowConstraints />
-                     </rowConstraints>
-                      </GridPane>
-      
-                      <!-- MIDDLE ROW (fixed height so bottom stays visible) -->
-                      <GridPane hgap="16" maxHeight="250" maxWidth="Infinity" prefHeight="250" vgap="0">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
-                              <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
-                          </columnConstraints>
-      
-                          <!-- Eco Timeline (compressed) -->
-                          <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="0">
-                              <padding>
-                           <Insets bottom="12" left="14" right="14" top="12" />
-                        </padding>
-      
-                              <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Eco Timeline" />
-      
-                              <VBox spacing="10" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;">
-                                  <padding>
-                              <Insets bottom="10" left="10" right="10" top="10" />
-                           </padding>
-      
-                                  <!-- smaller blocks -->
-                                  <HBox spacing="6">
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #EF4444; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="H" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #EF4444; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="H" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #F59E0B; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="M" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #F59E0B; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="M" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #10B981; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="L" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #10B981; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="L" />
-                                      </StackPane>
-                                  </HBox>
-      
-                                  <HBox spacing="6">
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #10B981; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="L" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #10B981; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="L" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #F59E0B; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="M" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #EF4444; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="H" />
-                                      </StackPane>
-                                      <StackPane prefHeight="34" prefWidth="26" style="-fx-background-color: #EF4444; -fx-background-radius: 8;">
-                                          <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="H" />
-                                      </StackPane>
-                                  </HBox>
-      
-                                  <!-- smaller callout -->
-                                  <VBox spacing="2" style="-fx-background-color: #111827; -fx-background-radius: 10;">
-                                      <padding>
-                                 <Insets bottom="8" left="10" right="10" top="8" />
-                              </padding>
-                                      <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;" text="13:00 — Low carbon hour" />
-                                      <Label style="-fx-text-fill: #D1D5DB; -fx-font-size: 11;" text="Grid intensity: 142 gCO₂/kWh" />
-                                      <Label style="-fx-text-fill: #D1D5DB; -fx-font-size: 11;" text="Solar contributed 82% of household use" />
-                                      <Label style="-fx-text-fill: #D1D5DB; -fx-font-size: 11;" text="Good time for flexible tasks" />
-                                  </VBox>
-                              </VBox>
-                          </VBox>
-      
-                          <!-- History Graph (compressed height) -->
-                          <VBox spacing="8" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;" GridPane.columnIndex="1">
-                              <padding>
-                           <Insets bottom="12" left="14" right="14" top="12" />
-                        </padding>
-      
-                              <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Eco-Impact History" />
-      
-                              <StackPane style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" VBox.vgrow="ALWAYS">
-                                  <Label style="-fx-text-fill: #6B7280; -fx-font-size: 12;" text="[Graph showing how eco-impact has changed]" />
-                              </StackPane>
-                          </VBox>
-                     <rowConstraints>
-                        <RowConstraints />
-                     </rowConstraints>
-                      </GridPane>
-      
-                      <!-- BOTTOM ROW (fixed height) -->
-                      <VBox maxHeight="270" maxWidth="Infinity" prefHeight="270" spacing="10" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 14; -fx-background-radius: 14;">
-                          <padding>
-                        <Insets bottom="12" left="14" right="14" top="12" />
-                     </padding>
-      
-                          <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Environmental Breakdown" />
-      
-                          <GridPane hgap="16" maxWidth="Infinity" vgap="0" VBox.vgrow="ALWAYS">
-                              <columnConstraints>
-                                  <ColumnConstraints hgrow="ALWAYS" percentWidth="64" />
-                                  <ColumnConstraints hgrow="ALWAYS" percentWidth="36" />
-                              </columnConstraints>
-      
-                              <!-- Energy Source (short chart) -->
-                              <VBox spacing="8" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" GridPane.columnIndex="0">
-                                  <padding>
-                              <Insets bottom="10" left="10" right="10" top="10" />
-                           </padding>
-      
-                                  <Label style="-fx-font-weight: bold;" text="By Energy Source" />
+                            <ComboBox prefWidth="90" promptText="Day" />
 
-                                  <BarChart fx:id="environmentalBreakdownChart" animated="false" legendVisible="true" maxHeight="120" prefHeight="120" title="">
-                                      <xAxis>
-                                 <CategoryAxis label="" />
-                              </xAxis>
-                                      <yAxis>
-                                 <NumberAxis label="" />
-                              </yAxis>
-                                  </BarChart>
-      
-                                  <HBox>
-                                      <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Total" />
-                                      <Region HBox.hgrow="ALWAYS" />
-                                      <Label style="-fx-font-weight: bold; -fx-font-size: 11;" text="3.1 kg CO₂" />
-                                  </HBox>
-                              </VBox>
-      
-                              <!-- Device Category (tighter text) -->
-                              <VBox spacing="8" style="-fx-background-color: #F9FAFB; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" GridPane.columnIndex="1">
-                                  <padding>
-                              <Insets bottom="10" left="10" right="10" top="10" />
-                           </padding>
-      
-                                  <Label style="-fx-font-weight: bold;" text="By Device Category" />
-      
-                                  <VBox spacing="8">
-                                      <HBox>
-                                 <Label style="-fx-font-size: 12;" text="🚗  EV" />
-                                 <Region HBox.hgrow="ALWAYS" />
-                                 <Label style="-fx-font-weight: bold; -fx-font-size: 12;" text="3.1 kg CO₂" />
-                              </HBox>
-                                      <HBox>
-                                 <Label style="-fx-font-size: 12;" text="♨  Heating" />
-                                 <Region HBox.hgrow="ALWAYS" />
-                                 <Label style="-fx-font-weight: bold; -fx-font-size: 12;" text="10.8 kg CO₂" />
-                              </HBox>
-                                      <HBox>
-                                 <Label style="-fx-font-size: 12;" text="🧺  Laundry" />
-                                 <Region HBox.hgrow="ALWAYS" />
-                                 <Label style="-fx-font-weight: bold; -fx-font-size: 12;" text="4.7 kg CO₂" />
-                              </HBox>
-                                      <HBox>
-                                 <Label style="-fx-font-size: 12;" text="🍳  Kitchen" />
-                                 <Region HBox.hgrow="ALWAYS" />
-                                 <Label style="-fx-font-weight: bold; -fx-font-size: 12;" text="1.2 kg CO₂" />
-                              </HBox>
-                                      <HBox>
-                                 <Label style="-fx-font-size: 12;" text="⏻  Standby" />
-                                 <Region HBox.hgrow="ALWAYS" />
-                                 <Label style="-fx-font-weight: bold; -fx-font-size: 12;" text="0.0 kg CO₂" />
-                              </HBox>
-                                  </VBox>
-                              </VBox>
-                        <rowConstraints>
-                           <RowConstraints />
-                        </rowConstraints>
-                          </GridPane>
-                      </VBox>
-      
-                  </VBox>
-              </center>
-          </BorderPane>
-      </content>
-   </ScrollPane>
+                            <Button id="ecostatistics-auto-6" mnemonicParsing="false">
+                                <graphic>
+                                    <Label id="ecostatistics-auto-7" text="Settings" />
+                                </graphic>
+                            </Button>
+                        </HBox>
+
+                        <GridPane hgap="16" maxHeight="160" maxWidth="Infinity" prefHeight="160" vgap="0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                            </columnConstraints>
+
+                            <VBox id="ecostatistics-auto-8" maxWidth="Infinity" spacing="10" GridPane.columnIndex="0">
+                                <padding>
+                                    <Insets bottom="12" left="14" right="14" top="12" />
+                                </padding>
+
+                                <Label id="ecostatistics-auto-30" text="Key Carbon Metrics" />
+
+                                <HBox spacing="10">
+                                    <VBox id="ecostatistics-auto-9" spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                                        <padding>
+                                            <Insets bottom="8" left="10" right="10" top="8" />
+                                        </padding>
+                                        <Label fx:id="carbonSavedLabel" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #10B981;" text="0.00 kg CO2" />
+                                        <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Carbon Saved (Solar)" />
+                                    </VBox>
+
+                                    <VBox id="ecostatistics-auto-12" spacing="2" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                                        <padding>
+                                            <Insets bottom="8" left="10" right="10" top="8" />
+                                        </padding>
+                                        <Label fx:id="carbonFootprintLabel" style="-fx-font-size: 16; -fx-font-weight: bold;" text="0 gCO2/kWh" />
+                                        <Label style="-fx-text-fill: #6B7280; -fx-font-size: 11;" text="Your Carbon Footprint" />
+                                    </VBox>
+                                </HBox>
+
+                                <VBox id="ecostatistics-auto-15" spacing="2">
+                                    <padding>
+                                        <Insets bottom="8" left="10" right="10" top="8" />
+                                    </padding>
+                                    <Label id="ecostatistics-auto-16" text="Your Eco Score:" />
+                                    <HBox alignment="BASELINE_LEFT" spacing="6">
+                                        <Label id="ecostatistics-auto-17" text="72" />
+                                        <Label id="ecostatistics-auto-18" text="/ 100" />
+                                    </HBox>
+                                    <Label id="ecostatistics-auto-19" text="Better than yesterday (+8)" />
+                                </VBox>
+                            </VBox>
+
+                            <VBox id="ecostatistics-auto-20" maxWidth="Infinity" spacing="8" GridPane.columnIndex="1">
+                                <padding>
+                                    <Insets bottom="12" left="14" right="14" top="12" />
+                                </padding>
+
+                                <Label id="cleanEnergyShareLabel" fx:id="cleanEnergyShareLabel" text="Clean Energy Share: 0%" />
+                                <StackPane id="cleanEnergyChartContainer" fx:id="cleanEnergyChartContainer" maxHeight="150" maxWidth="Infinity" prefHeight="150" />
+
+                                <GridPane hgap="10" vgap="6">
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="50" />
+                                        <ColumnConstraints percentWidth="50" />
+                                    </columnConstraints>
+
+                                    <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                        <Rectangle id="ecostatistics-auto-21" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                        <Label id="ecostatistics-auto-22" text="Solar" />
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                        <Rectangle id="ecostatistics-auto-23" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                        <Label id="ecostatistics-auto-24" text="Low-carbon grid" />
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                        <Rectangle id="ecostatistics-auto-25" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                        <Label id="ecostatistics-auto-26" text="Battery" />
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Rectangle id="ecostatistics-auto-27" arcHeight="3" arcWidth="3" height="9" width="9" />
+                                        <Label id="ecostatistics-auto-28" text="Grid fossil fuels" />
+                                    </HBox>
+                                    <rowConstraints>
+                                        <RowConstraints />
+                                        <RowConstraints />
+                                    </rowConstraints>
+                                </GridPane>
+                            </VBox>
+                            <rowConstraints>
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+
+                        <GridPane hgap="16" maxHeight="250" maxWidth="Infinity" prefHeight="250" vgap="0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                            </columnConstraints>
+
+                            <VBox id="ecostatistics-auto-29" styleClass="card" spacing="8" GridPane.columnIndex="0">
+                                <padding>
+                                    <Insets bottom="12" left="14" right="14" top="12" />
+                                </padding>
+
+                                <Label id="ecostatistics-auto-30" styleClass="widget-title" text="Current Hour Status" />
+
+                                <VBox id="ecostatistics-auto-54" spacing="8" styleClass="eco-hour-status-card">
+                                    <padding>
+                                        <Insets bottom="14" left="14" right="14" top="14" />
+                                    </padding>
+                                    <Label fx:id="currentHourStatusLabel" styleClass="eco-hour-pill" text="Loading current hour..." />
+                                    <Label fx:id="currentGridIntensityLabel" styleClass="eco-hour-intensity" text="Grid intensity: -- gCO2/kWh" />
+                                    <Label fx:id="carbonRecommendationLabel" styleClass="eco-hour-recommendation" text="Determining best action..." wrapText="true" />
+                                </VBox>
+                            </VBox>
+
+                            <VBox id="ecostatistics-auto-59" styleClass="card" spacing="8" GridPane.columnIndex="1">
+                                <padding>
+                                    <Insets bottom="12" left="14" right="14" top="12" />
+                                </padding>
+
+                                <Label id="ecostatistics-auto-60" styleClass="widget-title" text="Predicted Eco-Impact Today" />
+
+                                <StackPane VBox.vgrow="ALWAYS">
+                                    <BarChart fx:id="carbonHistoryChart" animated="false" legendVisible="false">
+                                        <xAxis>
+                                            <CategoryAxis side="BOTTOM" />
+                                        </xAxis>
+                                        <yAxis>
+                                            <NumberAxis label="gCO2/kWh" side="LEFT" />
+                                        </yAxis>
+                                    </BarChart>
+                                </StackPane>
+                            </VBox>
+                            <rowConstraints>
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+
+                        <VBox id="ecostatistics-auto-63" minHeight="980" maxWidth="Infinity" prefHeight="980" spacing="16" VBox.vgrow="ALWAYS">
+                            <padding>
+                                <Insets bottom="12" left="14" right="14" top="12" />
+                            </padding>
+
+                            <Label id="ecostatistics-auto-64" text="Environmental Breakdown" />
+
+                            <GridPane hgap="16" minHeight="900" prefHeight="900" vgap="12" VBox.vgrow="ALWAYS">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS" percentWidth="64" />
+                                    <ColumnConstraints hgrow="ALWAYS" percentWidth="36" />
+                                </columnConstraints>
+
+                                <VBox spacing="18" GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
+                                    <VBox minHeight="360.0" prefHeight="360.0" spacing="8" styleClass="eco-source-card">
+                                        <padding>
+                                            <Insets bottom="12" left="12" right="12" top="12" />
+                                        </padding>
+                                        <Label styleClass="widget-title" text="Personal Sources" />
+                                        <BarChart fx:id="personalSourcesChart" animated="false" barGap="4.0" categoryGap="24.0" legendVisible="false" minHeight="300.0" prefHeight="300.0" styleClass="eco-source-chart" title="Household supply by source (kWh)" VBox.vgrow="ALWAYS">
+                                            <xAxis>
+                                                <NumberAxis autoRanging="true" label="Energy (kWh)" lowerBound="0" side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                                <CategoryAxis label="Source" side="LEFT" />
+                                            </yAxis>
+                                        </BarChart>
+                                    </VBox>
+
+                                    <VBox minHeight="520.0" prefHeight="520.0" spacing="8" styleClass="eco-source-card">
+                                        <padding>
+                                            <Insets bottom="12" left="12" right="12" top="12" />
+                                        </padding>
+                                        <Label styleClass="widget-title" text="Grid Sources" />
+                                        <BarChart fx:id="gridSourcesChart" animated="false" barGap="3.0" categoryGap="10.0" legendVisible="false" minHeight="455.0" prefHeight="455.0" styleClass="eco-source-chart" title="National grid mix (%)" VBox.vgrow="ALWAYS">
+                                            <xAxis>
+                                                <NumberAxis autoRanging="true" label="Percentage (%)" lowerBound="0" side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                                <CategoryAxis label="Source" side="LEFT" />
+                                            </yAxis>
+                                        </BarChart>
+                                    </VBox>
+                                </VBox>
+
+                                <VBox id="ecostatistics-auto-69" spacing="8" styleClass="card" GridPane.columnIndex="1">
+                                    <padding>
+                                        <Insets bottom="10" left="10" right="10" top="10" />
+                                    </padding>
+
+                                    <Label id="ecostatistics-auto-70" styleClass="widget-title" text="By Device Category" />
+
+                                    <VBox spacing="8">
+                                        <HBox>
+                                            <Label id="ecostatistics-auto-71" text="EV" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label id="ecostatistics-auto-72" text="3.1 kg CO2" />
+                                        </HBox>
+                                        <HBox>
+                                            <Label id="ecostatistics-auto-73" text="Heating" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label id="ecostatistics-auto-74" text="10.8 kg CO2" />
+                                        </HBox>
+                                        <HBox>
+                                            <Label id="ecostatistics-auto-75" text="Laundry" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label id="ecostatistics-auto-76" text="4.7 kg CO2" />
+                                        </HBox>
+                                        <HBox>
+                                            <Label id="ecostatistics-auto-77" text="Kitchen" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label id="ecostatistics-auto-78" text="1.2 kg CO2" />
+                                        </HBox>
+                                        <HBox>
+                                            <Label id="ecostatistics-auto-79" text="Standby" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label id="ecostatistics-auto-80" text="0.0 kg CO2" />
+                                        </HBox>
+                                    </VBox>
+                                </VBox>
+                                <rowConstraints>
+                                    <RowConstraints />
+                                </rowConstraints>
+                            </GridPane>
+                        </VBox>
+                    </VBox>
+                </center>
+            </BorderPane>
+        </content>
+    </ScrollPane>
 </StackPane>

@@ -1,9 +1,9 @@
 package com.energyapp.db;
 
-import com.energyapp.model.EnergyRecord;
-import com.energyapp.utils.CsvReadForService;
+//import com.energyapp.model.EnergyRecord;
+//import com.energyapp.utils.CsvReadForService;
 import com.energyapp.service.OctopusEnergyTariffService;
-import com.energyapp.service.OpenMeteoSolarService;
+import com.energyapp.db.OpenMeteoSolarService;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -20,25 +20,51 @@ import java.net.http.HttpResponse;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 public final class DbBootstrap {
     private static final String HOME_ID = "HOME_1";
     private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final ZoneId DEFAULT_HOME_ZONE = ZoneId.of("Europe/London");
+    private static final double DEFAULT_SOLAR_CAPACITY_KW = 4.0;
 
     private DbBootstrap() {}
+    private static final String TEMPLATE_DB_RESOURCE = "/com/energy_template_db.sqlite";
+    private static final String APP_SCHEMA_VERSION = "2";
+    private static final String TEMPLATE_DB_NAME = "energy_template_db";
+    private static final String TEMPLATE_DB_VERSION = "2";
 
     public static void init() {
         DbPaths.ensureDataDirExists();
         System.out.println("DB PATH = " + DbPaths.dbFile().toAbsolutePath());
 
-        try (Connection conn = Sqlite.openConnection()) {
-            // 1) Always ensure schema exists
-            SqlScriptRunner.runResource(conn, "/com/schema.sql");
+        try {
+            // for debugging;
+            boolean existedBeforeInstall = DbPaths.dbExists();
+            System.out.println("DB PATH = " + DbPaths.dbFile().toAbsolutePath());
+            System.out.println("DB already existed before install step? " + existedBeforeInstall);
+
+            installTemplateDbIfMissing();
+
+            System.out.println("DB exists after install step? " + DbPaths.dbExists());
+
+            try (Connection conn = Sqlite.openConnection()) {
+                // safety: keeps schema creation idempotent
+                SqlScriptRunner.runResource(conn, "/com/schema.sql");
+                ensureWeeklyBudgetColumn(conn);
+                ensureSolarCapacityColumn(conn);
+                ensureVersionMetaIfMissing(conn);
+                verifyInstalledDbVersion(conn);
 
             // Keep UI devices available on first run and after schema upgrades.
             seedUiDevicesIfEmpty(conn);
@@ -48,55 +74,151 @@ public final class DbBootstrap {
                 SqlScriptRunner.runResource(conn, "/com/seed.sql");
                 upsertMeta(conn, "seed_applied", "true");
             }
+                // Mark installed-from-template once
+                upsertMeta(conn, "template_installed", "true");
 
-            // 3) Import simulation CSV into DB only if empty
-            if (tableIsEmpty(conn, "energy_interval")) {
-                importSimulationCsv(conn);
-                upsertMeta(conn, "csv_imported", "true");
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate("UPDATE home_profile SET lat = NULL, lon = NULL WHERE home_id = 'HOME_1'");
+                }
+
+                // Run API caching for current carbon and mix
+                try {
+                    cacheCurrentCarbonAndMix(conn);
+                    upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
+                } catch (Exception e) {
+                    System.err.println("API cache failed (carbon/mix).");
+                    e.printStackTrace();
+                }
+
+                // Run API caching for Octopus API tariffs
+                try {
+                    cacheOctopusTariffs(conn);
+                } catch (Exception e) {
+                    System.err.println("API cache failed (octopus).");
+                    e.printStackTrace();
+                }
+
+                // Run caching for MeteoSolar
+                try {
+                    cacheOpenMeteoSolar(conn);
+                } catch (Exception e) {
+                    System.err.println("API cache failed (open-meteo solar).");
+                    e.printStackTrace();
+                }
             }
-
-            // 4) (Optional but recommended) Cache current carbon intensity + generation mix once
-            // If offline, this will just fail quietly and your app still runs with simulated/carbon from CSV.
-//            try {
-//                cacheCurrentCarbonAndMix(conn);
-//                upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
-//            } catch (Exception ignored) {
-//                // Keep app usable offline
-//            }
-            // This doesn't hide any exceptions given it occurs unlike the commented out code above
-            // Run API caching for current carbon and mix
-            try {
-                cacheCurrentCarbonAndMix(conn);
-                upsertMeta(conn, "last_carbon_cache_at", LocalDateTime.now().format(TS_FMT));
-            } catch (Exception e) {
-                System.err.println("API cache failed (carbon/mix).");
-                e.printStackTrace();
-            }
-
-            // Run API caching for Octopus API tariffs
-            try {
-                cacheOctopusTariffs(conn);
-            } catch (Exception e) {
-                System.err.println("API cache failed (octopus).");
-                e.printStackTrace();
-            }
-
-            // Run caching for MeteoSolar
-            try {
-                cacheOpenMeteoSolar(conn);
-            } catch (Exception e) {
-                System.err.println("API cache failed (open-meteo solar).");
-                e.printStackTrace();
-            }
-
         } catch (Exception e) {
             throw new RuntimeException("DB bootstrap failed", e);
         }
     }
 
+    private static void ensureWeeklyBudgetColumn(Connection conn) throws SQLException {
+        if (hasColumn(conn, "home_profile", "weekly_budget_gbp")) {
+            return;
+        }
+
+        try (Statement statement = conn.createStatement()) {
+            statement.execute("ALTER TABLE home_profile ADD COLUMN weekly_budget_gbp REAL");
+        }
+    }
+
+    private static void ensureSolarCapacityColumn(Connection conn) throws SQLException {
+        if (!hasColumn(conn, "home_energy_assets", "solar_capacity_kw")) {
+            try (Statement statement = conn.createStatement()) {
+                statement.execute("ALTER TABLE home_energy_assets ADD COLUMN solar_capacity_kw REAL");
+            }
+        }
+
+        try (PreparedStatement ps = conn.prepareStatement("""
+                UPDATE home_energy_assets
+                SET solar_capacity_kw = ?
+                WHERE home_id = ? AND solar_capacity_kw IS NULL
+                """)) {
+            ps.setDouble(1, DEFAULT_SOLAR_CAPACITY_KW);
+            ps.setString(2, HOME_ID);
+            ps.executeUpdate();
+        }
+    }
+
+    private static boolean hasColumn(Connection conn, String tableName, String columnName) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("PRAGMA table_info(" + tableName + ")");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                if (columnName.equalsIgnoreCase(rs.getString("name"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // helper method to write schema/template versions and template name (metadata) into app_meta in the DB
+    private static void ensureVersionMetaIfMissing(Connection conn) throws SQLException {
+        upsertMeta(conn, "schema_version", APP_SCHEMA_VERSION);
+        upsertMeta(conn, "template_name", TEMPLATE_DB_NAME);
+        upsertMeta(conn, "template_version", TEMPLATE_DB_VERSION);
+    }
+
+    // If needed, can use this to compare versions after "ensureVersionMeta(conn)" in init()
+    private static String getMeta(Connection conn, String key) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT meta_value FROM app_meta WHERE meta_key = ?")) {
+            ps.setString(1, key);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString(1) : null;
+            }
+        }
+    }
+
+    // Visible check to verify the installed DB version (the one in the hidden folder) using 'app_meta' in DB.
+    private static void verifyInstalledDbVersion(Connection conn) throws SQLException {
+        String schemaVersion = getMeta(conn, "schema_version");
+        String templateName = getMeta(conn, "template_name");
+        String templateVersion = getMeta(conn, "template_version");
+
+        // For debugging purposes:
+        System.out.printf(
+                "Fetched  — schema_version: %s | template_name: %s | template_ver: %s%n" +
+                        "Expected — schema_version: %s | template_name: %s | template_ver: %s%n",
+                schemaVersion, templateName, templateVersion,
+                APP_SCHEMA_VERSION, TEMPLATE_DB_NAME, TEMPLATE_DB_VERSION
+        );
+
+        if (!APP_SCHEMA_VERSION.equals(schemaVersion)) {
+            System.err.println("Warning: local DB schema_version is '" + schemaVersion
+                    + "', expected '" + APP_SCHEMA_VERSION + "'.");
+        }
+
+        if (!TEMPLATE_DB_NAME.equals(templateName)) {
+            System.err.println("Warning: local DB template_name is '" + templateName
+                    + "', expected '" + TEMPLATE_DB_NAME + "'.");
+        }
+
+        if (!TEMPLATE_DB_VERSION.equals(templateVersion)) {
+            System.err.println("Warning: local DB template_version is '" + templateVersion
+                    + "', expected '" + TEMPLATE_DB_VERSION + "'.");
+        }
+    }
+
+    // If template DB is not already installed, this helper function will be used
+    private static void installTemplateDbIfMissing() throws Exception {
+        if (DbPaths.dbExists()) {
+            return;
+        }
+
+        try (InputStream in = DbBootstrap.class.getResourceAsStream(TEMPLATE_DB_RESOURCE)) {
+            if (in == null) {
+                throw new IllegalStateException("Missing template DB resource: " + TEMPLATE_DB_RESOURCE);
+            }
+
+            Files.copy(in, DbPaths.dbFile(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Installed template DB to " + DbPaths.dbFile().toAbsolutePath());
+        }
+    }
+
     // ------------------------
-    // CSV -> DB import
+    // CSV -> DB import (**REDUNDANT** - NOW USING TEMPLATE_DB WHICH HAS BEEN SEEDED ONCE WITH OLD CSV FILE)
     // ------------------------
+    /*
     private static void importSimulationCsv(Connection conn) throws Exception {
         InputStream csv = DbBootstrap.class.getResourceAsStream("/com/simulation_data.csv");
         if (csv == null) throw new IllegalStateException("Missing /com/simulation_data.csv");
@@ -164,6 +286,9 @@ public final class DbBootstrap {
         pd.setDouble(4, kwh);
         pd.addBatch();
     }
+
+     */
+
 
     // ------------------------
     // Carbon Intensity API cache (national)
@@ -335,16 +460,12 @@ public final class DbBootstrap {
     }
 
     private static void cacheOctopusTariffs(Connection conn) throws Exception {
-        // --------------
-        // OCTOPUS: choose from/to here
-        // from = now (UTC) rounded down to 30-min boundary
-        // to   = from + 48h (you can change to 24h if you want)
-        // --------------------------
-
-        OffsetDateTime from = OctopusEnergyTariffService.roundDownToHalfHourUtc(
-                OffsetDateTime.now(ZoneOffset.UTC)
-        );
-        OffsetDateTime to = from.plusHours(48);
+        ZoneId homeZone = resolveHomeZone(conn, HOME_ID);
+        LocalDate localDay = LocalDate.now(homeZone);
+        ZonedDateTime localStart = localDay.atStartOfDay(homeZone);
+        ZonedDateTime localEnd = localStart.plusHours(48);
+        OffsetDateTime from = localStart.withZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
+        OffsetDateTime to = localEnd.withZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
 
         OctopusEnergyTariffService octopus = new OctopusEnergyTariffService();
         var rates = octopus.getUnitRates(from, to);
@@ -379,6 +500,25 @@ public final class DbBootstrap {
 
         ForecastIntervalCacheWriter.upsertSolarRadiation(conn, HOME_ID, points);
         upsertMeta(conn, "last_solar_cache_at", LocalDateTime.now().format(TS_FMT));
+    }
+
+    private static ZoneId resolveHomeZone(Connection conn, String homeId) {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT timezone FROM home_profile WHERE home_id = ?")) {
+            ps.setString(1, homeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String timezone = rs.getString("timezone");
+                    if (timezone != null && !timezone.isBlank()) {
+                        return ZoneId.of(timezone);
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+            // Fall through to UTC when the configured home zone is unavailable during bootstrap.
+        }
+
+        return DEFAULT_HOME_ZONE;
     }
 
     private static String toAppTs(String iso) {

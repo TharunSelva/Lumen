@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import com.energyapp.controller.ThemeController;
 
 public class App extends Application {
 
@@ -18,10 +19,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        DbBootstrap.init();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/energyapp/view/MainLayout.fxml"));
         Parent root = loader.load();
 
-        DbBootstrap.init();  // DB initialisation
+          // DB initialisation
         apiRefreshService.start();
         simulationService.loadData();
         simulationService.startSimulation();
@@ -31,7 +34,10 @@ public class App extends Application {
         mainController.handleShowDashboard();
 
         primaryStage.setTitle("Home Energy Manager");
-        primaryStage.setScene(new Scene(root, 1280, 720));
+        Scene scene = new Scene(root, 1280, 720);
+        ThemeController.applyTheme(scene);
+        primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

@@ -7,13 +7,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="costCardVBox"
+<VBox fx:id="costCardVBox" stylesheets="@../../css/app.css"
       xmlns:fx="http://javafx.com/fxml/1"
       xmlns="http://javafx.com/javafx/8"
       fx:controller="com.energyapp.controller.CostCardController"
-      style="-fx-border-color: black;">
+      id="costCardVBox"
+      fillWidth="true">
     <children>
-        <Label fx:id="costCardLabel" alignment="CENTER" prefHeight="44.0" prefWidth="250" text="54 kWh so far this week...">
+        <Label fx:id="costCardLabel" alignment="CENTER" maxWidth="Infinity" wrapText="true" text="54 kWh so far this week...">
             <font>
                 <Font size="20" />
             </font>

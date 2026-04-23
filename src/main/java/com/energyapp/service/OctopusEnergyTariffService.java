@@ -28,7 +28,6 @@ import java.util.List;
  */
 public class OctopusEnergyTariffService {
 
-    // TODO: if you ever want this configurable, move to a settings table or app_meta.
     private static final String BASE_URL =
             "https://api.octopus.energy/v1/products/AGILE-24-10-01/electricity-tariffs/E-1R-AGILE-24-10-01-A/standard-unit-rates/";
 

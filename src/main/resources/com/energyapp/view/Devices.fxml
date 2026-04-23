@@ -10,17 +10,13 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="devicesPlane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DevicesController">
+<BorderPane fx:id="devicesPlane" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DevicesController">
     <center>
-        <VBox fx:id="devicesPaneMain" alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;">
+        <VBox fx:id="devicesPaneMain" alignment="TOP_CENTER" spacing="20" id="devicesPaneMain">
             <children>
-                <Label fx:id="devicesTitle" text="Your Home Devices...">
-                    <font>
-                        <Font name="System Bold" size="40.0" />
-                    </font>
-                </Label>
+                <Label fx:id="devicesTitle" text="Your Home Devices..." styleClass="screen-title" />
 
-                <ScrollPane fx:id="devicesScrollPane" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <ScrollPane fx:id="devicesScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" id="devicesScrollPane">
                <content>
                   <FlowPane fx:id="deviceContainer" prefHeight="200.0" prefWidth="200.0" />
                </content>

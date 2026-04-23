@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS home_profile (
     postcode_outcode TEXT,
     lat              REAL,
     lon              REAL,
+    weekly_budget_gbp REAL,
+--     weekly_budget    INTEGER,
     created_at       TEXT NOT NULL
 );
 
@@ -26,6 +28,7 @@ CREATE TABLE IF NOT EXISTS home_energy_assets (
     has_ev               INTEGER NOT NULL DEFAULT 0,
     has_solar            INTEGER NOT NULL DEFAULT 0,
     has_battery          INTEGER NOT NULL DEFAULT 0,
+    solar_capacity_kw    REAL,
     battery_capacity_kwh REAL,
     min_soc_pct          INTEGER,
     max_discharge_kw     REAL,
