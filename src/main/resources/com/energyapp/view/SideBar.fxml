@@ -37,32 +37,32 @@
             </HBox>
 
             <VBox spacing="8">
-                <ToggleButton onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-7">
+                <ToggleButton fx:id="homeButton" onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-7">
                     <graphic><Label text="🏠"  id="sidebar-auto-8"/></graphic>
                     <text>Home</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-9">
+                <ToggleButton fx:id="statisticsButton" onAction="#handleShowStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-9">
                     <graphic><Label text="📊"  id="sidebar-auto-10"/></graphic>
                     <text>Statistics</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowDevices" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-11">
+                <ToggleButton fx:id="devicesButton" onAction="#handleShowDevices" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-11">
                     <graphic><Label text="📱"  id="sidebar-auto-12"/></graphic>
                     <text>Devices</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowRecommendations" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-13">
+                <ToggleButton fx:id="recommendationsButton" onAction="#handleShowRecommendations" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-13">
                     <graphic><Label text="💡"  id="sidebar-auto-14"/></graphic>
                     <text>Recommendations</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowForecasting" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-15">
+                <ToggleButton fx:id="forecastingButtons" onAction="#handleShowForecasting" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-15">
                     <graphic><Label text="📈"  id="sidebar-auto-16"/></graphic>
                     <text>Forecasts</text>
                 </ToggleButton>
 
-                <ToggleButton onAction="#handleShowEcoStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-17">
+                <ToggleButton fx:id="ecostatisticsButton" onAction="#handleShowEcoStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-17">
                     <graphic><Label text="🌿"  id="sidebar-auto-18"/></graphic>
                     <text>Eco statistics</text>
                 </ToggleButton>
@@ -72,7 +72,7 @@
 
             <Separator />
 
-            <ToggleButton onAction="#handleShowSettings" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-19">
+            <ToggleButton fx:id="settingsButton" onAction="#handleShowSettings" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-19">
                 <graphic><Label text="⚙"  id="sidebar-auto-20"/></graphic>
                 <text>Settings</text>
             </ToggleButton>

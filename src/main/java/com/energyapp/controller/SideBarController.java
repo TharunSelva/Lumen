@@ -1,13 +1,9 @@
 package com.energyapp.controller;
 
 import javafx.fxml.FXML;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.VBox;
 
 public class SideBarController {
 
@@ -36,18 +32,21 @@ public class SideBarController {
     @FXML
     private ToggleButton statisticsButton;
 
-    private ToggleGroup menuGroup = new ToggleGroup();
+    private final ToggleGroup menuGroup = new ToggleGroup();
 
-    public SideBarController () {
+    @FXML
+    public void initialize() {
         devicesButton.setToggleGroup(menuGroup);
         ecostatisticsButton.setToggleGroup(menuGroup);
         forecastingButtons.setToggleGroup(menuGroup);
         homeButton.setToggleGroup(menuGroup);
         recommendationsButton.setToggleGroup(menuGroup);
+        statisticsButton.setToggleGroup(menuGroup);
         settingsButton.setToggleGroup(menuGroup);
+
         homeButton.setSelected(true);
         menuGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
-            if (newToggle == null) {
+            if (newToggle == null && oldToggle != null) {
                 oldToggle.setSelected(true);
             }
         });
@@ -98,12 +97,14 @@ public class SideBarController {
     @FXML
     public void handleShowRecommendations() {
         if (mainController != null) {
+            recommendationsButton.setSelected(true);
             mainController.handleShowRecommendations();
         }
     }
     @FXML
     public void handleShowEcoStatistics() {
         if (mainController != null) {
+            ecostatisticsButton.setSelected(true);
             mainController.handleShowEcoStatistics();
         }
     }

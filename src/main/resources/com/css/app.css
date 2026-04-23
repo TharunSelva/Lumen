@@ -1681,12 +1681,22 @@
     -fx-font-size: 24px;
 }
 
-#sideBarContainer .button:hover {
-    -fx-background-color: #f1f3f5;
+#sideBarContainer .button:hover,
+#sideBarContainer .toggle-button:hover {
+    -fx-background-color: #f8fafc;
 }
 
-#sideBarContainer .button:pressed {
+#sideBarContainer .button:pressed,
+#sideBarContainer .toggle-button:pressed {
     -fx-background-color: #e9ecef;
+}
+
+#sideBarContainer .toggle-button:selected {
+    -fx-background-color: #d1d5db;
+}
+
+#sideBarContainer .toggle-button:selected:hover {
+    -fx-background-color: #e5e7eb;
 }
 
 
@@ -1975,12 +1985,34 @@
     -fx-text-fill: -app-text;
 }
 
-.app-root.dark #sideBarContainer .button:hover {
-    -fx-background-color: -app-surface-2;
+.app-root.dark #sideBarContainer .toggle-button {
+    -fx-text-fill: -app-text;
 }
 
-.app-root.dark #sideBarContainer .button:pressed {
+.app-root.dark #sideBarContainer .toggle-button .label,
+.app-root.dark #sideBarContainer .label,
+.app-root.dark #sidebar-auto-2,
+.app-root.dark #sidebar-auto-3,
+.app-root.dark #sidebar-auto-5 {
+    -fx-text-fill: -app-text;
+}
+
+.app-root.dark #sideBarContainer .button:hover,
+.app-root.dark #sideBarContainer .toggle-button:hover {
+    -fx-background-color: #6b7280;
+}
+
+.app-root.dark #sideBarContainer .button:pressed,
+.app-root.dark #sideBarContainer .toggle-button:pressed {
     -fx-background-color: -app-surface;
+}
+
+.app-root.dark #sideBarContainer .toggle-button:selected {
+    -fx-background-color: #4b5563;
+}
+
+.app-root.dark #sideBarContainer .toggle-button:selected:hover {
+    -fx-background-color: #5b6575;
 }
 
 /* Search bars / text fields */
@@ -2227,12 +2259,24 @@
     -fx-text-fill: -app-text;
 }
 
-.app-root.high-contrast #sideBarContainer .button:hover {
-    -fx-background-color: #1f1f1f;
+.app-root.high-contrast #sideBarContainer .button:hover,
+.app-root.high-contrast #sideBarContainer .toggle-button:hover {
+    -fx-background-color: #3f3f3f;
 }
 
-.app-root.high-contrast #sideBarContainer .button:pressed {
+.app-root.high-contrast #sideBarContainer .button:pressed,
+.app-root.high-contrast #sideBarContainer .toggle-button:pressed {
     -fx-background-color: #2a2a2a;
+}
+
+.app-root.high-contrast #sideBarContainer .toggle-button:selected {
+    -fx-background-color: #6b7280;
+    -fx-border-color: -app-border;
+}
+
+.app-root.high-contrast #sideBarContainer .toggle-button:selected:hover {
+    -fx-background-color: #7c8593;
+    -fx-border-color: -app-border;
 }
 
 /* Inputs and controls */
