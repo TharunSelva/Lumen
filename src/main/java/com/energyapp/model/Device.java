@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 public abstract class Device {
 
+    private Long persistedId;
     private String deviceName;
     private DeviceType deviceType;
 
@@ -18,6 +19,14 @@ public abstract class Device {
 
     public String getDeviceName() {
         return this.deviceName;
+    }
+
+    public Long getPersistedId() {
+        return persistedId;
+    }
+
+    public void setPersistedId(Long persistedId) {
+        this.persistedId = persistedId;
     }
 
     public DeviceType getDeviceType() {

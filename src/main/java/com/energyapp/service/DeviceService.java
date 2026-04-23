@@ -1,5 +1,6 @@
 package com.energyapp.service;
 
+import com.energyapp.db.UiDeviceRepository;
 import com.energyapp.model.Device;
 import com.energyapp.model.DeviceType;
 import com.energyapp.model.SmartPlug;
@@ -9,14 +10,14 @@ import java.util.List;
 
 public class DeviceService {
 
+    private static final String HOME_ID = "HOME_1";
+
     private List<Device> allDevices = new ArrayList<>();
+    private final UiDeviceRepository uiDeviceRepository;
 
     public DeviceService(SimulationService service) {
-        // instantiate a few dummy plugs for testing
-        SmartPlug plug1 = new SmartPlug("Living Room", DeviceType.SMART_PLUG);
-        SmartPlug plug2 = new SmartPlug("Kitchen", DeviceType.SMART_PLUG);
-        SmartPlug plug3 = new SmartPlug("Bedroom", DeviceType.SMART_PLUG);
-        allDevices.add(plug1); allDevices.add(plug2); allDevices.add(plug3);
+        this.uiDeviceRepository = new UiDeviceRepository();
+        this.allDevices = new ArrayList<>(uiDeviceRepository.fetchAll(HOME_ID));
 
         service.getCurrentEnergyRecord().addListener((observable, oldRec,
                                                       newRec) -> evaluateCutoffRules(newRec.getPricePerKwh()));
@@ -38,7 +39,12 @@ public class DeviceService {
     }
 
     public void addDevice(Device device) {
+        uiDeviceRepository.insert(HOME_ID, device);
         this.allDevices.add(device);
+    }
+
+    public void saveDevice(Device device) {
+        uiDeviceRepository.upsert(HOME_ID, device);
     }
 
 }

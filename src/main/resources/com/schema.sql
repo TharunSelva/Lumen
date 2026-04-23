@@ -36,6 +36,24 @@ CREATE TABLE IF NOT EXISTS home_energy_assets (
 );
 
 -- =========================
+-- UI devices (persisted user-created devices)
+-- =========================
+CREATE TABLE IF NOT EXISTS ui_device (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    home_id      TEXT NOT NULL,
+    device_name  TEXT NOT NULL,
+    device_type  TEXT NOT NULL,
+    price_cutoff REAL,
+    schedule_time TEXT,
+    is_on        INTEGER NOT NULL DEFAULT 1,
+    created_at   TEXT NOT NULL,
+    updated_at   TEXT NOT NULL,
+    FOREIGN KEY (home_id) REFERENCES home_profile(home_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_ui_device_home ON ui_device(home_id);
+
+-- =========================
 -- Devices (Option A)
 -- =========================
 CREATE TABLE IF NOT EXISTS device (
