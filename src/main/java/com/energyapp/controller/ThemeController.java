@@ -12,7 +12,7 @@ public final class ThemeController {
     private static boolean darkModeEnabled = false;
     private static boolean highContrastEnabled = false;
 
-    private ThemeController() {
+    ThemeController() {
     }
 
     public static void applyTheme(Scene scene) {
