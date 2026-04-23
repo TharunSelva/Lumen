@@ -1169,12 +1169,22 @@
 
 /* Eco Statistics source/status refresh */
 .eco-source-card,
-.eco-hour-status-card {
+.eco-hour-status-card,
+.eco-recommendations-card {
     -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);
     -fx-border-color: #e5e7eb;
     -fx-border-radius: 16;
     -fx-background-radius: 16;
     -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.07), 12, 0.16, 0, 3);
+}
+
+.eco-recommendations-list {
+    -fx-background-color: transparent;
+}
+
+.eco-recommendations-helper {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
 }
 
 .eco-source-chart {
@@ -1235,8 +1245,10 @@
 
 .app-root.dark .eco-source-card,
 .app-root.dark .eco-hour-status-card,
+.app-root.dark .eco-recommendations-card,
 .app-root.high-contrast .eco-source-card,
-.app-root.high-contrast .eco-hour-status-card {
+.app-root.high-contrast .eco-hour-status-card,
+.app-root.high-contrast .eco-recommendations-card {
     -fx-background-color: -app-surface;
     -fx-border-color: -app-border;
 }
@@ -1254,7 +1266,9 @@
 }
 
 .app-root.dark .eco-hour-recommendation,
-.app-root.high-contrast .eco-hour-recommendation {
+.app-root.dark .eco-recommendations-helper,
+.app-root.high-contrast .eco-hour-recommendation,
+.app-root.high-contrast .eco-recommendations-helper {
     -fx-text-fill: -app-text-muted;
 }
 

@@ -1,9 +1,11 @@
 package com.energyapp.controller;
 
 import com.energyapp.model.EnergyRecord;
+import com.energyapp.model.Recommendation;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -64,5 +66,63 @@ class EcoStatisticsControllerTest {
         assertEquals("Low carbon hour", EcoStatisticsController.determineHourStatus(50).status());
         assertEquals("Moderate carbon hour", EcoStatisticsController.determineHourStatus(150).status());
         assertEquals("High carbon hour", EcoStatisticsController.determineHourStatus(250).status());
+    }
+
+    @Test
+    void buildEcoRecommendations_returnsLowCarbonRecommendation() {
+        EnergyRecord record = recordWithCarbon(82.0);
+
+        List<Recommendation> recommendations = EcoStatisticsController.buildEcoRecommendations(record);
+
+        assertEquals(1, recommendations.size());
+        assertEquals("eco-low-flexible-devices", recommendations.get(0).getId());
+        assertEquals("Great time to run flexible devices", recommendations.get(0).getTitle());
+        assertTrue(recommendations.get(0).getExplanation().contains("82"));
+        assertTrue(recommendations.get(0).isActive());
+    }
+
+    @Test
+    void buildEcoRecommendations_returnsModerateCarbonRecommendation() {
+        List<Recommendation> recommendations = EcoStatisticsController.buildEcoRecommendations(recordWithCarbon(151.0));
+
+        assertEquals(1, recommendations.size());
+        assertEquals("eco-moderate-shift-loads", recommendations.get(0).getId());
+        assertEquals("Shift heavy loads if possible", recommendations.get(0).getTitle());
+    }
+
+    @Test
+    void buildEcoRecommendations_returnsHighCarbonRecommendation() {
+        List<Recommendation> recommendations = EcoStatisticsController.buildEcoRecommendations(recordWithCarbon(250.0));
+
+        assertEquals(1, recommendations.size());
+        assertEquals("eco-high-delay-appliances", recommendations.get(0).getId());
+        assertEquals("Delay heavy appliance use", recommendations.get(0).getTitle());
+    }
+
+    @Test
+    void buildEcoRecommendations_usesRecordTimestamp() {
+        LocalDateTime timestamp = LocalDateTime.of(2026, 4, 23, 14, 30);
+        EnergyRecord record = new EnergyRecord(
+                timestamp, "14:30",
+                1.0, 20.0, 120.0, 10.0, 0.2, 50,
+                0.0, 0.0, 0.0, 0.0
+        );
+
+        List<Recommendation> recommendations = EcoStatisticsController.buildEcoRecommendations(record);
+
+        assertEquals(timestamp, recommendations.get(0).getShownAt());
+    }
+
+    @Test
+    void buildEcoRecommendations_handlesMissingRecordWithEmptyStateData() {
+        assertTrue(EcoStatisticsController.buildEcoRecommendations(null).isEmpty());
+    }
+
+    private static EnergyRecord recordWithCarbon(double carbon) {
+        return new EnergyRecord(
+                LocalDateTime.of(2026, 1, 5, 10, 0), "10:00",
+                2.0, 20.0, carbon, 10.0, 0.5, 50,
+                0.0, 0.0, 0.0, 0.0
+        );
     }
 }
