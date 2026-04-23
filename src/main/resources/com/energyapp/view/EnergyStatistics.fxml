@@ -15,228 +15,245 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<StackPane id="energystatistics-auto-1" prefHeight="800" prefWidth="1200" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EnergyStatsController">
-    <BorderPane id="energystatistics-auto-2" prefHeight="800" prefWidth="1200" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane id="energystatistics-auto-1" prefHeight="800.0" prefWidth="1200.0" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.EnergyStatsController">
+    <BorderPane id="energystatistics-auto-2" prefHeight="800.0" prefWidth="1200.0">
+        <center>
+            <ScrollPane id="energystatistics-auto-3" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                <content>
+                    <VBox id="energystatistics-auto-4" spacing="14.0" styleClass="energy-stats-page">
+                        <padding>
+                            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                        </padding>
 
-    <!-- CENTER CONTENT -->
-    <center>
-        <!-- fitToHeight=true helps ensure the content starts “flush” in the viewport.
-             The IMPORTANT fix for the cut-off is removing the GridPane RowConstraints (done below). -->
-        <ScrollPane id="energystatistics-auto-3" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
-            <content>
-                <VBox id="energystatistics-auto-4" spacing="14">
-                    <padding>
-                        <Insets bottom="16" left="16" right="16" top="16" />
-                    </padding>
-
-                    <!-- Header row -->
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
                             <Label id="energystatistics-auto-5" text="Your energy statistics..." />
-                            <Label id="energystatistics-auto-6" text="Today • Updated 3 mins ago" />
-                        </VBox>
+                        </HBox>
 
-                        <ComboBox prefWidth="90" promptText="Day" />
-
-                        <Button id="energystatistics-auto-7" mnemonicParsing="false">
-                            <graphic><Label id="energystatistics-auto-8" text="⚙" /></graphic>
-                        </Button>
-                    </HBox>
-
-                    <!-- TOP STATS CARD -->
-                    <HBox id="energystatistics-auto-9" spacing="16">
-                        <padding>
-                            <Insets bottom="14" left="16" right="16" top="14" />
-                        </padding>
-
-                        <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="Summary">
-                           <font>
-                              <Font name="System Bold" size="26.0" />
-                           </font>
-                        </Label>
-                            <Label id="energystatistics-auto-10" text="9.2 kWh Total Energy" />
-                            <Label id="energystatistics-auto-11" text="Total household consumption today" />
-                            <Label id="energystatistics-auto-12" text="3.1 kg CO₂ Emissions" />
-                            <Label id="energystatistics-auto-13" text="Includes grid + battery sources" />
-                        </VBox>
-
-                        <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label />
-                            <Label id="energystatistics-auto-14" text="£3.40 Total Cost" />
-                            <Label id="energystatistics-auto-15" text="Based on your time-of-use tariff" />
-                            <Label id="energystatistics-auto-16" text="44% solar • 22% battery • 34% grid" />
-                            <Label id="energystatistics-auto-17" text="Solar/Battery Contribution" />
-                        </VBox>
-                    </HBox>
-
-                                <!-- USAGE CARD -->
-                    <VBox id="energystatistics-auto-18" spacing="10">
-                        <padding>
-                            <Insets bottom="14" left="16" right="16" top="14" />
-                        </padding>
-
-                                    <Label id="energystatistics-auto-19" text="Usage" />
-                        <Label id="energystatistics-auto-20" text="Hour-by-Hour Usage" />
-                        <Label id="energystatistics-auto-21" text="Tip: Click the graph to expand. Use Time Range for Real time, Last 1 hour, Last 24 hours, or All time." />
-
-
-                                    <!-- Smaller fixed height so everything is more likely to fit initially -->
-<!--                        <BarChart animated="false" legendVisible="false" maxHeight="170" prefHeight="170" title="">-->
-<!--                            <xAxis><CategoryAxis label="" /></xAxis>-->
-<!--                            <yAxis><NumberAxis label="" /></yAxis>-->
-<!--                        </BarChart>-->
-                        <LineChart id="usageChartSmall" fx:id="usageChartSmall" animated="false" createSymbols="true" legendVisible="false" maxHeight="170" prefHeight="170">
-                            <xAxis>
-                                <NumberAxis fx:id="usageSmallXAxis" autoRanging="false" label="" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis fx:id="usageSmallYAxis" autoRanging="true" label="Kilowatts" />
-                            </yAxis>
-                        </LineChart>
-                    </VBox>
-
-                    <!-- LOWER GRID: Costs | Device breakdown | Right column -->
-                    <!-- IMPORTANT: no RowConstraints -> prevents the “cut off” you saw -->
-                    <GridPane hgap="16" vgap="16">
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="ALWAYS" percentWidth="44.0" />
-                            <ColumnConstraints hgrow="ALWAYS" percentWidth="24.0" />
-                            <ColumnConstraints hgrow="ALWAYS" percentWidth="32.0" />
-                        </columnConstraints>
-
-                        <!-- COSTS PANEL -->
-                        <VBox id="energystatistics-auto-22" spacing="10" GridPane.columnIndex="0">
+                        <HBox id="energystatistics-auto-9" spacing="24.0" styleClass="summary-card">
                             <padding>
-                                <Insets bottom="14" left="16" right="16" top="14" />
+                                <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
                             </padding>
 
-                            <Label id="energystatistics-auto-23" text="Costs" />
+                            <VBox spacing="12.0" HBox.hgrow="ALWAYS">
+                                <Label styleClass="summary-card-title" text="Summary" />
+                                <VBox spacing="4.0" styleClass="summary-metric-group">
+                                    <Label fx:id="summaryTotalEnergyLabel" styleClass="summary-metric-value" text="0.0 kWh Total Energy" />
+                                    <Label styleClass="summary-metric-caption" text="Total household consumption" />
+                                </VBox>
+                                <VBox spacing="4.0" styleClass="summary-metric-group">
+                                    <Label fx:id="summarySolarTodayLabel" styleClass="summary-metric-value" text="0.0 kWh Solar Today" />
+                                    <Label styleClass="summary-metric-caption" text="Solar generation captured today" />
+                                </VBox>
+                            </VBox>
 
-                            <BarChart fx:id="costsChart" animated="false" legendVisible="false" maxHeight="150" prefHeight="150" title="">
-                                <xAxis><CategoryAxis fx:id="costsXAxis" label="" /></xAxis>
-                                <yAxis><NumberAxis fx:id="costsYAxis" label="" /></yAxis>
-                            </BarChart>
+                            <VBox spacing="12.0" HBox.hgrow="ALWAYS">
+                                <Label styleClass="summary-column-spacer" text="" />
+                                <VBox spacing="4.0" styleClass="summary-metric-group">
+                                    <Label fx:id="summaryTotalCostLabel" styleClass="summary-metric-value" text="0.00 Total Cost" />
+                                    <Label styleClass="summary-metric-caption" text="Based on your time-of-use tariff" />
+                                </VBox>
+                                <VBox spacing="4.0" styleClass="summary-metric-group">
+                                    <Label fx:id="summaryEstimatedContributionLabel" styleClass="summary-metric-value" text="0% solar &#8226; 0% battery &#8226; 0% grid" />
+                                    <Label styleClass="summary-metric-caption" text="Estimated source contribution" />
+                                </VBox>
+                            </VBox>
+                        </HBox>
 
-                            <VBox id="energystatistics-auto-24" spacing="6">
+                        <VBox id="energystatistics-auto-18" minHeight="430.0" prefHeight="430.0" spacing="10.0" styleClass="stats-card">
+                            <padding>
+                                <Insets bottom="14.0" left="16.0" right="16.0" top="14.0" />
+                            </padding>
+
+                            <Label id="energystatistics-auto-19" text="Usage" />
+                            <Label id="energystatistics-auto-20" text="Hour-by-Hour Usage" />
+                            <Label id="energystatistics-auto-21" text="Tip: Click the graph to expand. Use Time Range for rolling 1 hour, 8 hour, daily, weekly, monthly, or all-time views." />
+
+                            <LineChart id="usageChartSmall" fx:id="usageChartSmall" animated="false" createSymbols="true" legendVisible="false" maxHeight="360.0" minHeight="330.0" prefHeight="345.0">
+                                <xAxis>
+                                    <NumberAxis fx:id="usageSmallXAxis" autoRanging="false" label="" />
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis fx:id="usageSmallYAxis" autoRanging="true" label="Power (kWh)" />
+                                </yAxis>
+                            </LineChart>
+                        </VBox>
+
+                        <GridPane hgap="16.0" vgap="16.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="44.0" />
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="24.0" />
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="32.0" />
+                            </columnConstraints>
+
+                            <VBox id="energystatistics-auto-22" spacing="10.0" styleClass="stats-card" GridPane.columnIndex="0">
                                 <padding>
-                                    <Insets bottom="10" left="10" right="10" top="10" />
+                                    <Insets bottom="14.0" left="16.0" right="16.0" top="14.0" />
                                 </padding>
-                                <HBox>
-                                    <Label text="Total Cost Today:" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label id="energystatistics-auto-25" fx:id="totalCostTodayLabel" text="£3.40" />
-                                </HBox>
-                                <HBox>
-                                    <Label text="Projected daily cost:" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label id="energystatistics-auto-26" fx:id="projectedDailyCostLabel" text="£4.10" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
 
-                        <!-- DEVICE-LEVEL BREAKDOWN -->
-                        <VBox id="energystatistics-auto-27" prefHeight="595.0" prefWidth="189.0" spacing="10" GridPane.columnIndex="1">
-                            <padding>
-                                <Insets bottom="14" left="16" right="16" top="14" />
-                            </padding>
+                                <Label id="energystatistics-auto-23" text="Costs" />
 
-                            <Label id="energystatistics-auto-28" text="Device-level breakdown" />
+                                <BarChart fx:id="costsChart" animated="false" legendVisible="false" maxHeight="260.0" prefHeight="245.0" title="">
+                                    <xAxis>
+                                        <CategoryAxis fx:id="costsXAxis" label="" />
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis fx:id="costsYAxis" label="" />
+                                    </yAxis>
+                                </BarChart>
 
-                            <VBox fx:id="devicebreakdownpanel" spacing="10">
-                                <VBox id="device1" fx:id="device1" spacing="4">
-                                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-                                    <Label id="device1holder" fx:id="device1holder" text="🔌 EV Charger:" />
-                                    <Label fx:id="device1useage" text="3.5 kWh • £0.90 • 1.2 kg CO₂" />
-                                    <Label id="weeklycost1" fx:id="weeklycost1" text="Estimated Weekly Cost: " />
-                                </VBox>
-
-                                <VBox id="device2" fx:id="device2" spacing="4">
-                                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-                                    <Label id="device2holder" fx:id="device2holder" text="🌀 Tumble Dryer:" />
-                                    <Label fx:id="device2useage" text="1.4 kWh • £0.48" />
-                                    <Label id="weeklycost2" fx:id="weeklycost2" text="Estimated Weekly Cost: " />
-                                </VBox>
-
-                                <VBox id="device3" fx:id="device3" spacing="4">
-                                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-                                    <Label id="device3holder" fx:id="device3holder" text="🔥 Heat Pump:" />
-                                    <Label fx:id="device3useage" text="2.1 kWh • £0.62" />
-                                    <Label id="weeklycost3" fx:id="weeklycost3" text="Estimated Weekly Cost: " />
+                                <VBox id="energystatistics-auto-24" spacing="6.0">
+                                    <padding>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    </padding>
+                                    <HBox>
+                                        <Label text="Total Cost Today:" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label id="energystatistics-auto-25" fx:id="totalCostTodayLabel" text="0.00" />
+                                    </HBox>
+                                    <HBox>
+                                        <Label text="Projected daily cost:" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label id="energystatistics-auto-26" fx:id="projectedDailyCostLabel" text="0.00" />
+                                    </HBox>
                                 </VBox>
                             </VBox>
 
-                            <!-- dots (kept near bottom by adding a small spacer) -->
-                            <Region prefHeight="6" />
-                            <HBox fx:id="selection" alignment="CENTER" spacing="6">
-                                <Label fx:id="page1" style="-fx-padding: 4 10; -fx-font-weight: bold; -fx-font-size: 13;" styleClass="page-indicator" text="1">
-                                    <cursor><Cursor fx:constant="HAND" /></cursor>
-                                </Label>
-                                <Label fx:id="page2" style="-fx-padding: 4 10; -fx-font-size: 13;" styleClass="page-indicator" text="2">
-                                    <cursor><Cursor fx:constant="HAND" /></cursor>
-                                </Label>
-                                <Label fx:id="page3" style="-fx-padding: 4 10; -fx-font-size: 13;" styleClass="page-indicator" text="3">
-                                    <cursor><Cursor fx:constant="HAND" /></cursor>
-                                </Label>
-                            </HBox>
-                        </VBox>
+                            <VBox id="energystatistics-auto-27" prefHeight="595.0" prefWidth="189.0" spacing="10.0" styleClass="stats-card" GridPane.columnIndex="1">
+                                <padding>
+                                    <Insets bottom="14.0" left="16.0" right="16.0" top="14.0" />
+                                </padding>
 
-                        <!-- RIGHT COLUMN: Personal + Grid Sources (ADD-08) -->
-                        <VBox spacing="16" GridPane.columnIndex="2">
-                        <Pane prefHeight="128.0" prefWidth="359.0">
-                           <children>
-                              <Text layoutX="88.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[Placeholder for Source mix graph]" />
-                           </children>
-                        </Pane>
+                                <Label id="energystatistics-auto-28" text="Device-level breakdown" />
 
-                            <fx:include fx:id="solarStatusCard" source="SolarGenCard.fxml" VBox.vgrow="ALWAYS" />
-                        </VBox>
-                  <rowConstraints>
-                     <RowConstraints />
-                  </rowConstraints>
+                                <VBox fx:id="devicebreakdownpanel" spacing="10.0">
+                                    <VBox id="device1" fx:id="device1" spacing="4.0">
+                                        <padding>
+                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                        </padding>
+                                        <Label id="device1holder" fx:id="device1holder" text="EV Charger" />
+                                        <Label fx:id="device1useage" text="0.0 kWh this week" />
+                                        <Label id="weeklycost1" fx:id="weeklycost1" text="Weekly Cost: 0.00" />
+                                    </VBox>
 
-                    </GridPane>
-                </VBox>
-            </content>
-        </ScrollPane>
-    </center>
+                                    <VBox id="device2" fx:id="device2" spacing="4.0">
+                                        <padding>
+                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                        </padding>
+                                        <Label id="device2holder" fx:id="device2holder" text="Washing Machine" />
+                                        <Label fx:id="device2useage" text="0.0 kWh this week" />
+                                        <Label id="weeklycost2" fx:id="weeklycost2" text="Weekly Cost: 0.00" />
+                                    </VBox>
 
-</BorderPane>
+                                    <VBox id="device3" fx:id="device3" spacing="4.0">
+                                        <padding>
+                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                        </padding>
+                                        <Label id="device3holder" fx:id="device3holder" text="Heating" />
+                                        <Label fx:id="device3useage" text="0.0 kWh this week" />
+                                        <Label id="weeklycost3" fx:id="weeklycost3" text="Weekly Cost: 0.00" />
+                                    </VBox>
+                                </VBox>
 
+                                <Region prefHeight="6.0" />
+                                <HBox fx:id="selection" alignment="CENTER" spacing="6.0">
+                                    <Label fx:id="page1" style="-fx-padding: 4 10; -fx-font-weight: bold; -fx-font-size: 13;" styleClass="page-indicator" text="1">
+                                        <cursor>
+                                            <Cursor fx:constant="HAND" />
+                                        </cursor>
+                                    </Label>
+                                    <Label fx:id="page2" style="-fx-padding: 4 10; -fx-font-size: 13;" styleClass="page-indicator" text="2">
+                                        <cursor>
+                                            <Cursor fx:constant="HAND" />
+                                        </cursor>
+                                    </Label>
+                                    <Label fx:id="page3" style="-fx-padding: 4 10; -fx-font-size: 13;" styleClass="page-indicator" text="3">
+                                        <cursor>
+                                            <Cursor fx:constant="HAND" />
+                                        </cursor>
+                                    </Label>
+                                </HBox>
+                            </VBox>
 
+                            <VBox spacing="16.0" GridPane.columnIndex="2">
+                                <VBox id="energystatistics-auto-32" spacing="14.0" styleClass="energy-sources-card">
+                                    <padding>
+                                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                                    </padding>
 
+                                    <Label styleClass="energy-sources-title" text="Energy Sources" />
+
+                                    <GridPane hgap="12.0" vgap="12.0">
+                                        <columnConstraints>
+                                            <ColumnConstraints percentWidth="50.0" />
+                                            <ColumnConstraints percentWidth="50.0" />
+                                        </columnConstraints>
+
+                                        <VBox styleClass="source-tile">
+                                            <Label styleClass="source-tile-title" text="Solar now" />
+                                            <Label fx:id="solarNowValueLabel" styleClass="source-tile-value" text="0.0 kW" />
+                                            <Label fx:id="solarNowDetailLabel" styleClass="source-tile-detail" text="0% of capacity" />
+                                        </VBox>
+
+                                        <VBox styleClass="source-tile" GridPane.columnIndex="1">
+                                            <Label styleClass="source-tile-title" text="Battery charge" />
+                                            <Label fx:id="batteryChargeValueLabel" styleClass="source-tile-value" text="0%" />
+                                            <Label fx:id="batteryChargeDetailLabel" styleClass="source-tile-detail" text="0.0 / 0.0 kWh" />
+                                        </VBox>
+                                    </GridPane>
+
+                                    <VBox spacing="8.0">
+                                        <Label styleClass="source-note-label" text="Estimated source contribution" />
+                                        <GridPane fx:id="sourceContributionBar" prefHeight="12.0" styleClass="source-contribution-bar">
+                                            <columnConstraints>
+                                                <ColumnConstraints fx:id="solarContributionColumn" percentWidth="0.0" />
+                                                <ColumnConstraints fx:id="batteryContributionColumn" percentWidth="0.0" />
+                                                <ColumnConstraints fx:id="gridContributionColumn" percentWidth="0.0" />
+                                            </columnConstraints>
+                                            <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="source-segment-solar" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                            <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="source-segment-battery" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                            <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="source-segment-grid" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                        </GridPane>
+                                        <Label fx:id="sourceContributionSummaryLabel" styleClass="source-contribution-summary" text="0% solar &#8226; 0% battery &#8226; 0% grid" />
+                                        <Label fx:id="sourceContributionEstimateLabel" styleClass="source-note-label" text="Estimated source contribution" wrapText="true" />
+                                    </VBox>
+                                </VBox>
+
+                                <fx:include fx:id="solarStatusCard" source="SolarGenCard.fxml" VBox.vgrow="ALWAYS" />
+                            </VBox>
+                        </GridPane>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </center>
+    </BorderPane>
 
     <AnchorPane id="graphOverlay" fx:id="graphOverlay" managed="false" visible="false">
-        <BorderPane id="energystatistics-auto-36" AnchorPane.bottomAnchor="24" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="24" AnchorPane.topAnchor="24">
+        <BorderPane id="energystatistics-auto-36" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="24.0">
             <top>
-                <HBox id="energystatistics-auto-37" alignment="CENTER_LEFT" spacing="12">
+                <HBox id="energystatistics-auto-37" alignment="CENTER_LEFT" spacing="12.0">
                     <padding>
-                        <Insets bottom="12" left="16" right="16" top="12" />
+                        <Insets bottom="12.0" left="16.0" right="16.0" top="12.0" />
                     </padding>
 
-                    <Button id="backButton" fx:id="backButton" text="← Back" />
+                    <Button id="backButton" fx:id="backButton" text="Back" />
 
                     <Label id="energystatistics-auto-38" text="Usage" />
 
                     <Region HBox.hgrow="ALWAYS" />
 
                     <Label id="energystatistics-auto-39" text="Time Range" />
-                    <ComboBox fx:id="timeRangeCombo" prefWidth="160" />
+                    <ComboBox fx:id="timeRangeCombo" prefWidth="160.0" />
                 </HBox>
             </top>
 
             <center>
-                <VBox spacing="10">
+                <VBox spacing="10.0">
                     <padding>
-                        <Insets bottom="16" left="16" right="16" top="16" />
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                     </padding>
 
                     <Label id="energystatistics-auto-40" text="House Total Power Draw" />
@@ -246,13 +263,11 @@
                             <NumberAxis fx:id="usageLargeXAxis" autoRanging="false" label="Time" />
                         </xAxis>
                         <yAxis>
-                            <NumberAxis fx:id="usageLargeYAxis" autoRanging="true" label="Watts" />
+                            <NumberAxis fx:id="usageLargeYAxis" autoRanging="true" label="Power (kWh)" />
                         </yAxis>
                     </LineChart>
                 </VBox>
             </center>
         </BorderPane>
     </AnchorPane>
-
-
 </StackPane>

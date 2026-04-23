@@ -541,8 +541,10 @@
 }
 
 #ecostatistics-auto-54 {
-    -fx-background-color: #111827;
-    -fx-background-radius: 10;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
 }
 
 #ecostatistics-auto-55 {
@@ -782,6 +784,7 @@
 
 #usageChartSmall {
     -fx-background-color: transparent;
+    -fx-padding: 8 12 10 10;
 }
 
 #energystatistics-auto-22 {
@@ -936,6 +939,332 @@
 #energystatistics-auto-40 {
     -fx-font-size: 22;
     -fx-font-weight: bold;
+}
+
+/* Modern Energy Statistics summary/source cards */
+.stats-card,
+.summary-card,
+.energy-sources-card,
+.solar-status-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 14, 0.18, 0, 4);
+}
+
+.summary-card-title,
+.energy-sources-title,
+.solar-card-title {
+    -fx-font-size: 21;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.summary-column-spacer {
+    -fx-min-height: 25;
+}
+
+.summary-metric-group {
+    -fx-padding: 4 0 4 0;
+}
+
+.summary-metric-value {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.summary-metric-caption {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12;
+}
+
+.energy-sources-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f4fbf7);
+}
+
+.source-tile {
+    -fx-padding: 12;
+    -fx-spacing: 6;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+}
+
+.source-tile-title {
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+    -fx-text-transform: uppercase;
+}
+
+.source-tile-value {
+    -fx-font-size: 19;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+    -fx-wrap-text: true;
+}
+
+.source-tile-detail,
+.source-note-label,
+.solar-generation-detail,
+.solar-diagnostic-helper {
+    -fx-font-size: 12;
+    -fx-text-fill: #64748b;
+}
+
+.source-contribution-bar {
+    -fx-background-color: #e5e7eb;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 0;
+}
+
+.source-segment-solar {
+    -fx-background-color: #f59e0b;
+    -fx-background-radius: 999 0 0 999;
+}
+
+.source-segment-battery {
+    -fx-background-color: #10b981;
+}
+
+.source-segment-grid {
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 0 999 999 0;
+}
+
+.source-contribution-summary {
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.solar-status-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f7fbff);
+}
+
+.solar-status-pill {
+    -fx-padding: 4 10 4 10;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+}
+
+.status-pill-optimal {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #166534;
+}
+
+.status-pill-underperforming {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+
+.status-pill-idle {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #334155;
+}
+
+.status-pill-alert {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #991b1b;
+}
+
+.status-pill-disabled {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #64748b;
+}
+
+.solar-generation-value {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.solar-status-progress {
+    -fx-pref-height: 10;
+}
+
+.solar-status-progress .track {
+    -fx-background-color: #e5e7eb;
+    -fx-background-radius: 999;
+}
+
+.solar-status-progress .bar {
+    -fx-background-color: linear-gradient(to right, #22c55e, #0ea5e9);
+    -fx-background-radius: 999;
+    -fx-padding: 0.22em;
+}
+
+.solar-diagnostic-button {
+    -fx-cursor: hand;
+    -fx-background-color: #111827;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 8 12 8 12;
+}
+
+.solar-diagnostic-button:hover {
+    -fx-background-color: #0f766e;
+}
+
+.solar-diagnostic-button:disabled {
+    -fx-opacity: 0.0;
+}
+
+.app-root.dark .stats-card,
+.app-root.dark .summary-card,
+.app-root.dark .energy-sources-card,
+.app-root.dark .solar-status-card,
+.app-root.high-contrast .stats-card,
+.app-root.high-contrast .summary-card,
+.app-root.high-contrast .energy-sources-card,
+.app-root.high-contrast .solar-status-card {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+}
+
+.app-root.dark .source-tile,
+.app-root.high-contrast .source-tile {
+    -fx-background-color: -app-surface-2;
+    -fx-border-color: -app-border;
+}
+
+.app-root.dark .summary-card-title,
+.app-root.dark .energy-sources-title,
+.app-root.dark .solar-card-title,
+.app-root.dark .summary-metric-value,
+.app-root.dark .source-tile-value,
+.app-root.dark .source-contribution-summary,
+.app-root.dark .solar-generation-value,
+.app-root.high-contrast .summary-card-title,
+.app-root.high-contrast .energy-sources-title,
+.app-root.high-contrast .solar-card-title,
+.app-root.high-contrast .summary-metric-value,
+.app-root.high-contrast .source-tile-value,
+.app-root.high-contrast .source-contribution-summary,
+.app-root.high-contrast .solar-generation-value {
+    -fx-text-fill: -app-text;
+}
+
+.app-root.dark .summary-metric-caption,
+.app-root.dark .source-tile-title,
+.app-root.dark .source-tile-detail,
+.app-root.dark .source-note-label,
+.app-root.dark .solar-generation-detail,
+.app-root.dark .solar-diagnostic-helper,
+.app-root.high-contrast .summary-metric-caption,
+.app-root.high-contrast .source-tile-title,
+.app-root.high-contrast .source-tile-detail,
+.app-root.high-contrast .source-note-label,
+.app-root.high-contrast .solar-generation-detail,
+.app-root.high-contrast .solar-diagnostic-helper {
+    -fx-text-fill: -app-text-muted;
+}
+
+/* Eco Statistics source/status refresh */
+.eco-source-card,
+.eco-hour-status-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.07), 12, 0.16, 0, 3);
+}
+
+.eco-source-chart {
+    -fx-background-color: transparent;
+}
+
+.eco-source-chart .chart-title {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.eco-source-chart .axis-label {
+    -fx-text-fill: #334155;
+}
+
+.eco-source-chart .axis {
+    -fx-tick-label-fill: #475569;
+}
+
+.eco-hour-status-card {
+    -fx-background-color: linear-gradient(to bottom right, #f8fafc, #eef8f2);
+}
+
+.eco-hour-pill {
+    -fx-padding: 5 12 5 12;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-font-weight: bold;
+    -fx-max-width: -fx-pref;
+}
+
+.eco-hour-low {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #166534;
+}
+
+.eco-hour-moderate {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+
+.eco-hour-high {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #991b1b;
+}
+
+.eco-hour-intensity {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.eco-hour-recommendation {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13;
+}
+
+.app-root.dark .eco-source-card,
+.app-root.dark .eco-hour-status-card,
+.app-root.high-contrast .eco-source-card,
+.app-root.high-contrast .eco-hour-status-card {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+}
+
+.app-root.dark .eco-source-chart .chart-title,
+.app-root.dark .eco-source-chart .axis-label,
+.app-root.dark .eco-source-chart .axis,
+.app-root.dark .eco-hour-intensity,
+.app-root.high-contrast .eco-source-chart .chart-title,
+.app-root.high-contrast .eco-source-chart .axis-label,
+.app-root.high-contrast .eco-source-chart .axis,
+.app-root.high-contrast .eco-hour-intensity {
+    -fx-text-fill: -app-text;
+    -fx-tick-label-fill: -app-text;
+}
+
+.app-root.dark .eco-hour-recommendation,
+.app-root.high-contrast .eco-hour-recommendation {
+    -fx-text-fill: -app-text-muted;
+}
+
+.app-root.high-contrast .eco-hour-low,
+.app-root.high-contrast .eco-hour-moderate,
+.app-root.high-contrast .eco-hour-high {
+    -fx-background-color: #000000;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
 }
 
 /* Forecasts.fxml */
@@ -2258,6 +2587,83 @@
     -fx-text-fill: #ffffff;
     -fx-fill: #ffffff;
     -fx-opacity: 1;
+}
+
+/* Final Eco Statistics readability/layout overrides */
+#ecostatistics-auto-54.eco-hour-status-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+}
+
+#ecostatistics-auto-54.eco-hour-status-card .eco-hour-intensity {
+    -fx-text-fill: #0f172a;
+}
+
+#ecostatistics-auto-54.eco-hour-status-card .eco-hour-recommendation {
+    -fx-text-fill: #475569;
+}
+
+#ecostatistics-auto-54.eco-hour-status-card .eco-hour-low {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #166534;
+}
+
+#ecostatistics-auto-54.eco-hour-status-card .eco-hour-moderate {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+
+#ecostatistics-auto-54.eco-hour-status-card .eco-hour-high {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #991b1b;
+}
+
+.app-root.dark #ecostatistics-auto-54.eco-hour-status-card {
+    -fx-background-color: linear-gradient(to bottom right, #020617, #111827);
+    -fx-border-color: #475569;
+}
+
+.app-root.dark #ecostatistics-auto-54.eco-hour-status-card .eco-hour-intensity,
+.app-root.dark #ecostatistics-auto-54.eco-hour-status-card .eco-hour-recommendation {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark #ecostatistics-auto-54.eco-hour-status-card .eco-hour-low {
+    -fx-background-color: #bbf7d0;
+    -fx-text-fill: #14532d;
+}
+
+.app-root.dark #ecostatistics-auto-54.eco-hour-status-card .eco-hour-moderate {
+    -fx-background-color: #fde68a;
+    -fx-text-fill: #78350f;
+}
+
+.app-root.dark #ecostatistics-auto-54.eco-hour-status-card .eco-hour-high {
+    -fx-background-color: #fecaca;
+    -fx-text-fill: #7f1d1d;
+}
+
+.app-root.high-contrast #ecostatistics-auto-54.eco-hour-status-card {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast #ecostatistics-auto-54.eco-hour-status-card .eco-hour-intensity,
+.app-root.high-contrast #ecostatistics-auto-54.eco-hour-status-card .eco-hour-recommendation {
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast #ecostatistics-auto-54.eco-hour-status-card .eco-hour-low,
+.app-root.high-contrast #ecostatistics-auto-54.eco-hour-status-card .eco-hour-moderate,
+.app-root.high-contrast #ecostatistics-auto-54.eco-hour-status-card .eco-hour-high {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    -fx-text-fill: #ffffff;
 }
 
 /* ---------------------------
