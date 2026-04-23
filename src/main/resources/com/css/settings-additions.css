@@ -1,0 +1,255 @@
+
+/* =========================================================
+   Settings Page — revamped design
+   Append these rules to the bottom of app.css
+   ========================================================= */
+
+/* ── Page root ─────────────────────────────────────────── */
+.settings-root {
+    -fx-background-color: transparent;
+}
+
+.settings-page-header {
+    -fx-padding: 0 0 4 0;
+}
+
+.settings-page-icon {
+    -fx-font-size: 32px;
+}
+
+.settings-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: -app-text-muted;
+}
+
+/* ── Section cards ──────────────────────────────────────── */
+.settings-card {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.07), 12, 0.15, 0, 3);
+}
+
+.settings-card-header {
+    -fx-padding: 16 18 14 18;
+}
+
+.settings-section-icon {
+    -fx-font-size: 18px;
+}
+
+.settings-section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-text;
+}
+
+/* ── Dividers ───────────────────────────────────────────── */
+.settings-divider {
+    -fx-padding: 0;
+    -fx-opacity: 1;
+    -fx-background-color: -app-border;
+}
+
+.settings-row-divider {
+    -fx-padding: 0 18 0 18;
+    -fx-opacity: 0.6;
+}
+
+/* ── Toggle rows ────────────────────────────────────────── */
+.settings-toggle-row {
+    -fx-padding: 13 18 13 18;
+}
+
+.settings-action-row {
+    -fx-padding: 13 18 13 18;
+}
+
+.settings-row-block {
+    -fx-padding: 13 18 13 18;
+}
+
+.settings-row-icon {
+    -fx-font-size: 16px;
+    -fx-min-width: 24;
+    -fx-alignment: CENTER;
+}
+
+.settings-row-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-text;
+}
+
+.settings-row-desc {
+    -fx-font-size: 11px;
+    -fx-text-fill: -app-text-muted;
+}
+
+/* ── Toggle button (ON/OFF pill) ────────────────────────── */
+.settings-toggle {
+    -fx-min-width: 60;
+    -fx-pref-width: 60;
+    -fx-min-height: 28;
+    -fx-pref-height: 28;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-color: #d1d5db;
+    -fx-text-fill: #6b7280;
+    -fx-border-color: transparent;
+}
+
+.settings-toggle:selected {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+.settings-toggle:hover {
+    -fx-opacity: 0.88;
+}
+
+/* ── Chevron / Open buttons ─────────────────────────────── */
+.settings-chevron-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -app-text-muted;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+    -fx-padding: 0 4 0 4;
+}
+
+.settings-chevron-btn:hover {
+    -fx-text-fill: -app-text;
+}
+
+.settings-open-btn {
+    -fx-background-color: #f3f4f6;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+    -fx-cursor: hand;
+    -fx-padding: 5 12 5 12;
+}
+
+.settings-open-btn:hover {
+    -fx-background-color: #e9ecef;
+}
+
+/* ── Location text field ────────────────────────────────── */
+.settings-text-field {
+    -fx-background-color: -app-surface-2;
+    -fx-border-color: -app-border;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 7 10 7 10;
+    -fx-font-size: 13px;
+    -fx-text-fill: -app-text;
+    -fx-prompt-text-fill: -app-text-muted;
+}
+
+.settings-text-field:focused {
+    -fx-border-color: #10b981;
+    -fx-border-width: 1.5;
+}
+
+.settings-save-btn {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 7 16 7 16;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.settings-save-btn:hover {
+    -fx-background-color: #059669;
+}
+
+/* ── Sign out / danger card ─────────────────────────────── */
+.settings-danger-card {
+    -fx-border-color: #fecaca;
+}
+
+.settings-danger-title {
+    -fx-text-fill: #dc2626;
+}
+
+.settings-signout-body {
+    -fx-padding: 14 18 18 18;
+}
+
+.settings-signout-btn {
+    -fx-background-color: #dc2626;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10 0 10 0;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.settings-signout-btn:hover {
+    -fx-background-color: #b91c1c;
+}
+
+/* ── Dark mode overrides ────────────────────────────────── */
+.app-root.dark .settings-card {
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 14, 0.2, 0, 4);
+}
+
+.app-root.dark .settings-toggle {
+    -fx-background-color: #3f3f46;
+    -fx-text-fill: #a1a1aa;
+}
+
+.app-root.dark .settings-toggle:selected {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+}
+
+.app-root.dark .settings-open-btn {
+    -fx-background-color: -app-surface-2;
+    -fx-border-color: -app-border;
+    -fx-text-fill: -app-text;
+}
+
+.app-root.dark .settings-open-btn:hover {
+    -fx-background-color: -app-border;
+}
+
+.app-root.dark .settings-text-field {
+    -fx-background-color: -app-surface-2;
+    -fx-border-color: -app-border;
+    -fx-text-fill: -app-text;
+}
+
+.app-root.dark .settings-danger-card {
+    -fx-border-color: #7f1d1d;
+}
+
+/* ── High contrast overrides ────────────────────────────── */
+.app-root.high-contrast .settings-toggle {
+    -fx-border-color: -app-text;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .settings-toggle:selected {
+    -fx-background-color: #000000;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #000000;
+}

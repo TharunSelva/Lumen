@@ -1,135 +1,286 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
 <BorderPane stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SettingsController">
    <center>
-      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="settingsMainVBox" spacing="20.0" id="settingsMainVBox">
-               <children>
-                  <Label fx:id="settingsGreetingLabel" text="What's wrong Richard? :(" styleClass="screen-title" />
+            <VBox fx:id="settingsMainVBox" spacing="0" styleClass="settings-root">
+               <padding>
+                  <Insets bottom="40" left="40" right="40" top="32" />
+               </padding>
 
-                  <GridPane fx:id="settingsMainGridPane" hgap="30.0" vgap="30.0" VBox.vgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
-                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
+               <!-- Page header -->
+               <HBox alignment="CENTER_LEFT" spacing="12" styleClass="settings-page-header">
+                  <VBox spacing="2">
+                     <Label styleClass="screen-title" text="Settings" />
+                     <Label styleClass="settings-subtitle" text="Manage your account, display, and accessibility preferences" />
+                  </VBox>
+               </HBox>
 
-                        <VBox fx:id="settingsAccountVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                           <children>
-                              <Label fx:id="settingsAccountTitleLabel" text="Account">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <children>
-                                    <Label text="Location:"></Label>
-                                    <HBox spacing="10.0">
-                                       <TextField fx:id="locationTextField" promptText="Enter City" HBox.hgrow="ALWAYS"/>
-                                       <Button fx:id="saveLocationButton" text="Save"/>
-                                    </HBox>
-                                    <CheckBox fx:id="settingsAccountSetting2" mnemonicParsing="false" text="Change Password" />
-                                    <CheckBox fx:id="settingsAccountSetting3" mnemonicParsing="false" text="Notifications" />
-                                 </children>
-                              </VBox>
-                           </children>
+               <Region minHeight="28" />
+
+               <!-- Main two-column grid -->
+               <GridPane hgap="20" vgap="20">
+                  <columnConstraints>
+                     <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                     <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints vgrow="SOMETIMES" />
+                     <RowConstraints vgrow="SOMETIMES" />
+                     <RowConstraints vgrow="SOMETIMES" />
+                  </rowConstraints>
+
+                  <!-- ── ACCOUNT ── -->
+                  <VBox spacing="0" styleClass="settings-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-card-header">
+                        <Label styleClass="settings-section-icon" text="👤" />
+                        <Label styleClass="settings-section-title" text="Account" />
+                     </HBox>
+                     <Separator styleClass="settings-divider" />
+
+                     <!-- Location row -->
+                     <VBox spacing="6" styleClass="settings-row-block">
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                           <VBox spacing="1" HBox.hgrow="ALWAYS">
+                              <Label styleClass="settings-row-label" text="Location" />
+                              <Label styleClass="settings-row-desc" text="Used for solar forecasting" />
+                           </VBox>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                           <TextField fx:id="locationTextField" promptText="Enter city name…" styleClass="settings-text-field" HBox.hgrow="ALWAYS" />
+                           <Button fx:id="saveLocationButton" styleClass="settings-save-btn" text="Save" />
+                        </HBox>
+                     </VBox>
+
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Change Password row -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-action-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Change Password" />
+                           <Label styleClass="settings-row-desc" text="Update your account password" />
                         </VBox>
+                        <Button fx:id="settingsAccountSetting2Btn" styleClass="settings-chevron-btn" text="›" />
+                     </HBox>
 
-                        <VBox fx:id="settingsAccessibilityVBox" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                           <children>
-                              <Label fx:id="settingsAccessibilityTitleLabel" text="Accessibility">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsAccessibilitySetting1" mnemonicParsing="false" text="High Contrast" />
-                                 <CheckBox fx:id="settingsAccessibilitySetting2" mnemonicParsing="false" text="Screen Reader" />
-                                 <CheckBox fx:id="settingsAccessibilitySetting3" mnemonicParsing="false" text="Large Text" />
-                              </VBox>
-                              <Button fx:id="settingsAccessibilityButton" text="Scalable Text Options..." maxWidth="Infinity"/>
-                           </children>
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Notifications row -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-action-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Notifications" />
+                           <Label styleClass="settings-row-desc" text="Alerts and push notifications" />
                         </VBox>
+                        <Button fx:id="settingsAccountSetting3Btn" styleClass="settings-chevron-btn" text="›" />
+                     </HBox>
+                  </VBox>
 
-                        <VBox fx:id="settingsPrivacyVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                           <children>
-                              <Label fx:id="settingsPrivacyTitleLabel" text="Privacy and Security">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsPrivacySetting1" mnemonicParsing="false" text="Data Sharing" />
-                                 <CheckBox fx:id="settingsPrivacySetting2" mnemonicParsing="false" text="Location Services" />
-                                 <CheckBox fx:id="settingsPrivacySetting3" mnemonicParsing="false" text="Two-Factor Auth" />
-                              </VBox>
-                           </children>
+                  <!-- ── DISPLAY ── -->
+                  <VBox spacing="0" styleClass="settings-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-card-header">
+                        <Label styleClass="settings-section-icon" text="🖥" />
+                        <Label styleClass="settings-section-title" text="Display" />
+                     </HBox>
+                     <Separator styleClass="settings-divider" />
+
+                     <!-- Dark Mode -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Dark Mode" />
+                           <Label styleClass="settings-row-desc" text="Switch to a darker colour scheme" />
                         </VBox>
+                        <ToggleButton fx:id="settingsDisplaySetting1" styleClass="settings-toggle" text="" />
+                     </HBox>
 
-                        <VBox fx:id="settingsHelpVBox" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <children>
-                              <Label fx:id="settingsHelpTitleLabel" text="Help and Support">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsHelpSetting1" mnemonicParsing="false" text="FAQ" />
-                                 <CheckBox fx:id="settingsHelpSetting2" mnemonicParsing="false" text="Contact Support" />
-                                 <CheckBox fx:id="settingsHelpSetting3" mnemonicParsing="false" text="Report a Bug" />
-                              </VBox>
-                           </children>
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Compact View -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Compact View" />
+                           <Label styleClass="settings-row-desc" text="Reduce panel sizes for smaller screens" />
                         </VBox>
+                        <ToggleButton fx:id="settingsDisplaySetting2" styleClass="settings-toggle" text="" />
+                     </HBox>
 
-                        <VBox fx:id="settingsDisplayVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                           <children>
-                              <Label fx:id="settingsDisplayTitleLabel" text="Display">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsDisplaySetting1" mnemonicParsing="false" text="Dark Mode" />
-                                 <CheckBox fx:id="settingsDisplaySetting2" mnemonicParsing="false" text="Compact View" />
-                                 <CheckBox fx:id="settingsDisplaySetting3" mnemonicParsing="false" text="Show Animations" />
-                              </VBox>
-                           </children>
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Show Animations -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Show Animations" />
+                           <Label styleClass="settings-row-desc" text="Enable transitions and motion effects" />
                         </VBox>
+                        <ToggleButton fx:id="settingsDisplaySetting3" styleClass="settings-toggle" text="" />
+                     </HBox>
+                  </VBox>
 
-                        <VBox fx:id="settingsLogOutVBox" spacing="10.0" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <children>
-                              <Label fx:id="settingsLogOutTitleLabel" text="Log Out" textFill="RED">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="settingsLogOutMessageLabel" text="You can log in again soon. See ya later!" wrapText="true"/>
-                              <Button fx:id="settingsLogOutProceedButton" mnemonicParsing="false" text="Proceed" id="settingsLogOutProceedButton"/>
-                           </children>
+                  <!-- ── ACCESSIBILITY ── -->
+                  <VBox spacing="0" styleClass="settings-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-card-header">
+                        <Label styleClass="settings-section-icon" text="♿" />
+                        <Label styleClass="settings-section-title" text="Accessibility" />
+                     </HBox>
+                     <Separator styleClass="settings-divider" />
+
+                     <!-- High Contrast -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="High Contrast" />
+                           <Label styleClass="settings-row-desc" text="Improves readability for low vision" />
                         </VBox>
+                        <ToggleButton fx:id="settingsAccessibilitySetting1" styleClass="settings-toggle" text="" />
+                     </HBox>
 
-                     </children>
-                  </GridPane>
-               </children>
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Screen Reader -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Screen Reader" />
+                           <Label styleClass="settings-row-desc" text="Narrates UI elements on hover" />
+                        </VBox>
+                        <ToggleButton fx:id="settingsAccessibilitySetting2" styleClass="settings-toggle" text="" />
+                     </HBox>
+
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Large Text -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Large Text" />
+                           <Label styleClass="settings-row-desc" text="Increases font size application-wide" />
+                        </VBox>
+                        <ToggleButton fx:id="settingsAccessibilitySetting3" styleClass="settings-toggle" text="" />
+                     </HBox>
+
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Scalable Text Button -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-action-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Scalable Text Options" />
+                           <Label styleClass="settings-row-desc" text="Customise font size and style" />
+                        </VBox>
+                        <Button fx:id="settingsAccessibilityButton" styleClass="settings-open-btn" text="Open ›" />
+                     </HBox>
+                  </VBox>
+
+                  <!-- ── PRIVACY & SECURITY ── -->
+                  <VBox spacing="0" styleClass="settings-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-card-header">
+                        <Label styleClass="settings-section-icon" text="🔒" />
+                        <Label styleClass="settings-section-title" text="Privacy &amp; Security" />
+                     </HBox>
+                     <Separator styleClass="settings-divider" />
+
+                     <!-- Data Sharing -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Data Sharing" />
+                           <Label styleClass="settings-row-desc" text="Share anonymised usage data" />
+                        </VBox>
+                        <ToggleButton fx:id="settingsPrivacySetting1" styleClass="settings-toggle" text="" />
+                     </HBox>
+
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Location Services -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Location Services" />
+                           <Label styleClass="settings-row-desc" text="Allow location-based features" />
+                        </VBox>
+                        <ToggleButton fx:id="settingsPrivacySetting2" styleClass="settings-toggle" text="" />
+                     </HBox>
+
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Two-Factor Auth -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-toggle-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Two-Factor Auth" />
+                           <Label styleClass="settings-row-desc" text="Add an extra layer of account security" />
+                        </VBox>
+                        <ToggleButton fx:id="settingsPrivacySetting3" styleClass="settings-toggle" text="" />
+                     </HBox>
+                  </VBox>
+
+                  <!-- ── HELP & SUPPORT ── -->
+                  <VBox spacing="0" styleClass="settings-card" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-card-header">
+                        <Label styleClass="settings-section-icon" text="💬" />
+                        <Label styleClass="settings-section-title" text="Help &amp; Support" />
+                     </HBox>
+                     <Separator styleClass="settings-divider" />
+
+                     <!-- FAQ -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-action-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="FAQ" />
+                           <Label styleClass="settings-row-desc" text="Frequently asked questions" />
+                        </VBox>
+                        <Button fx:id="settingsHelpSetting1" styleClass="settings-chevron-btn" text="›" />
+                     </HBox>
+
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Contact Support -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-action-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Contact Support" />
+                           <Label styleClass="settings-row-desc" text="Get help from our team" />
+                        </VBox>
+                        <Button fx:id="settingsHelpSetting2" styleClass="settings-chevron-btn" text="›" />
+                     </HBox>
+
+                     <Separator styleClass="settings-row-divider" />
+
+                     <!-- Report a Bug -->
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-action-row">
+                        <VBox spacing="1" HBox.hgrow="ALWAYS">
+                           <Label styleClass="settings-row-label" text="Report a Bug" />
+                           <Label styleClass="settings-row-desc" text="Tell us what went wrong" />
+                        </VBox>
+                        <Button fx:id="settingsHelpSetting3" styleClass="settings-chevron-btn" text="›" />
+                     </HBox>
+                  </VBox>
+
+                  <!-- ── SIGN OUT ── -->
+                  <VBox spacing="0" styleClass="settings-card settings-danger-card" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="settings-card-header">
+                        <Label styleClass="settings-section-icon" text="🚪" />
+                        <Label styleClass="settings-section-title settings-danger-title" text="Sign Out" />
+                     </HBox>
+                     <Separator styleClass="settings-divider" />
+
+                     <VBox alignment="CENTER_LEFT" spacing="12" styleClass="settings-signout-body">
+                        <Label styleClass="settings-row-label" text="You're signed in as Richard." />
+                        <Label styleClass="settings-row-desc" text="Signing out will close the application. You can re-open it at any time." wrapText="true" />
+                        <Button fx:id="settingsLogOutProceedButton" maxWidth="Infinity" styleClass="settings-signout-btn" text="Sign Out" />
+                     </VBox>
+                  </VBox>
+
+               </GridPane>
+
+               <Region minHeight="24" />
+
             </VBox>
          </content>
       </ScrollPane>
