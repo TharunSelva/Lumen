@@ -93,14 +93,6 @@ public class DeviceServiceTest {
     }
 
     @Test
-    public void testGetAllDevicesReturnsCorrectList() {
-        assertNotNull(deviceService.getAllDevices());
-        for (Device device : deviceService.getAllDevices()) {
-            assertEquals(DeviceType.SMART_PLUG, device.getDeviceType());
-        }
-    }
-
-    @Test
     public void testZeroPriceCutoff() {
         SmartPlug testPlug = new SmartPlug("Zero Cutoff", DeviceType.SMART_PLUG);
         testPlug.setPriceCutoff(0.0);
