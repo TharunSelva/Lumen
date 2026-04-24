@@ -1,30 +1,30 @@
 package com.energyapp.controller;
 
 import com.energyapp.db.ForecastIntervalRepository;
-import com.energyapp.db.HomeProfileRepository;
+import com.energyapp.db.ForecastWindowRecord;
 import com.energyapp.model.EnergyRecord;
-import com.energyapp.model.Geocode;
 import com.energyapp.model.Insight;
+import com.energyapp.service.ForecastOverviewService;
 import com.energyapp.service.InsightEngine;
-import com.energyapp.db.OpenMeteoSolarService;
 import com.energyapp.service.SimulationService;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.collections.FXCollections;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import java.time.ZoneId;
 import javafx.scene.control.Button;
-import javafx.scene.control.Separator;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -36,36 +36,29 @@ import java.util.Map;
 
 public class ForecastingController {
 
+    private static final int REFRESH_THRESHOLD = 5;
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
+
     @FXML private LineChart<String, Number> energyCostForecastLineChart;
     @FXML private Label lastUpdatedLabel;
     @FXML private VBox insightsContainer;
     @FXML private Button forecastingReload;
-    @FXML private XYChart<Number, Number> solarForecastChart;
+    @FXML private LineChart<Number, Number> solarForecastChart;
+    @FXML private Label solarForecastStatusLabel;
+    @FXML private Label tomorrowSummaryHeadlineLabel;
+    @FXML private VBox tomorrowSummaryList;
 
     private SimulationService simulationService;
     private int lastRefreshRecordCount = 0;
-    private static final int REFRESH_THRESHOLD = 5;
-    private final ForecastIntervalRepository forecastIntervalRepository = new ForecastIntervalRepository();
-    private static final String HOME_ID = "HOME_1";
-    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
-    private final HomeProfileRepository homeRepo = new HomeProfileRepository();
-    private final OpenMeteoSolarService solarService = new OpenMeteoSolarService();
+    private final ForecastIntervalRepository forecastIntervalRepository = new ForecastIntervalRepository();
+    private final ForecastOverviewService forecastOverviewService = new ForecastOverviewService();
 
     @FXML
     public void initialize() {
-        if (energyCostForecastLineChart != null) {
-            energyCostForecastLineChart.setAnimated(false);
-
-            CategoryAxis axis = (CategoryAxis) energyCostForecastLineChart.getXAxis();
-            axis.setCategories(FXCollections.observableArrayList(buildAllSlots()));
-
-            javafx.scene.chart.NumberAxis yAxis =
-                    (javafx.scene.chart.NumberAxis) energyCostForecastLineChart.getYAxis();
-            yAxis.setForceZeroInRange(false);
-        }
-
-        loadSolarForecast();
+        configureEnergyPriceChart();
+        configureSolarChart();
+        refreshForecastOverviewPanels();
 
         if (lastUpdatedLabel != null) {
             lastUpdatedLabel.setText("Waiting for simulation data...");
@@ -86,6 +79,7 @@ public class ForecastingController {
             if (newRec != null) {
                 Platform.runLater(() -> {
                     refreshEnergyPriceChart();
+                    refreshForecastOverviewPanels();
                     updateLastUpdatedLabel();
 
                     int currentSize = service.getEnergyStatsSessionHistory().size();
@@ -98,19 +92,51 @@ public class ForecastingController {
         });
     }
 
+    private void configureEnergyPriceChart() {
+        if (energyCostForecastLineChart == null) {
+            return;
+        }
+
+        energyCostForecastLineChart.setAnimated(false);
+
+        CategoryAxis axis = (CategoryAxis) energyCostForecastLineChart.getXAxis();
+        axis.setCategories(FXCollections.observableArrayList(buildAllSlots()));
+
+        NumberAxis yAxis = (NumberAxis) energyCostForecastLineChart.getYAxis();
+        yAxis.setForceZeroInRange(false);
+    }
+
+    private void configureSolarChart() {
+        if (solarForecastChart == null) {
+            return;
+        }
+
+        solarForecastChart.setAnimated(false);
+        solarForecastChart.setCreateSymbols(false);
+        solarForecastChart.setLegendVisible(false);
+
+        NumberAxis xAxis = (NumberAxis) solarForecastChart.getXAxis();
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(48);
+        xAxis.setTickUnit(4);
+    }
+
     private void refreshAllForecastPanels() {
-        loadSolarForecast();
         refreshForecastDataPanels();
     }
 
     private void refreshForecastDataPanels() {
         refreshInsights();
         refreshEnergyPriceChart();
+        refreshForecastOverviewPanels();
         updateLastUpdatedLabel();
     }
 
     private void refreshInsights() {
-        if (simulationService == null) return;
+        if (simulationService == null || insightsContainer == null) {
+            return;
+        }
         if (insightsContainer.getChildren().size() > 1) {
             insightsContainer.getChildren().remove(1, insightsContainer.getChildren().size());
         }
@@ -135,7 +161,7 @@ public class ForecastingController {
                         + history.get(i).getBaseloadKwh();
             }
         }
-        System.out.println("Previous total: " + previousUsageTotal + " kWh, Current total: " + currentUsageTotal + " kWh");
+
         InsightEngine engine = new InsightEngine();
         List<Insight> activeInsights = engine.generateInsights(currentUsageTotal, previousUsageTotal);
 
@@ -172,15 +198,16 @@ public class ForecastingController {
     }
 
     private void refreshEnergyPriceChart() {
-        if (simulationService == null || energyCostForecastLineChart == null) return;
+        if (simulationService == null || energyCostForecastLineChart == null) {
+            return;
+        }
 
         List<EnergyRecord> history = new ArrayList<>(simulationService.getEnergyStatsSessionHistory());
         EnergyRecord currentRecord = simulationService.getCurrentEnergyRecord().get();
 
         LocalDate chartDay = resolveChartDay(history, currentRecord);
-        ZoneId homeZone = forecastIntervalRepository.resolveHomeZone(HOME_ID);
 
-        List<EnergyRecord> forecastRecords = loadForecastRecords(chartDay, homeZone);
+        List<EnergyRecord> forecastRecords = loadForecastRecords(chartDay);
         List<XYChart.Series<String, Number>> chartSeries =
                 buildPriceChartSeries(history, forecastRecords, chartDay);
 
@@ -191,15 +218,103 @@ public class ForecastingController {
         }
     }
 
-    private List<EnergyRecord> loadForecastRecords(LocalDate chartDay, ZoneId homeZone) {
-        List<EnergyRecord> forecastRecords =
-                forecastIntervalRepository.fetchTariffForecast(HOME_ID, chartDay, homeZone);
+    private List<EnergyRecord> loadForecastRecords(LocalDate chartDay) {
+        ForecastOverviewService.ForecastOverviewSnapshot snapshot =
+                forecastOverviewService.load(ForecastOverviewService.HOME_ID, resolvePreferredForecastReference());
+
+        List<EnergyRecord> forecastRecords = forecastIntervalRepository.fetchTariffForecast(
+                ForecastOverviewService.HOME_ID,
+                chartDay,
+                snapshot.homeZone()
+        );
 
         if (!forecastRecords.isEmpty()) {
             return forecastRecords;
         }
 
         return forecastIntervalRepository.fetchTodayTariffForecast();
+    }
+
+    private void refreshForecastOverviewPanels() {
+        ForecastOverviewService.ForecastOverviewSnapshot snapshot =
+                forecastOverviewService.load(ForecastOverviewService.HOME_ID, resolvePreferredForecastReference());
+
+        renderSolarForecast(snapshot);
+        renderTomorrowSummary(snapshot);
+    }
+
+    private LocalDateTime resolvePreferredForecastReference() {
+        if (simulationService != null && simulationService.getCurrentEnergyRecord().get() != null) {
+            return simulationService.getCurrentEnergyRecord().get().getTimestamp();
+        }
+        return null;
+    }
+
+    private void renderSolarForecast(ForecastOverviewService.ForecastOverviewSnapshot snapshot) {
+        if (solarForecastChart == null) {
+            return;
+        }
+
+        List<ForecastWindowRecord> solarWindows = snapshot.twoDayWindows().stream()
+                .filter(window -> window.solarShortwaveWm2() != null)
+                .toList();
+
+        solarForecastChart.getData().clear();
+
+        if (solarWindows.isEmpty()) {
+            if (solarForecastStatusLabel != null) {
+                solarForecastStatusLabel.setText("Solar forecast cache is still refreshing.");
+            }
+            return;
+        }
+
+        LocalDateTime dayStart = snapshot.anchorTime().toLocalDate().atStartOfDay();
+        XYChart.Series<Number, Number> solarSeries = new XYChart.Series<>();
+
+        for (ForecastWindowRecord window : solarWindows) {
+            if (window.windowStart() == null) {
+                continue;
+            }
+            double hourIndex = Duration.between(dayStart, window.windowStart()).toMinutes() / 60.0;
+            if (hourIndex >= 0 && hourIndex <= 48) {
+                solarSeries.getData().add(new XYChart.Data<>(hourIndex, window.solarShortwaveWm2()));
+            }
+        }
+
+        solarForecastChart.getData().add(solarSeries);
+
+        ForecastWindowRecord peakSolarTomorrow = snapshot.tomorrowWindows().stream()
+                .filter(window -> window.solarShortwaveWm2() != null)
+                .max(java.util.Comparator.comparingDouble(ForecastWindowRecord::solarShortwaveWm2))
+                .orElse(null);
+
+        if (solarForecastStatusLabel != null) {
+            solarForecastStatusLabel.setText(peakSolarTomorrow == null
+                    ? "Solar outlook loaded from the next 48 forecast hours."
+                    : "Tomorrow peaks near " + formatTime(peakSolarTomorrow.windowStart())
+                    + " at " + formatSolar(peakSolarTomorrow.solarShortwaveWm2()) + ".");
+        }
+    }
+
+    private void renderTomorrowSummary(ForecastOverviewService.ForecastOverviewSnapshot snapshot) {
+        if (tomorrowSummaryHeadlineLabel == null || tomorrowSummaryList == null) {
+            return;
+        }
+
+        ForecastOverviewService.TomorrowSummarySnapshot tomorrowSnapshot =
+                forecastOverviewService.buildTomorrowSummary(snapshot);
+        tomorrowSummaryHeadlineLabel.setText(tomorrowSnapshot.headline());
+        populateSummaryItems(tomorrowSummaryList, tomorrowSnapshot.items(), "forecast-summary-chip");
+    }
+
+    private void populateSummaryItems(VBox container, List<String> items, String styleClass) {
+        container.getChildren().clear();
+        for (String item : items) {
+            Label label = new Label(item);
+            label.setWrapText(true);
+            label.getStyleClass().add(styleClass);
+            container.getChildren().add(label);
+        }
     }
 
     private List<XYChart.Series<String, Number>> buildContiguousSeries(Map<String, Number> valuesBySlot, String seriesName) {
@@ -288,12 +403,16 @@ public class ForecastingController {
     }
 
     private String formatTime(LocalDateTime timestamp) {
-        return timestamp.toLocalTime().format(TIME_FMT);
+        return timestamp == null ? "later" : timestamp.toLocalTime().format(TIME_FMT);
     }
 
     private String formatSlot(int slotIndex) {
         LocalTime time = LocalTime.MIDNIGHT.plusMinutes(slotIndex * 30L);
         return time.format(TIME_FMT);
+    }
+
+    private String formatSolar(Double solar) {
+        return solar == null ? "unknown solar output" : String.format(java.util.Locale.UK, "%.0f W/m2", solar);
     }
 
     private List<String> buildAllSlots() {
@@ -306,46 +425,12 @@ public class ForecastingController {
 
     private void updateLastUpdatedLabel() {
         if (lastUpdatedLabel != null) {
-            lastUpdatedLabel.setText("Updated " + LocalTime.now().format(TIME_FMT));
-        }
-    }
-
-    private void loadSolarForecast() {
-        Geocode loc = homeRepo.getHomeLocation("HOME_1");
-        if (loc == null) return;
-
-        List<OpenMeteoSolarService.SolarPoint> forecast = null;
-        try {
-            forecast = solarService.fetchHourlyShortwave(loc.latitude(), loc.longitude(), 2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (forecast == null) return;
-
-        List<OpenMeteoSolarService.SolarPoint> finalForecast = forecast;
-        Platform.runLater(() -> {
-            solarForecastChart.getData().clear();
-
-            // Lock the X axis to exactly your data range
-            javafx.scene.chart.NumberAxis xAxis =
-                    (javafx.scene.chart.NumberAxis) solarForecastChart.getXAxis();
-            xAxis.setAutoRanging(false);
-            xAxis.setLowerBound(0);
-            xAxis.setUpperBound(47);
-            xAxis.setTickUnit(1); // one tick per hour
-
-            XYChart.Series<Number, Number> series = new XYChart.Series<>();
-            series.setName("Solar Generation (W/m²)");
-
-            for (int i = 0; i < finalForecast.size(); i++) {
-                OpenMeteoSolarService.SolarPoint point = finalForecast.get(i);
-                int hour = Integer.parseInt(point.timeIso.substring(11, 13));
-                boolean isDay2 = i >= 24;
-                series.getData().add(new XYChart.Data<>(isDay2 ? hour + 24 : hour, point.shortwaveWm2));
+            EnergyRecord currentRecord = simulationService == null ? null : simulationService.getCurrentEnergyRecord().get();
+            if (currentRecord != null && currentRecord.getTimestamp() != null) {
+                lastUpdatedLabel.setText("Simulation updated " + formatTime(currentRecord.getTimestamp()));
+            } else {
+                lastUpdatedLabel.setText("Waiting for simulation data...");
             }
-
-            solarForecastChart.getData().add(series);
-        });
+        }
     }
 }

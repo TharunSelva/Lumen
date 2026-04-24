@@ -8,9 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,7 @@ public final class ForecastIntervalRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     String tsStr = rs.getString("ts_start");
-                    LocalDateTime timestampUtc = LocalDateTime.parse(tsStr, TS_FMT);
+                    LocalDateTime timestampUtc = parseTimestampUtc(tsStr);
                     LocalDateTime timestamp = timestampUtc
                             .atOffset(ZoneOffset.UTC)
                             .atZoneSameInstant(zoneId)
@@ -106,5 +108,20 @@ public final class ForecastIntervalRepository {
         }
 
         return DEFAULT_HOME_ZONE;
+    }
+
+    private LocalDateTime parseTimestampUtc(String rawTimestamp) {
+        if (rawTimestamp == null || rawTimestamp.isBlank()) {
+            throw new DateTimeParseException("Timestamp is blank", String.valueOf(rawTimestamp), 0);
+        }
+
+        String normalized = rawTimestamp.trim();
+        try {
+            return LocalDateTime.parse(normalized, TS_FMT);
+        } catch (DateTimeParseException ignored) {
+            return OffsetDateTime.parse(normalized)
+                    .withOffsetSameInstant(ZoneOffset.UTC)
+                    .toLocalDateTime();
+        }
     }
 }
