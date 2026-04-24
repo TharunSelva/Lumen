@@ -3,6 +3,7 @@ package com.energyapp.controller;
 import com.energyapp.model.EnergyRecord;
 import com.energyapp.model.Recommendation;
 import com.energyapp.service.RecommendationFeedService;
+import com.energyapp.service.RecommendationTopSectionService;
 import com.energyapp.service.SimulationService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -30,10 +31,27 @@ public class RecommendationsController {
     private VBox recommendationsContainer;
     @FXML
     private StackPane recommendationsFeedViewport;
+    @FXML
+    private Label priorityRecommendationTitleLabel;
+    @FXML
+    private Label priorityRecommendationSummaryLabel;
+    @FXML
+    private Label priorityRecommendationWhyLabel;
+    @FXML
+    private Label priorityRecommendationImpactLabel;
+    @FXML
+    private javafx.scene.control.Button priorityRecommendationActionButton;
+    @FXML
+    private VBox smartSavingsList;
+    @FXML
+    private VBox solarOpportunitiesList;
 
     private MainLayoutController mainController;
     private SimulationService simulationService;
     private final RecommendationFeedService recommendationFeedService = RecommendationFeedService.getInstance();
+    private final RecommendationTopSectionService recommendationTopSectionService = new RecommendationTopSectionService();
+    private RecommendationTopSectionService.NavigationTarget priorityNavigationTarget =
+            RecommendationTopSectionService.NavigationTarget.FORECASTS;
 
     @FXML
     public void initialize() {
@@ -65,6 +83,8 @@ public class RecommendationsController {
             if (recommendationsContainer == null) {
                 return;
             }
+
+            renderTopSections(recommendationTopSectionService.build(currentRecord));
 
             RecommendationFeedService.FeedUpdate feedUpdate = recommendationFeedService.updateRecommendations(currentRecord);
             List<Recommendation> allRecommendations = feedUpdate.getVisibleRecommendations();
@@ -105,6 +125,46 @@ public class RecommendationsController {
 
             animatePushDownTransition(insertedRecommendation, activeRecommendations);
         });
+    }
+
+    @FXML
+    private void handlePriorityAction() {
+        if (mainController == null) {
+            return;
+        }
+
+        switch (priorityNavigationTarget) {
+            case DEVICES -> mainController.handleShowDevices();
+            case FORECASTS -> mainController.handleShowForecasting();
+        }
+    }
+
+    private void renderTopSections(RecommendationTopSectionService.TopSectionsSnapshot snapshot) {
+        if (snapshot == null) {
+            return;
+        }
+
+        RecommendationTopSectionService.PriorityCard priorityCard = snapshot.priorityCard();
+        priorityRecommendationTitleLabel.setText(priorityCard.title());
+        priorityRecommendationSummaryLabel.setText(priorityCard.summary());
+        priorityRecommendationWhyLabel.setText(priorityCard.why());
+        priorityRecommendationImpactLabel.setText(priorityCard.impact());
+        priorityRecommendationActionButton.setText(priorityCard.actionLabel());
+        priorityNavigationTarget = priorityCard.navigationTarget();
+
+        populateSectionItems(smartSavingsList, snapshot.tonightSection().items());
+        populateSectionItems(solarOpportunitiesList, snapshot.tomorrowSection().items());
+    }
+
+    private void populateSectionItems(VBox container, List<String> items) {
+        container.getChildren().clear();
+        for (String item : items) {
+            Label label = new Label(item);
+            label.setWrapText(true);
+            label.setMaxWidth(Double.MAX_VALUE);
+            label.getStyleClass().add("recommendations-list-item");
+            container.getChildren().add(label);
+        }
     }
 
     private void replaceRecommendationCards(List<Recommendation> recommendations) {
