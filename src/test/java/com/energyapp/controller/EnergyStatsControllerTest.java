@@ -113,6 +113,41 @@ class EnergyStatsControllerTest {
         assertEquals(14L * 24L * 60L * 60L, threeMonthTick);
     }
 
+    @Test
+    void formatAxisTick_formatsAsDaysAndMonthsForAllTimeView() {
+        // Defines an epoch timestamp (e.g., April 15, 2026, 12:00)
+        long epoch = DateTimeUtils.toEpochSeconds(LocalDateTime.of(2026, 4, 15, 12, 0));
+
+        // Simulates an "All-time" duration span larger than 31 days
+        long allTimeDuration = 32L * 24L * 60L * 60L;
+
+        String tickLabel = EnergyStatsController.formatAxisTick(epoch, allTimeDuration);
+
+        // Asserts that the time (hours/minutes) is dropped in favor of the Month scale
+        assertEquals("15 Apr", tickLabel);
+    }
+
+    @Test
+    void calculateSourceBreakdown_processesPowerInKilowattsNotWatts() {
+        // Given a record with 5.0 kW load and 2.5 kW solar generation
+        // Notice we pass 5.0 (kW) to the load argument, not 5000 (Watts)
+        EnergyRecord record1 = new EnergyRecord(
+                LocalDateTime.of(2026, 1, 5, 10, 0), "10:00",
+                2.5, 20.0, 100.0,
+                5.0,   // totalLoadKwh
+                2.5,   // solarGenKwh
+                50, 0.0, 0.0, 0.0, 4.0
+        );
+
+        EnergyStatsController.SourceBreakdown breakdown =
+                EnergyStatsController.calculateSourceBreakdown(List.of(record1));
+
+        // Asserts that the mathematical breakdown relies on the kW values
+        assertEquals(2.5, breakdown.solarKwh(), 0.001);
+        assertEquals(2.5, breakdown.gridKwh(), 0.001);
+        assertEquals(0.0, breakdown.batteryKwh(), 0.001);
+    }
+
     private static EnergyRecord record(LocalDateTime timestamp, double totalLoad, double price, double solar, double grid, int battery) {
         return new EnergyRecord(timestamp, timestamp.toLocalTime().toString(), grid, price,
                 100.0, totalLoad, solar, battery, 0.0, 0.0, 0.0, 0.0);

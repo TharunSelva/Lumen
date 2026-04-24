@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,8 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DbBootstrapTest {
 
@@ -125,5 +125,21 @@ class DbBootstrapTest {
                 assertEquals(4.0, rs.getDouble("solar_capacity_kw"), 0.0001);
             }
         }
+    }
+
+    @Test
+    void dbBootstrapInit_createsNewDatabaseSafelyOnFirstTimeRun() throws Exception {
+        Path dbPath = DbPaths.dbFile();
+
+        // Simulates the user deleting the runtime DB to force a "first time run"
+        Files.deleteIfExists(dbPath);
+        assertFalse(Files.exists(dbPath), "Database should not exist before init");
+
+        // Execution: Should provision the template gracefully without throwing errors
+        DbBootstrap.init();
+
+        // Verification
+        assertTrue(Files.exists(dbPath), "Database file should have been generated");
+        assertTrue(Files.size(dbPath) > 0, "Database file should not be empty");
     }
 }
