@@ -1,5 +1,6 @@
 package com.energyapp.db;
 
+import com.energyapp.model.Geocode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -67,5 +69,30 @@ class HomeProfileRepositoryTest {
                 () -> repository.setWeeklyBudgetGbp("HOME_MISSING", 4.50));
 
         assertEquals(true, error.getMessage().contains("HOME_MISSING"));
+    }
+
+    @Test
+    void saveProfile_persistsFirstNameCityAndLocation() {
+        repository.saveProfile("HOME_1", "Ava", "Southampton", new Geocode(50.9097, -1.4044));
+
+        HomeProfileRepository.HomeProfileSnapshot profile = repository.getProfile("HOME_1");
+        assertNotNull(profile);
+        assertEquals("Ava", profile.firstName());
+        assertEquals("Southampton", profile.cityName());
+        assertNotNull(profile.location());
+        assertEquals(50.9097, profile.location().latitude(), 0.0001);
+        assertEquals(-1.4044, profile.location().longitude(), 0.0001);
+    }
+
+    @Test
+    void updateHomeCity_replacesSavedCityWithoutChangingFirstName() {
+        repository.saveProfile("HOME_1", "Ava", "Southampton", new Geocode(50.9097, -1.4044));
+
+        repository.updateHomeCity("HOME_1", "Portsmouth", new Geocode(50.8198, -1.0880));
+
+        assertEquals("Ava", repository.getFirstName("HOME_1"));
+        assertEquals("Portsmouth", repository.getCityName("HOME_1"));
+        assertEquals(50.8198, repository.getHomeLocation("HOME_1").latitude(), 0.0001);
+        assertEquals(-1.0880, repository.getHomeLocation("HOME_1").longitude(), 0.0001);
     }
 }

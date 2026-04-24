@@ -1,34 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-
-<VBox minHeight="-Infinity" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SetupModalController">
+<VBox id="setupModalRoot" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SetupModalController">
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
    <children>
-      <Label text="Welcome!">
-         <font>
-            <Font name="System Bold" size="36.0" />
-         </font>
-      </Label>
-      <HBox>
+      <VBox maxWidth="460.0" prefWidth="460.0" styleClass="setup-modal-card">
          <children>
-            <Label text="Enter location:" />
-            <Region prefWidth="10.0" />
-            <TextField fx:id="cityTextField" text="City goes here..." />
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <Label styleClass="setup-brand-badge" text="⚡" />
+                  <VBox spacing="2.0">
+                     <children>
+                        <Label styleClass="setup-brand-name" text="Lumen" />
+                        <Label styleClass="setup-brand-tagline" text="Home energy dashboard" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Label styleClass="setup-modal-title" text="Welcome to Lumen" />
+            <Label styleClass="setup-modal-copy" text="Tell us who you are and where home is so Lumen can personalise your dashboard, local forecasts, and energy insights." wrapText="true" />
+            <VBox spacing="10.0">
+               <children>
+                  <Label styleClass="setup-field-label" text="First name" />
+                  <TextField fx:id="firstNameTextField" promptText="e.g. Alex" />
+               </children>
+            </VBox>
+            <VBox spacing="10.0">
+               <children>
+                  <Label styleClass="setup-field-label" text="City" />
+                  <TextField fx:id="cityTextField" promptText="e.g. Southampton" />
+               </children>
+            </VBox>
+            <Label styleClass="setup-modal-helper" text="Both fields are required. Your city helps Lumen show the right forecast and solar context for your home." wrapText="true" />
+            <Label fx:id="errorLabel" managed="false" styleClass="setup-modal-error" visible="false" wrapText="true" />
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Button fx:id="saveButton" mnemonicParsing="false" text="Save and continue" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
-      <HBox>
-         <children>
-            <Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
-            <Region prefWidth="30.0" />
-            <Label fx:id="errorLabel" alignment="TOP_RIGHT" textAlignment="RIGHT" />
-         </children>
-      </HBox>
+      </VBox>
    </children>
 </VBox>

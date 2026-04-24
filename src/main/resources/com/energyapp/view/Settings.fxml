@@ -1,27 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
 <BorderPane stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.SettingsController">
    <center>
-      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="settingsMainVBox" spacing="20.0" id="settingsMainVBox">
+            <VBox fx:id="settingsMainVBox" spacing="24.0" id="settingsMainVBox">
+               <padding>
+                  <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+               </padding>
                <children>
-                  <Label fx:id="settingsGreetingLabel" text="What's wrong Richard? :(" styleClass="screen-title" />
+                  <HBox alignment="CENTER_LEFT" spacing="18.0" styleClass="settings-hero-card">
+                     <children>
+                        <StackPane styleClass="settings-hero-badge">
+                           <children>
+                              <Label text="&#x26A1;" />
+                           </children>
+                        </StackPane>
+                        <VBox spacing="6.0">
+                           <children>
+                              <Label fx:id="settingsGreetingLabel" text="Lumen settings" styleClass="screen-title" />
+                              <Label text="Manage your home profile, theme, accessibility tools, and support from one place." wrapText="true" styleClass="settings-hero-copy" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
 
-                  <GridPane fx:id="settingsMainGridPane" hgap="30.0" vgap="30.0" VBox.vgrow="ALWAYS">
+                  <GridPane fx:id="settingsMainGridPane" hgap="20.0" vgap="20.0" VBox.vgrow="ALWAYS">
                      <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
@@ -29,104 +47,69 @@
                      <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-
-                        <VBox fx:id="settingsAccountVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <VBox id="settingsProfileCard" spacing="14.0" styleClass="settings-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
                            <children>
-                              <Label fx:id="settingsAccountTitleLabel" text="Account">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
+                              <Label text="Profile" styleClass="settings-card-title" />
+                              <Label fx:id="settingsProfileNameLabel" text="Your home profile" styleClass="settings-profile-name" />
+                              <Label fx:id="settingsProfileLocationLabel" text="Add your city to personalise forecasts, solar outlooks, and recommendations." wrapText="true" styleClass="settings-card-copy" />
+                              <VBox spacing="8.0" styleClass="settings-form-group">
                                  <children>
-                                    <Label text="Location:"></Label>
+                                    <Label text="Home city" styleClass="settings-field-label" />
                                     <HBox spacing="10.0">
-                                       <TextField fx:id="locationTextField" promptText="Enter City" HBox.hgrow="ALWAYS"/>
-                                       <Button fx:id="saveLocationButton" text="Save"/>
+                                       <children>
+                                          <TextField fx:id="locationTextField" promptText="City" HBox.hgrow="ALWAYS" />
+                                          <Button fx:id="saveLocationButton" text="Save city" styleClass="settings-action-button" />
+                                       </children>
                                     </HBox>
-                                    <CheckBox fx:id="settingsAccountSetting2" mnemonicParsing="false" text="Change Password" />
-                                    <CheckBox fx:id="settingsAccountSetting3" mnemonicParsing="false" text="Notifications" />
+                                    <Label fx:id="locationStatusLabel" text="" wrapText="true" styleClass="settings-status-label" />
                                  </children>
                               </VBox>
                            </children>
                         </VBox>
 
-                        <VBox fx:id="settingsAccessibilityVBox" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <VBox id="settingsDisplayCard" spacing="14.0" styleClass="settings-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
                            <children>
-                              <Label fx:id="settingsAccessibilityTitleLabel" text="Accessibility">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsAccessibilitySetting1" mnemonicParsing="false" text="High Contrast" />
-                                 <CheckBox fx:id="settingsAccessibilitySetting2" mnemonicParsing="false" text="Screen Reader" />
-                                 <CheckBox fx:id="settingsAccessibilitySetting3" mnemonicParsing="false" text="Large Text" />
-                              </VBox>
-                              <Button fx:id="settingsAccessibilityButton" text="Scalable Text Options..." maxWidth="Infinity"/>
-                           </children>
-                        </VBox>
-
-                        <VBox fx:id="settingsPrivacyVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                           <children>
-                              <Label fx:id="settingsPrivacyTitleLabel" text="Privacy and Security">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsPrivacySetting1" mnemonicParsing="false" text="Data Sharing" />
-                                 <CheckBox fx:id="settingsPrivacySetting2" mnemonicParsing="false" text="Location Services" />
-                                 <CheckBox fx:id="settingsPrivacySetting3" mnemonicParsing="false" text="Two-Factor Auth" />
+                              <Label text="Display" styleClass="settings-card-title" />
+                              <Label text="Adjust how Lumen looks and feels across the app." wrapText="true" styleClass="settings-card-copy" />
+                              <VBox spacing="10.0">
+                                 <children>
+                                    <CheckBox fx:id="darkModeCheckBox" mnemonicParsing="false" text="Dark mode" />
+                                    <CheckBox fx:id="compactViewCheckBox" mnemonicParsing="false" text="Compact view" />
+                                    <CheckBox fx:id="animationsCheckBox" mnemonicParsing="false" text="Show animations" />
+                                 </children>
                               </VBox>
                            </children>
                         </VBox>
 
-                        <VBox fx:id="settingsHelpVBox" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <VBox id="settingsAccessibilityCard" spacing="14.0" styleClass="settings-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
                            <children>
-                              <Label fx:id="settingsHelpTitleLabel" text="Help and Support">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsHelpSetting1" mnemonicParsing="false" text="FAQ" />
-                                 <CheckBox fx:id="settingsHelpSetting2" mnemonicParsing="false" text="Contact Support" />
-                                 <CheckBox fx:id="settingsHelpSetting3" mnemonicParsing="false" text="Report a Bug" />
+                              <Label text="Accessibility" styleClass="settings-card-title" />
+                              <Label text="Keep contrast, text, and assistive options easy to reach." wrapText="true" styleClass="settings-card-copy" />
+                              <VBox spacing="10.0">
+                                 <children>
+                                    <CheckBox fx:id="highContrastCheckBox" mnemonicParsing="false" text="High contrast" />
+                                    <CheckBox fx:id="screenReaderCheckBox" mnemonicParsing="false" text="Screen reader support" />
+                                    <CheckBox fx:id="largeTextCheckBox" mnemonicParsing="false" text="Large text" />
+                                 </children>
+                              </VBox>
+                              <Button fx:id="settingsAccessibilityButton" text="Scalable text options" maxWidth="Infinity" styleClass="settings-action-button settings-action-button-secondary" />
+                           </children>
+                        </VBox>
+
+                        <VBox id="settingsHelpCard" spacing="14.0" styleClass="settings-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <children>
+                              <Label text="Help" styleClass="settings-card-title" />
+                              <Label text="Open practical guidance for the app or create a bug report draft with your saved profile context." wrapText="true" styleClass="settings-card-copy" />
+                              <VBox spacing="10.0">
+                                 <children>
+                                    <Button fx:id="faqButton" text="FAQ" maxWidth="Infinity" styleClass="settings-action-button" />
+                                    <Button fx:id="reportBugButton" text="Report a Bug" maxWidth="Infinity" styleClass="settings-action-button settings-action-button-secondary" />
+                                 </children>
                               </VBox>
                            </children>
                         </VBox>
-
-                        <VBox fx:id="settingsDisplayVBox" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                           <children>
-                              <Label fx:id="settingsDisplayTitleLabel" text="Display">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox spacing="5.0">
-                                 <CheckBox fx:id="settingsDisplaySetting1" mnemonicParsing="false" text="Dark Mode" />
-                                 <CheckBox fx:id="settingsDisplaySetting2" mnemonicParsing="false" text="Compact View" />
-                                 <CheckBox fx:id="settingsDisplaySetting3" mnemonicParsing="false" text="Show Animations" />
-                              </VBox>
-                           </children>
-                        </VBox>
-
-                        <VBox fx:id="settingsLogOutVBox" spacing="10.0" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <children>
-                              <Label fx:id="settingsLogOutTitleLabel" text="Log Out" textFill="RED">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="settingsLogOutMessageLabel" text="You can log in again soon. See ya later!" wrapText="true"/>
-                              <Button fx:id="settingsLogOutProceedButton" mnemonicParsing="false" text="Proceed" id="settingsLogOutProceedButton"/>
-                           </children>
-                        </VBox>
-
                      </children>
                   </GridPane>
                </children>

@@ -1,5 +1,7 @@
 package com.energyapp.controller;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 
 public final class ThemeController {
@@ -9,8 +11,8 @@ public final class ThemeController {
     private static final String DARK_CLASS = "dark";
     private static final String HIGH_CONTRAST_CLASS = "high-contrast";
 
-    private static boolean darkModeEnabled = false;
-    private static boolean highContrastEnabled = false;
+    private static final BooleanProperty darkModeEnabled = new SimpleBooleanProperty(false);
+    private static final BooleanProperty highContrastEnabled = new SimpleBooleanProperty(false);
 
     ThemeController() {
     }
@@ -36,20 +38,28 @@ public final class ThemeController {
     }
 
     public static void setDarkMode(Scene scene, boolean enabled) {
-        darkModeEnabled = enabled;
+        darkModeEnabled.set(enabled);
         applyCurrentTheme(scene);
     }
 
     public static boolean isDarkModeEnabled() {
+        return darkModeEnabled.get();
+    }
+
+    public static BooleanProperty darkModeProperty() {
         return darkModeEnabled;
     }
 
     public static void setHighContrast(Scene scene, boolean enabled) {
-        highContrastEnabled = enabled;
+        highContrastEnabled.set(enabled);
         applyCurrentTheme(scene);
     }
 
     public static boolean isHighContrastEnabled() {
+        return highContrastEnabled.get();
+    }
+
+    public static BooleanProperty highContrastProperty() {
         return highContrastEnabled;
     }
 
@@ -60,7 +70,7 @@ public final class ThemeController {
 
         var styleClasses = scene.getRoot().getStyleClass();
 
-        if (darkModeEnabled) {
+        if (darkModeEnabled.get()) {
             if (!styleClasses.contains(DARK_CLASS)) {
                 styleClasses.add(DARK_CLASS);
             }
@@ -68,7 +78,7 @@ public final class ThemeController {
             styleClasses.remove(DARK_CLASS);
         }
 
-        if (highContrastEnabled) {
+        if (highContrastEnabled.get()) {
             if (!styleClasses.contains(HIGH_CONTRAST_CLASS)) {
                 styleClasses.add(HIGH_CONTRAST_CLASS);
             }

@@ -1,5 +1,6 @@
 package com.energyapp.controller;
 
+import com.energyapp.db.HomeProfileRepository;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,55 +23,80 @@ public class SetupModalControllerTest {
     }
 
     @Test
-    void testSaveButton_EmptyCityShowsError() throws Exception {
-        SetupModalController controller = new SetupModalController();
+    void testSaveButton_EmptyFirstNameShowsError() throws Exception {
+        SetupModalController controller = new SetupModalController() {
+            @Override
+            protected HomeProfileRepository.HomeProfileSnapshot loadExistingProfile() {
+                return null;
+            }
+        };
 
-        // Inject Fake UI
-        TextField mockTextField = new TextField();
-        mockTextField.setText(""); // Simulate empty input
+        TextField mockFirstNameField = new TextField();
+        mockFirstNameField.setText("");
+
+        TextField mockCityField = new TextField();
+        mockCityField.setText("Southampton");
 
         Label mockErrorLabel = new Label();
         Button mockSaveButton = new Button();
 
-        inject(controller, "cityTextField", mockTextField);
+        inject(controller, "firstNameTextField", mockFirstNameField);
+        inject(controller, "cityTextField", mockCityField);
         inject(controller, "errorLabel", mockErrorLabel);
         inject(controller, "saveButton", mockSaveButton);
 
-        // Run the initialization to hook up the event handler
         controller.initialize();
-
-        // Simulate click
         runOnFxThread(mockSaveButton::fire);
 
-        // Verify the business logic correctly rejected the empty location
-        assertEquals("No valid city entered.", mockErrorLabel.getText(),
-                "The UI should block submission and warn the user if the city is empty.");
+        assertEquals("Please enter your first name.", mockErrorLabel.getText(),
+                "The UI should block submission and warn the user if the first name is missing.");
     }
 
     @Test
-    void testSaveButton_DefaultPlaceholderShowsError() throws Exception {
-        SetupModalController controller = new SetupModalController();
+    void testSaveButton_EmptyCityShowsError() throws Exception {
+        SetupModalController controller = new SetupModalController() {
+            @Override
+            protected HomeProfileRepository.HomeProfileSnapshot loadExistingProfile() {
+                return null;
+            }
+        };
 
-        TextField mockTextField = new TextField();
-        mockTextField.setText("Enter City"); // Simulate user leaving the default placeholder text
+        TextField mockFirstNameField = new TextField();
+        mockFirstNameField.setText("Alex");
+
+        TextField mockCityField = new TextField();
+        mockCityField.setText("");
 
         Label mockErrorLabel = new Label();
         Button mockSaveButton = new Button();
 
-        inject(controller, "cityTextField", mockTextField);
+        inject(controller, "firstNameTextField", mockFirstNameField);
+        inject(controller, "cityTextField", mockCityField);
         inject(controller, "errorLabel", mockErrorLabel);
         inject(controller, "saveButton", mockSaveButton);
 
         controller.initialize();
         runOnFxThread(mockSaveButton::fire);
 
-        assertEquals("No valid city entered.", mockErrorLabel.getText());
+        assertEquals("Please enter your city.", mockErrorLabel.getText());
     }
 
     private void inject(Object target, String fieldName, Object value) throws Exception {
-        Field f = target.getClass().getDeclaredField(fieldName);
+        Field f = findField(target.getClass(), fieldName);
         f.setAccessible(true);
         f.set(target, value);
+    }
+
+    private Field findField(Class<?> type, String fieldName) throws NoSuchFieldException {
+        Class<?> current = type;
+        while (current != null) {
+            try {
+                return current.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException ignored) {
+                current = current.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     private void runOnFxThread(Runnable action) throws InterruptedException {
