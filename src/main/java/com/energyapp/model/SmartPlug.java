@@ -5,10 +5,15 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 public class SmartPlug extends Device {
 
-    private DoubleProperty priceCutoff = new SimpleDoubleProperty(20);
+    private final DoubleProperty priceCutoff = new SimpleDoubleProperty(20);
+
+    public SmartPlug(String deviceName) {
+        this(deviceName, DeviceType.SMART_PLUG);
+    }
 
     public SmartPlug(String deviceName, DeviceType deviceType) {
         super(deviceName, deviceType);
+        setStatus(DeviceStatus.IDLE);
     }
 
     public double getPriceCutoff() {
