@@ -1287,7 +1287,12 @@
 }
 
 #forecastingReload {
-    -fx-background-radius: 10;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #1e3a5f);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
 }
 
 #forecasts-auto-2 {
@@ -1303,21 +1308,63 @@
 }
 
 #forecasts-auto-3 {
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 5;
-    -fx-padding: 10;
+    -fx-padding: 16;
 }
 
 #forecasts-auto-4 {
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 5;
-    -fx-padding: 10;
+    -fx-padding: 16;
 }
 
 #forecasts-auto-5 {
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 5;
-    -fx-padding: 10;
+    -fx-padding: 16;
+}
+
+.forecast-detail-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fbff);
+    -fx-border-color: #dbe4ee;
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 18 20 16 20;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 14, 0.18, 0, 4);
+}
+
+.forecast-panel-headline {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.forecast-panel-copy {
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+}
+
+.forecast-support-copy {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+}
+
+.forecast-summary-list {
+    -fx-fill-width: true;
+}
+
+.forecast-summary-chip {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 9 12 9 12;
+    -fx-text-fill: #334155;
+}
+
+.forecast-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0 2 2 0;
+}
+
+#forecastingReload:hover {
+    -fx-background-color: linear-gradient(to bottom right, #16233a, #274568);
 }
 
 /* InsightCard.fxml */
@@ -1439,8 +1486,11 @@
 #recommendations-auto-7 {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 8 16 8 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
 }
 
 #recommendations-auto-8 {
@@ -1448,55 +1498,199 @@
 }
 
 #recommendations-auto-9 {
-    -fx-background-color: white;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f7fbff);
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 14;
-    -fx-background-radius: 14;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 16, 0.18, 0, 4);
 }
 
 #recommendations-auto-10 {
-    -fx-font-size: 18;
+    -fx-font-size: 13;
     -fx-font-weight: bold;
+    -fx-text-fill: #475569;
 }
 
 #recommendations-auto-11 {
     -fx-font-weight: bold;
+    -fx-background-color: #eef6ff;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 10 12 10 12;
 }
 
 #recommendations-auto-12 {
     -fx-font-weight: bold;
+    -fx-background-color: #ecfdf3;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 10 12 10 12;
 }
 
 #recommendations-auto-13 {
-    -fx-background-color: white;
-    -fx-border-color: #E5E7EB;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #1e3a5f);
+    -fx-border-color: transparent;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
     -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 10 18 10 18;
+    -fx-cursor: hand;
 }
 
 #recommendations-auto-14 {
-    -fx-background-color: white;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 14;
-    -fx-background-radius: 14;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.06), 14, 0.18, 0, 3);
 }
 
 #recommendations-auto-15 {
     -fx-font-size: 16;
     -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
 }
 
 #recommendations-auto-16 {
-    -fx-background-color: white;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f7fbff);
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 14;
-    -fx-background-radius: 14;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.06), 14, 0.18, 0, 3);
 }
 
 #recommendations-auto-17 {
     -fx-font-size: 16;
     -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.recommendations-top-layout {
+    -fx-alignment: top-left;
+}
+
+.recommendations-priority-card {
+    -fx-spacing: 14;
+    -fx-min-height: 340;
+}
+
+.recommendations-secondary-column {
+    -fx-fill-width: true;
+    -fx-pref-width: 390;
+    -fx-min-width: 320;
+}
+
+.recommendations-secondary-card {
+    -fx-spacing: 10;
+    -fx-min-height: 150;
+    -fx-alignment: top-left;
+}
+
+.recommendations-status-pill {
+    -fx-background-color: #ecfdf3;
+    -fx-border-color: #bbf7d0;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10 4 10;
+    -fx-text-fill: #166534;
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+}
+
+.recommendations-priority-title {
+    -fx-font-size: 27;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.recommendations-priority-summary {
+    -fx-font-size: 16;
+    -fx-text-fill: #334155;
+}
+
+.recommendations-support-line {
+    -fx-text-fill: #1e293b;
+}
+
+.recommendations-impact-line {
+    -fx-text-fill: #0f172a;
+}
+
+.recommendations-secondary-title {
+    -fx-text-fill: #0f172a;
+}
+
+.recommendations-list {
+    -fx-fill-width: true;
+    -fx-spacing: 8;
+}
+
+.recommendations-list .label {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 9 12 9 12;
+    -fx-text-fill: #334155;
+}
+
+.recommendations-list-item {
+    -fx-font-size: 13.5px;
+    -fx-wrap-text: true;
+    -fx-pref-width: 1.7976931348623157E308;
+}
+
+.recommendations-action-row {
+    -fx-padding: 14 0 0 0;
+}
+
+#recommendations-auto-13:hover {
+    -fx-background-color: linear-gradient(to bottom right, #16233a, #274568);
+}
+
+.app-root.dark .recommendations-status-pill {
+    -fx-background-color: #163127;
+    -fx-border-color: #24553a;
+    -fx-text-fill: #d1fae5;
+}
+
+.app-root.dark .recommendations-priority-title,
+.app-root.dark .recommendations-priority-summary,
+.app-root.dark .recommendations-secondary-title,
+.app-root.dark .recommendations-list .label,
+.app-root.dark .recommendations-support-line,
+.app-root.dark .recommendations-impact-line {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .recommendations-list .label {
+    -fx-background-color: #1f2c3d;
+    -fx-border-color: #334155;
+}
+
+.app-root.dark #recommendations-auto-10 {
+    -fx-text-fill: #9fb1c7;
+}
+
+.app-root.high-contrast .recommendations-status-pill,
+.app-root.high-contrast .recommendations-list .label,
+.app-root.high-contrast .recommendations-support-line,
+.app-root.high-contrast .recommendations-impact-line {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast .recommendations-priority-title,
+.app-root.high-contrast .recommendations-priority-summary,
+.app-root.high-contrast .recommendations-secondary-title,
+.app-root.high-contrast #recommendations-auto-10 {
+    -fx-text-fill: #ffffff;
 }
 
 /* Settings.fxml */
@@ -1523,13 +1717,41 @@
 }
 
 #sidebar-auto-2 {
-    -fx-font-size: 10;
-    -fx-text-fill: #6B7280;
+    -fx-font-size: 16;
+    -fx-text-fill: #111827;
 }
 
 #sidebar-auto-3 {
     -fx-font-size: 18;
     -fx-font-weight: bold;
+}
+
+.sidebar-sim-clock {
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #16253d);
+    -fx-background-radius: 18;
+    -fx-border-color: #1e3a5f;
+    -fx-border-radius: 18;
+    -fx-padding: 14 14 12 14;
+    -fx-spacing: 4;
+    -fx-max-width: 1.7976931348623157E308;
+}
+
+.sidebar-sim-clock-kicker {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgba(226, 232, 240, 0.86);
+}
+
+.sidebar-sim-clock-time {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.sidebar-sim-clock-date {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 11px;
 }
 
 #sidebar-auto-4 {
@@ -1541,6 +1763,10 @@
 
 #sidebar-auto-5 {
     -fx-font-size: 14;
+    -fx-min-width: 22px;
+    -fx-pref-width: 22px;
+    -fx-max-width: 22px;
+    -fx-text-overrun: clip;
 }
 
 #sidebar-auto-6 {
@@ -1548,6 +1774,7 @@
     -fx-border-color: transparent;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+    -fx-prompt-text-fill: #94a3b8;
 }
 
 #sidebar-auto-7 {
@@ -1775,6 +2002,19 @@
     -fx-border-color: -app-border;
 }
 
+.app-root.dark .sidebar-sim-clock {
+    -fx-background-color: linear-gradient(to bottom right, #101828, #1f2937);
+    -fx-border-color: #334155;
+}
+
+.app-root.dark .sidebar-sim-clock-kicker {
+    -fx-text-fill: #cbd5e1;
+}
+
+.app-root.dark .sidebar-sim-clock-date {
+    -fx-text-fill: #e2e8f0;
+}
+
 .app-root.dark #sidebar-auto-1,
 .app-root.dark #sidebar-auto-4,
 .app-root.dark #cleanEnergyChartContainer,
@@ -1834,6 +2074,24 @@
 
 .app-root.dark #dashboardQuickForecastBarHBox {
     -fx-background-color: -app-surface-alt;
+}
+
+.app-root.dark .forecast-detail-card {
+    -fx-background-color: #152133;
+    -fx-border-color: #2b4059;
+    -fx-effect: dropshadow(gaussian, rgba(2,8,23,0.42), 18, 0.22, 0, 6);
+}
+
+.app-root.dark .forecast-panel-headline,
+.app-root.dark .forecast-panel-copy,
+.app-root.dark .forecast-support-copy,
+.app-root.dark .forecast-summary-chip {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .forecast-summary-chip {
+    -fx-background-color: #1f2c3d;
+    -fx-border-color: #334155;
 }
 
 .app-root.dark #dashboardWeeklyBudgetSpentLabel,
@@ -2228,6 +2486,18 @@
     -fx-border-color: -app-border;
 }
 
+.app-root.high-contrast .sidebar-sim-clock {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .sidebar-sim-clock-kicker,
+.app-root.high-contrast .sidebar-sim-clock-time,
+.app-root.high-contrast .sidebar-sim-clock-date {
+    -fx-text-fill: #ffffff;
+}
+
 .app-root.high-contrast #sideBarContainer .button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -2591,6 +2861,20 @@
     -fx-border-color: #ffffff;
 }
 
+.app-root.high-contrast .forecast-detail-card,
+.app-root.high-contrast .forecast-summary-chip {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .forecast-panel-headline,
+.app-root.high-contrast .forecast-panel-copy,
+.app-root.high-contrast .forecast-support-copy,
+.app-root.high-contrast .forecast-summary-chip {
+    -fx-text-fill: #ffffff;
+}
+
 /* Placeholder text + helper text in the dashboard forecast area */
 .app-root.high-contrast #dashboardQuickForecastBarHBox .label,
 .app-root.high-contrast #dashboardQuickForecastBarHBox .text,
@@ -2783,11 +3067,10 @@
 
 .compact-view #dashboard00VBox,
 .compact-view #dashboard10VBox,
-.compact-view #settingsAccountVBox,
-.compact-view #settingsAccessibilityVBox,
-.compact-view #settingsPrivacyVBox,
-.compact-view #settingsHelpVBox,
-.compact-view #settingsDisplayVBox {
+.compact-view #settingsProfileCard,
+.compact-view #settingsAccessibilityCard,
+.compact-view #settingsHelpCard,
+.compact-view #settingsDisplayCard {
     -fx-spacing: 4px !important;
 }
 
@@ -2808,6 +3091,14 @@
     -fx-max-width: 130px !important;
 }
 
+.compact-view .sidebar-sim-clock {
+    -fx-padding: 10 10 8 10;
+}
+
+.compact-view .sidebar-sim-clock-time {
+    -fx-font-size: 21px;
+}
+
 
 .compact-view #sideBarContainer .button {
     -fx-font-size: 12px !important;
@@ -2826,4 +3117,961 @@
 .widget-title {
     -fx-font-size: 1.4em !important;
     -fx-font-weight: bold !important;
+}
+
+/* =========================================================
+   Devices refresh
+   ========================================================= */
+
+#devicesPaneMain {
+    -fx-background-color: transparent;
+}
+
+#devicesPaneMain .screen-title,
+#devicesPaneMain .widget-title {
+    -fx-text-fill: #0f172a;
+}
+
+.devices-summary-card,
+.devices-plan-card,
+.devices-device-card,
+#addDeviceFormRoot,
+#deviceSettingsRoot {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fbff);
+    -fx-border-color: #dbe6f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 14, 0.18, 0, 4);
+}
+
+.devices-summary-card {
+    -fx-padding: 18 20 18 20;
+    -fx-pref-width: 260;
+}
+
+.devices-summary-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.devices-plan-card,
+.devices-device-card,
+#addDeviceFormRoot,
+#deviceSettingsRoot {
+    -fx-padding: 18 20 18 20;
+}
+
+.devices-plan-card {
+    -fx-spacing: 10;
+}
+
+.devices-device-card {
+    -fx-pref-width: 320;
+    -fx-min-height: 170;
+}
+
+.devices-card-eyebrow {
+    -fx-text-fill: #5b6f86;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.6px;
+}
+
+.devices-plan-title,
+.devices-device-title,
+.devices-modal-title {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.devices-plan-action {
+    -fx-text-fill: #122034;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.devices-card-copy {
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+}
+
+.devices-card-meta,
+.devices-settings-helper {
+    -fx-text-fill: #60758d;
+    -fx-font-size: 12px;
+}
+
+.device-status-chip {
+    -fx-padding: 5 10 5 10;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.device-status-on {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #0f172a;
+}
+
+.device-status-scheduled {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #0f172a;
+}
+
+.device-status-skipped {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #0f172a;
+}
+
+.device-status-off {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #0f172a;
+}
+
+.devices-inline-button {
+    -fx-background-color: #eef3fb;
+    -fx-text-fill: #162033;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #d3deea;
+    -fx-border-width: 1;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.devices-inline-button:hover {
+    -fx-background-color: #dbe9f7;
+}
+
+.devices-inline-button-primary {
+    -fx-background-color: linear-gradient(to bottom right, #13243c, #233a5c);
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+}
+
+.devices-inline-button-primary:hover {
+    -fx-background-color: linear-gradient(to bottom right, #183050, #29456d);
+}
+
+.devices-inline-button-selected {
+    -fx-background-color: linear-gradient(to bottom right, #22c55e, #15803d);
+    -fx-border-color: transparent;
+    -fx-text-fill: #f8fafc;
+}
+
+.devices-inline-button-danger {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #991b1b;
+    -fx-border-color: #fecaca;
+}
+
+.devices-inline-button-danger:hover {
+    -fx-background-color: #fecaca;
+}
+
+.devices-form-label {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.devices-form-row {
+    -fx-background-color: rgba(241, 245, 249, 0.95);
+    -fx-border-color: #d8e1eb;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 12 14 12 14;
+}
+
+.devices-time-field {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 14px;
+    -fx-text-fill: #0f172a;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.devices-form-error {
+    -fx-text-fill: #b91c1c;
+    -fx-font-size: 12px;
+}
+
+.devices-empty-copy {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+}
+
+.devices-live-indicators {
+    -fx-padding: 6 8 6 8;
+    -fx-background-color: #162033;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(15, 23, 42, 0.12);
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.18), 10, 0.16, 0, 2);
+}
+
+.devices-live-indicator {
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: transparent;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.devices-live-indicator-good {
+    -fx-background-color: rgba(34, 197, 94, 0.16);
+    -fx-text-fill: #f8fafc;
+}
+
+.devices-live-indicator-neutral {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: #f8fafc;
+}
+
+.devices-price-indicator {
+    -fx-text-fill: #f8fafc;
+}
+
+.devices-disabled-field {
+    -fx-opacity: 0.65;
+    -fx-background-color: #e2e8f0;
+    -fx-border-color: #cbd5e1;
+}
+
+.app-root.dark .devices-summary-card,
+.app-root.dark .devices-plan-card,
+.app-root.dark .devices-device-card,
+.app-root.dark #addDeviceFormRoot,
+.app-root.dark #deviceSettingsRoot {
+    -fx-background-color: #152133;
+    -fx-border-color: #2b4059;
+    -fx-effect: dropshadow(gaussian, rgba(2,8,23,0.42), 18, 0.22, 0, 6);
+}
+
+.app-root.dark #devicesPaneMain .screen-title,
+.app-root.dark #devicesPaneMain .widget-title,
+.app-root.dark .devices-summary-value,
+.app-root.dark .devices-plan-title,
+.app-root.dark .devices-device-title,
+.app-root.dark .devices-modal-title,
+.app-root.dark .devices-plan-action,
+.app-root.dark .devices-form-label,
+.app-root.dark .devices-price-indicator {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .devices-card-eyebrow {
+    -fx-text-fill: #9fb1c7;
+}
+
+.app-root.dark .devices-card-copy,
+.app-root.dark .devices-card-meta,
+.app-root.dark .devices-settings-helper,
+.app-root.dark .devices-empty-copy {
+    -fx-text-fill: #e8eef7;
+}
+
+.app-root.dark .devices-form-row {
+    -fx-background-color: #1b2b41;
+    -fx-border-color: #334c68;
+}
+
+.app-root.dark .devices-time-field {
+    -fx-background-color: #0f1a28;
+    -fx-border-color: #415a77;
+    -fx-text-fill: #f8fafc;
+    -fx-prompt-text-fill: #9fb1c7;
+}
+
+.app-root.dark .devices-inline-button {
+    -fx-background-color: #233449;
+    -fx-border-color: #38516d;
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .devices-inline-button:hover {
+    -fx-background-color: #2c425a;
+}
+
+.app-root.dark .devices-inline-button-primary {
+    -fx-background-color: linear-gradient(to bottom right, #2b4364, #37577f);
+    -fx-border-color: transparent;
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .devices-inline-button-primary:hover {
+    -fx-background-color: linear-gradient(to bottom right, #33517a, #456892);
+}
+
+.app-root.dark .devices-inline-button-selected {
+    -fx-background-color: linear-gradient(to bottom right, #22c55e, #15803d);
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .devices-inline-button-danger {
+    -fx-background-color: #7f1d1d;
+    -fx-border-color: #991b1b;
+    -fx-text-fill: #fee2e2;
+}
+
+.app-root.dark .devices-live-indicator-good {
+    -fx-background-color: rgba(34, 197, 94, 0.20);
+    -fx-text-fill: #d1fae5;
+}
+
+.app-root.dark .devices-live-indicator-neutral {
+    -fx-background-color: #223247;
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .devices-live-indicators {
+    -fx-background-color: #101826;
+    -fx-border-color: #26364d;
+}
+
+.app-root.dark .device-status-on {
+    -fx-background-color: #bbf7d0;
+    -fx-text-fill: #0f172a;
+}
+
+.app-root.dark .device-status-scheduled {
+    -fx-background-color: #bfdbfe;
+    -fx-text-fill: #0f172a;
+}
+
+.app-root.dark .device-status-skipped {
+    -fx-background-color: #fde68a;
+    -fx-text-fill: #0f172a;
+}
+
+.app-root.dark .device-status-off {
+    -fx-background-color: #fecdd3;
+    -fx-text-fill: #0f172a;
+}
+
+.app-root.dark .devices-disabled-field {
+    -fx-background-color: #223247;
+    -fx-border-color: #334c68;
+}
+
+.app-root.high-contrast .devices-summary-card,
+.app-root.high-contrast .devices-plan-card,
+.app-root.high-contrast .devices-device-card,
+.app-root.high-contrast #addDeviceFormRoot,
+.app-root.high-contrast #deviceSettingsRoot,
+.app-root.high-contrast .devices-form-row {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast #devicesPaneMain .screen-title,
+.app-root.high-contrast #devicesPaneMain .widget-title,
+.app-root.high-contrast .devices-summary-value,
+.app-root.high-contrast .devices-plan-title,
+.app-root.high-contrast .devices-device-title,
+.app-root.high-contrast .devices-modal-title,
+.app-root.high-contrast .devices-plan-action,
+.app-root.high-contrast .devices-card-copy,
+.app-root.high-contrast .devices-card-meta,
+.app-root.high-contrast .devices-settings-helper,
+.app-root.high-contrast .devices-form-label,
+.app-root.high-contrast .devices-empty-copy,
+.app-root.high-contrast .devices-price-indicator {
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast .devices-inline-button,
+.app-root.high-contrast .devices-time-field {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast .devices-live-indicator {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    -fx-text-fill: #ffffff;
+}
+
+/* Welcome / setup */
+#setupModalRoot {
+    -fx-background-color: linear-gradient(to bottom right, #e0f2fe, #eff6ff 38%, #ecfccb 100%);
+}
+
+.setup-modal-card {
+    -fx-background-color: rgba(255, 255, 255, 0.94);
+    -fx-background-radius: 24;
+    -fx-border-color: rgba(148, 163, 184, 0.35);
+    -fx-border-radius: 24;
+    -fx-padding: 28 30 24 30;
+    -fx-spacing: 16;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.14), 28, 0.18, 0, 12);
+}
+
+.setup-brand-badge {
+    -fx-alignment: center;
+    -fx-background-color: linear-gradient(to bottom right, #2563eb, #0f766e);
+    -fx-background-radius: 999;
+    -fx-padding: 8 14;
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.setup-brand-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.setup-brand-tagline {
+    -fx-font-size: 12px;
+    -fx-text-fill: #475569;
+}
+
+.setup-modal-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.setup-modal-copy,
+.setup-modal-helper {
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+}
+
+.setup-field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+#setupModalRoot .text-field {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 14;
+    -fx-padding: 10 12;
+}
+
+#setupModalRoot .button {
+    -fx-background-color: linear-gradient(to bottom right, #2563eb, #0f766e);
+    -fx-background-radius: 14;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 18;
+}
+
+#setupModalRoot .button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #1d4ed8, #0f766e);
+}
+
+.setup-modal-error {
+    -fx-background-color: #fef2f2;
+    -fx-background-radius: 12;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 12;
+    -fx-padding: 10 12;
+    -fx-text-fill: #b91c1c;
+}
+
+.app-root.dark #setupModalRoot {
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #111827 48%, #14532d 100%);
+}
+
+.app-root.dark .setup-modal-card {
+    -fx-background-color: rgba(15, 23, 42, 0.95);
+    -fx-border-color: #334155;
+}
+
+.app-root.dark .setup-brand-name,
+.app-root.dark .setup-modal-title,
+.app-root.dark .setup-field-label {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .setup-brand-tagline,
+.app-root.dark .setup-modal-copy,
+.app-root.dark .setup-modal-helper {
+    -fx-text-fill: #cbd5e1;
+}
+
+.app-root.dark #setupModalRoot .text-field {
+    -fx-background-color: #111827;
+    -fx-border-color: #475569;
+    -fx-text-fill: #f8fafc;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.app-root.dark .setup-modal-error {
+    -fx-background-color: #3f1d1d;
+    -fx-border-color: #7f1d1d;
+    -fx-text-fill: #fecaca;
+}
+
+.app-root.high-contrast #setupModalRoot,
+.app-root.high-contrast .setup-modal-card {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .setup-brand-badge,
+.app-root.high-contrast #setupModalRoot .button {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast .setup-brand-name,
+.app-root.high-contrast .setup-brand-tagline,
+.app-root.high-contrast .setup-modal-title,
+.app-root.high-contrast .setup-modal-copy,
+.app-root.high-contrast .setup-modal-helper,
+.app-root.high-contrast .setup-field-label,
+.app-root.high-contrast .setup-modal-error {
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast #setupModalRoot .text-field,
+.app-root.high-contrast .setup-modal-error {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+/* Settings refresh */
+#settingsMainVBox {
+    -fx-background-color: transparent;
+}
+
+.settings-hero-card,
+.settings-card,
+.settings-faq-card,
+.settings-modal-root {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fbff);
+    -fx-border-color: #dbe6f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 22;
+    -fx-background-radius: 22;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 14, 0.18, 0, 4);
+}
+
+.settings-hero-card {
+    -fx-padding: 22 24 22 24;
+}
+
+.settings-hero-badge {
+    -fx-min-width: 62;
+    -fx-min-height: 62;
+    -fx-background-color: linear-gradient(to bottom right, #2563eb, #0f766e);
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-alignment: center;
+}
+
+.settings-hero-badge .label {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.settings-hero-copy,
+.settings-card-copy,
+.settings-faq-answer,
+.settings-modal-copy {
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+}
+
+.settings-card {
+    -fx-padding: 20 22 20 22;
+    -fx-spacing: 14;
+}
+
+.settings-card-title,
+.settings-modal-title,
+.settings-faq-question {
+    -fx-text-fill: #0f172a;
+    -fx-font-weight: bold;
+}
+
+.settings-card-title {
+    -fx-font-size: 20px;
+}
+
+.settings-profile-name {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.settings-field-label {
+    -fx-text-fill: #334155;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.settings-form-group {
+    -fx-padding: 12 14 12 14;
+    -fx-background-color: rgba(241, 245, 249, 0.92);
+    -fx-border-color: #dbe6f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+}
+
+#settingsMainVBox .text-field,
+.settings-report-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 10 12 10 12;
+}
+
+.settings-report-area .content {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+}
+
+.settings-action-button {
+    -fx-background-color: linear-gradient(to bottom right, #13243c, #233a5c);
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 10 16 10 16;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.settings-action-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #183050, #29456d);
+}
+
+.settings-action-button-secondary {
+    -fx-background-color: #eef3fb;
+    -fx-border-color: #d3deea;
+    -fx-border-width: 1;
+    -fx-text-fill: #13243c;
+}
+
+.settings-action-button-secondary:hover {
+    -fx-background-color: #dbe9f7;
+}
+
+.settings-status-label {
+    -fx-font-size: 12px;
+}
+
+.settings-status-success {
+    -fx-text-fill: #166534;
+}
+
+.settings-status-error {
+    -fx-text-fill: #b91c1c;
+}
+
+.settings-modal-root {
+    -fx-padding: 22 24 22 24;
+    -fx-spacing: 14;
+}
+
+.settings-modal-title {
+    -fx-font-size: 24px;
+}
+
+.settings-faq-card {
+    -fx-padding: 16 18 16 18;
+    -fx-spacing: 6;
+}
+
+.settings-faq-question {
+    -fx-font-size: 15px;
+}
+
+/* Sidebar refresh */
+.sidebar-brand-copy {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 11px;
+}
+
+.sidebar-footer-row {
+    -fx-alignment: center-left;
+}
+
+.sidebar-theme-toggle {
+    -fx-background-color: #eef3fb;
+    -fx-border-color: #d3deea;
+    -fx-border-width: 1;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #13243c;
+    -fx-cursor: hand;
+}
+
+.sidebar-theme-toggle:selected {
+    -fx-background-color: linear-gradient(to bottom right, #13243c, #233a5c);
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+}
+
+.sidebar-theme-toggle:selected .text {
+    -fx-fill: white;
+}
+
+.app-root.dark .settings-hero-card,
+.app-root.dark .settings-card,
+.app-root.dark .settings-faq-card,
+.app-root.dark .settings-modal-root {
+    -fx-background-color: #152133;
+    -fx-border-color: #2b4059;
+    -fx-effect: dropshadow(gaussian, rgba(2,8,23,0.42), 18, 0.22, 0, 6);
+}
+
+.app-root.dark .settings-card-title,
+.app-root.dark .settings-profile-name,
+.app-root.dark .settings-modal-title,
+.app-root.dark .settings-faq-question,
+.app-root.dark .settings-field-label,
+.app-root.dark .settings-hero-copy,
+.app-root.dark .settings-card-copy,
+.app-root.dark .settings-faq-answer,
+.app-root.dark .settings-modal-copy,
+.app-root.dark .sidebar-brand-copy {
+    -fx-text-fill: #e8eef7;
+}
+
+.app-root.dark .settings-hero-badge {
+    -fx-background-color: linear-gradient(to bottom right, #2563eb, #0f766e);
+}
+
+.app-root.dark .settings-form-group {
+    -fx-background-color: #1b2b41;
+    -fx-border-color: #334c68;
+}
+
+.app-root.dark #settingsMainVBox .text-field,
+.app-root.dark .settings-report-area,
+.app-root.dark .settings-report-area .content {
+    -fx-background-color: #0f1a28;
+    -fx-border-color: #415a77;
+    -fx-text-fill: #f8fafc;
+    -fx-prompt-text-fill: #9fb1c7;
+}
+
+.app-root.dark .settings-action-button-secondary,
+.app-root.dark .sidebar-theme-toggle {
+    -fx-background-color: #233449;
+    -fx-border-color: #38516d;
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .settings-action-button-secondary:hover,
+.app-root.dark .sidebar-theme-toggle:hover {
+    -fx-background-color: #2c425a;
+}
+
+.app-root.dark .sidebar-theme-toggle:selected {
+    -fx-background-color: linear-gradient(to bottom right, #22c55e, #15803d);
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.high-contrast .settings-hero-card,
+.app-root.high-contrast .settings-card,
+.app-root.high-contrast .settings-faq-card,
+.app-root.high-contrast .settings-modal-root,
+.app-root.high-contrast .settings-form-group {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .settings-card-title,
+.app-root.high-contrast .settings-profile-name,
+.app-root.high-contrast .settings-modal-title,
+.app-root.high-contrast .settings-faq-question,
+.app-root.high-contrast .settings-field-label,
+.app-root.high-contrast .settings-hero-copy,
+.app-root.high-contrast .settings-card-copy,
+.app-root.high-contrast .settings-faq-answer,
+.app-root.high-contrast .settings-modal-copy,
+.app-root.high-contrast .settings-status-label,
+.app-root.high-contrast .sidebar-brand-copy {
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast #settingsMainVBox .text-field,
+.app-root.high-contrast .settings-report-area,
+.app-root.high-contrast .settings-report-area .content,
+.app-root.high-contrast .settings-action-button,
+.app-root.high-contrast .settings-action-button-secondary,
+.app-root.high-contrast .sidebar-theme-toggle {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    -fx-text-fill: #ffffff;
+}
+
+/* Dashboard refresh */
+.dashboard-header-row {
+    -fx-padding: 4 0 2 0;
+}
+
+.dashboard-hero-copy {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+}
+
+.dashboard-overview-card,
+#dashboardDevicesSummaryVBox {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fbff);
+    -fx-border-color: #dbe6f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 18 20 18 20;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 14, 0.18, 0, 4);
+}
+
+.dashboard-insight-copy {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.dashboard-card-muted,
+.dashboard-bullet-label,
+.dashboard-forecast-detail {
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+}
+
+.dashboard-summary-kicker {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.dashboard-metric-tile,
+.dashboard-usage-insight-card {
+    -fx-background-color: rgba(241, 245, 249, 0.92);
+    -fx-border-color: #dbe6f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 12 14 12 14;
+}
+
+.dashboard-metric-value {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.dashboard-forecast-column {
+    -fx-alignment: bottom-center;
+    -fx-padding: 4 0 0 0;
+}
+
+.dashboard-forecast-time {
+    -fx-text-fill: #475569;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.dashboard-forecast-bar-frame {
+    -fx-background-color: rgba(241, 245, 249, 0.88);
+    -fx-border-color: #dbe6f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 8 10 8 10;
+    -fx-min-width: 56;
+    -fx-pref-width: 56;
+}
+
+.dashboard-forecast-bar {
+    -fx-background-color: linear-gradient(to top, #0f766e, #22c55e);
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-min-width: 18;
+    -fx-pref-width: 18;
+}
+
+.app-root.dark .dashboard-overview-card,
+.app-root.dark #dashboardDevicesSummaryVBox {
+    -fx-background-color: #152133;
+    -fx-border-color: #2b4059;
+    -fx-effect: dropshadow(gaussian, rgba(2,8,23,0.42), 18, 0.22, 0, 6);
+}
+
+.app-root.dark .dashboard-hero-copy,
+.app-root.dark .dashboard-card-muted,
+.app-root.dark .dashboard-bullet-label,
+.app-root.dark .dashboard-forecast-detail,
+.app-root.dark .dashboard-summary-kicker,
+.app-root.dark .dashboard-forecast-time {
+    -fx-text-fill: #9fb1c7;
+}
+
+.app-root.dark .dashboard-insight-copy,
+.app-root.dark .dashboard-metric-value {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .dashboard-metric-tile,
+.app-root.dark .dashboard-usage-insight-card,
+.app-root.dark .dashboard-forecast-bar-frame {
+    -fx-background-color: #1b2b41;
+    -fx-border-color: #334c68;
+}
+
+.app-root.dark .dashboard-forecast-bar {
+    -fx-background-color: linear-gradient(to top, #2563eb, #22c55e);
+}
+
+.app-root.high-contrast .dashboard-overview-card,
+.app-root.high-contrast #dashboardDevicesSummaryVBox,
+.app-root.high-contrast .dashboard-metric-tile,
+.app-root.high-contrast .dashboard-usage-insight-card,
+.app-root.high-contrast .dashboard-forecast-bar-frame {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .dashboard-hero-copy,
+.app-root.high-contrast .dashboard-card-muted,
+.app-root.high-contrast .dashboard-bullet-label,
+.app-root.high-contrast .dashboard-forecast-detail,
+.app-root.high-contrast .dashboard-summary-kicker,
+.app-root.high-contrast .dashboard-insight-copy,
+.app-root.high-contrast .dashboard-metric-value,
+.app-root.high-contrast .dashboard-forecast-time {
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast .dashboard-forecast-bar {
+    -fx-background-color: #ffffff;
 }
