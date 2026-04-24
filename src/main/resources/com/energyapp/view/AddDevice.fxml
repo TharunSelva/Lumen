@@ -6,33 +6,42 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="addDeviceFormRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      alignment="TOP_LEFT" spacing="14.0"
+<VBox id="addDeviceFormRoot" alignment="TOP_LEFT" prefWidth="430.0" spacing="16.0"
+      stylesheets="@../../css/app.css"
       xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.energyapp.controller.AddDeviceController">
    <padding>
-      <Insets top="18.0" right="18.0" bottom="18.0" left="18.0" />
+      <Insets top="22.0" right="22.0" bottom="22.0" left="22.0" />
    </padding>
    <children>
-      <Label id="addDeviceFormTitle" text="Add Device" />
-      <HBox id="addDeviceNameRow" alignment="CENTER_LEFT" spacing="10.0">
+      <VBox spacing="6.0">
          <children>
-            <Label id="addDeviceNameLabel" prefWidth="110.0" text="Device Name:" />
-            <TextField fx:id="deviceName" id="addDeviceNameField" prefWidth="220.0" />
+            <Label id="addDeviceFormTitle" styleClass="devices-modal-title" text="Add a device" />
+            <Label styleClass="devices-card-copy" text="New devices are saved straight to your Lumen data store so they stay after restart." wrapText="true" />
          </children>
-      </HBox>
-      <HBox id="addDeviceTypeRow" alignment="CENTER_LEFT" spacing="10.0">
+      </VBox>
+      <VBox spacing="8.0" styleClass="devices-form-row">
          <children>
-            <Label id="addDeviceTypeLabel" prefWidth="110.0" text="Device Type:" />
+            <Label id="addDeviceNameLabel" styleClass="devices-form-label" text="Device name" />
+            <TextField fx:id="deviceName" id="addDeviceNameField" promptText="Kitchen dishwasher" />
+         </children>
+      </VBox>
+      <VBox spacing="8.0" styleClass="devices-form-row">
+         <children>
+            <Label id="addDeviceTypeLabel" styleClass="devices-form-label" text="Device type" />
             <ComboBox fx:id="selectDeviceType" id="addDeviceTypeCombo" prefWidth="220.0" />
+            <Label styleClass="devices-card-meta" text="Schedulable devices get sensible default run times that you can change later." wrapText="true" />
          </children>
-      </HBox>
-      <HBox id="addDeviceButtonRow" alignment="CENTER_LEFT" spacing="10.0">
+      </VBox>
+      <Label fx:id="errorLabel" styleClass="devices-form-error" text="" wrapText="true" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Button fx:id="addButton" id="addDeviceConfirmButton" mnemonicParsing="false" text="Add" />
-            <Button fx:id="cancelButton" id="addDeviceCancelButton" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="addButton" id="addDeviceConfirmButton" mnemonicParsing="false" styleClass="devices-inline-button devices-inline-button-primary" text="Add device" />
+            <Button fx:id="cancelButton" id="addDeviceCancelButton" mnemonicParsing="false" styleClass="devices-inline-button" text="Cancel" />
+            <Region HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

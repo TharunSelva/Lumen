@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="deviceSettingsRoot" id="deviceSettingsRoot" alignment="TOP_LEFT" prefWidth="560.0" spacing="18.0"
+      stylesheets="@../../css/app.css"
+      xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.energyapp.controller.DeviceSettingsController">
+   <padding>
+      <Insets top="22.0" right="22.0" bottom="22.0" left="22.0" />
+   </padding>
+   <children>
+      <VBox spacing="6.0">
+         <children>
+            <Label fx:id="titleLabel" styleClass="devices-modal-title" text="Device name" />
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label fx:id="subtitleLabel" styleClass="devices-card-eyebrow" text="Device type" />
+                  <Label fx:id="statusChipLabel" styleClass="device-status-chip device-status-idle" text="Idle" />
+               </children>
+            </HBox>
+            <Label fx:id="currentStateLabel" styleClass="devices-card-copy" text="Current state" wrapText="true" />
+         </children>
+      </VBox>
+
+      <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="devices-form-row">
+         <children>
+            <Label prefWidth="145.0" styleClass="devices-form-label" text="Power" />
+            <ToggleButton fx:id="powerToggle" mnemonicParsing="false" prefWidth="90.0" text="Off" />
+         </children>
+      </HBox>
+
+      <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="devices-form-row">
+         <children>
+            <Label prefWidth="145.0" styleClass="devices-form-label" text="Green energy only" />
+            <CheckBox fx:id="greenEnergyToggle" mnemonicParsing="false" text="Prefer cleaner windows" />
+         </children>
+      </HBox>
+
+      <VBox fx:id="scheduleRow" spacing="10.0" styleClass="devices-form-row">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <Label prefWidth="145.0" styleClass="devices-form-label" text="Scheduled time" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <CheckBox fx:id="scheduleEnabledToggle" mnemonicParsing="false" text="Enable schedule" />
+               </children>
+            </HBox>
+            <VBox spacing="8.0">
+               <children>
+                  <TextField fx:id="scheduleTimeField" maxWidth="180.0" prefWidth="180.0" promptText="HH:mm" styleClass="devices-time-field" />
+                  <Label fx:id="scheduleHelperLabel" styleClass="devices-card-meta devices-settings-helper" text="Use HH:mm format to reschedule the next automatic run." wrapText="true" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+
+      <HBox fx:id="smartPlugRow" alignment="CENTER_LEFT" spacing="12.0" styleClass="devices-form-row">
+         <children>
+            <Label prefWidth="145.0" styleClass="devices-form-label" text="Price cut-off" />
+            <TextField fx:id="priceCutoffField" prefWidth="120.0" promptText="18.5" />
+            <Label styleClass="devices-card-meta" text="p/kWh" />
+         </children>
+      </HBox>
+
+      <Label fx:id="errorLabel" styleClass="devices-form-error" text="" wrapText="true" />
+
+      <HBox alignment="CENTER_LEFT" spacing="10.0">
+         <children>
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSave" styleClass="devices-inline-button devices-inline-button-primary" text="Save" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" styleClass="devices-inline-button" text="Cancel" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" styleClass="devices-inline-button devices-inline-button-danger" text="Delete device" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

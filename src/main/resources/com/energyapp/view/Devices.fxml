@@ -1,36 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="devicesPlane" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.energyapp.controller.DevicesController">
     <center>
-        <VBox fx:id="devicesPaneMain" alignment="TOP_CENTER" spacing="20" id="devicesPaneMain">
-            <children>
-                <Label fx:id="devicesTitle" text="Your Home Devices..." styleClass="screen-title" />
+        <ScrollPane fitToWidth="true" id="devicesScrollPane" pannable="true">
+            <content>
+                <VBox fx:id="devicesPaneMain" alignment="TOP_LEFT" id="devicesPaneMain" spacing="20.0">
+                    <padding>
+                        <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <VBox spacing="4.0">
+                                    <children>
+                                        <Label fx:id="devicesTitle" styleClass="screen-title" text="Devices" />
+                                        <Label fx:id="deviceCountLabel" styleClass="devices-card-meta" text="0 devices" />
+                                    </children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="devices-live-indicators">
+                                    <children>
+                                        <Label fx:id="currentPriceLabel" styleClass="devices-live-indicator devices-live-indicator-neutral devices-price-indicator" text="--.- p/kWh" />
+                                        <Label fx:id="greenEnergyNowLabel" styleClass="devices-live-indicator devices-live-indicator-neutral" text="Standard grid" />
+                                    </children>
+                                </HBox>
+                                <Button fx:id="btnForAdd" mnemonicParsing="false" styleClass="devices-inline-button devices-inline-button-primary" text="Add device" />
+                            </children>
+                        </HBox>
 
-                <ScrollPane fx:id="devicesScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" id="devicesScrollPane">
-               <content>
-                  <FlowPane fx:id="deviceContainer" prefHeight="200.0" prefWidth="200.0" />
-               </content>
-                </ScrollPane>
-            <HBox alignment="BOTTOM_RIGHT" spacing="5.0">
-               <children>
-                  <Label text="Off=" />
-                  <Circle fill="RED" layoutX="305.0" layoutY="29.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Label text="On=" />
-                  <Circle fill="#00ab2b" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Button fx:id="btnForAdd" alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Add +" />
-               </children>
-            </HBox>
-            </children>
-        </VBox>
+                        <HBox alignment="CENTER_LEFT" spacing="16.0">
+                            <children>
+                                <VBox styleClass="devices-summary-card" spacing="6.0">
+                                    <children>
+                                        <Label styleClass="devices-card-eyebrow" text="Live now" />
+                                        <Label fx:id="devicesOnSummaryLabel" styleClass="devices-summary-value" text="0 on right now" />
+                                    </children>
+                                </VBox>
+                                <VBox styleClass="devices-summary-card" spacing="6.0">
+                                    <children>
+                                        <Label styleClass="devices-card-eyebrow" text="Scheduled today" />
+                                        <Label fx:id="scheduledTodaySummaryLabel" styleClass="devices-summary-value" text="0 scheduled" />
+                                    </children>
+                                </VBox>
+                                <VBox styleClass="devices-summary-card" spacing="6.0">
+                                    <children>
+                                        <Label styleClass="devices-card-eyebrow" text="Next run" />
+                                        <Label fx:id="nextRunSummaryLabel" styleClass="devices-summary-value" text="Nothing planned yet" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="12.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                    <children>
+                                        <Label styleClass="widget-title" text="Plan cards" />
+                                        <Label styleClass="devices-card-meta" text="Use the next 24-hour forecast to act quickly." />
+                                    </children>
+                                </HBox>
+                                <VBox fx:id="planCardsContainer" spacing="14.0" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="12.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                    <children>
+                                        <Label styleClass="widget-title" text="Your devices" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <TextField fx:id="searchField" promptText="Search devices" prefWidth="220.0" />
+                                        <ComboBox fx:id="statusFilter" prefWidth="140.0" />
+                                    </children>
+                                </HBox>
+                                <Label fx:id="emptyStateLabel" managed="false" styleClass="devices-empty-copy" text="No devices match that filter yet." visible="false" wrapText="true" />
+                                <FlowPane fx:id="deviceContainer" hgap="18.0" prefWrapLength="1080.0" vgap="18.0" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
     </center>
 </BorderPane>
