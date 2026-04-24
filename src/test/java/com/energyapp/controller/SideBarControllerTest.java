@@ -95,4 +95,13 @@ class SideBarControllerTest {
         assertEquals(ViewType.SETTINGS, controller.resolveSearchTarget("faq help"));
         assertEquals(ViewType.SETTINGS, controller.resolveSearchTarget("report bug"));
     }
+
+    @Test
+    void searchSuggestionsIncludeHelpfulMatchesWhileTyping() {
+        SideBarController controller = new SideBarController();
+
+        assertTrue(controller.suggestionTitlesFor("fore").contains("Forecasts"));
+        assertTrue(controller.suggestionTitlesFor("bug").contains("Report a Bug"));
+        assertTrue(controller.suggestionTitlesFor("dark").contains("Dark mode"));
+    }
 }

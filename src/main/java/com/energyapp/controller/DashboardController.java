@@ -2,7 +2,6 @@ package com.energyapp.controller;
 
 import com.energyapp.db.CanonicalDeviceMapper;
 import com.energyapp.db.DeviceRepository;
-import com.energyapp.db.ForecastWindowRecord;
 import com.energyapp.db.HomeEnergyAssetsRepository;
 import com.energyapp.db.HomeProfileRepository;
 import com.energyapp.model.Device;
@@ -21,7 +20,9 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -37,7 +38,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -58,7 +58,6 @@ import java.util.Locale;
 public class DashboardController {
 
     private static final int HOME_VISIBLE_RECOMMENDATIONS = 3;
-    private static final int HOME_FORECAST_WINDOWS = 6;
     private static final String HOME_ID = "HOME_1";
     private static final DateTimeFormatter DEVICE_TIME_FMT = DateTimeFormatter.ofPattern("EEE HH:mm");
 
@@ -94,7 +93,6 @@ public class DashboardController {
     @FXML private VBox dashboardQuickForecastVBox;
     @FXML private Label dashboardForecastHeadlineLabel;
     @FXML private Label dashboardForecastStatusLabel;
-    @FXML private HBox dashboardQuickForecastBarHBox;
     @FXML private VBox dashboardForecastHighlightsVBox;
     @FXML private VBox dashboardDevicesSummaryVBox;
     @FXML private Label dashboardDevicesTitleLabel;
@@ -169,6 +167,7 @@ public class DashboardController {
         dashboardScrollPane.setContent(zoomWrapper);
         configureZoomControls();
         configureDashboardClipping();
+        configureCardNavigation();
 
         reloadWeeklyBudgetFromRepository();
         refreshWeeklyBudgetDisplay();
@@ -355,15 +354,45 @@ public class DashboardController {
         }
     }
 
+    private void openRecommendations() {
+        if (mainController != null) {
+            mainController.handleShowRecommendations();
+        }
+    }
+
+    private void openForecasting() {
+        if (mainController != null) {
+            mainController.handleShowForecasting();
+        }
+    }
+
+    private void openDevices() {
+        if (mainController != null) {
+            mainController.handleShowDevices();
+        }
+    }
+
+    private void openEcoStatistics() {
+        if (mainController != null) {
+            mainController.handleShowEcoStatistics();
+        }
+    }
+
     private void configureZoomControls() {
-        zoomComboBox.getItems().addAll("100%", "125%", "150%", "175%");
+        zoomComboBox.getItems().addAll("90%", "100%", "110%", "125%", "150%");
         zoomComboBox.setValue("100%");
         zoomComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
+                double preservedV = dashboardScrollPane == null ? 0.0 : dashboardScrollPane.getVvalue();
+                double preservedH = dashboardScrollPane == null ? 0.0 : dashboardScrollPane.getHvalue();
                 double newZoomLevel = Double.parseDouble(newVal.replace("%", "")) / 100;
                 dashboardContentVBox.setScaleX(newZoomLevel);
                 dashboardContentVBox.setScaleY(newZoomLevel);
                 dashboardScrollPane.requestLayout();
+                Platform.runLater(() -> {
+                    dashboardScrollPane.setVvalue(preservedV);
+                    dashboardScrollPane.setHvalue(preservedH);
+                });
             }
         });
 
@@ -380,6 +409,40 @@ public class DashboardController {
             clip.heightProperty().bind(dashboardQuickRecommendationsViewport.heightProperty());
             dashboardQuickRecommendationsViewport.setClip(clip);
         }
+    }
+
+    private void configureCardNavigation() {
+        wireCardNavigation(dashboard00VBox, this::openEnergyStatistics);
+        wireCardNavigation(dashboard10VBox, this::openRecommendations);
+        wireCardNavigation(dashboardEcoImpactVBox, this::openEcoStatistics);
+        wireCardNavigation(dashboardQuickForecastVBox, this::openForecasting);
+        wireCardNavigation(dashboardDevicesSummaryVBox, this::openDevices);
+        wireCardNavigation(dashboardWeeklyBudgetVBox, this::openEnergyStatistics);
+    }
+
+    private void wireCardNavigation(Node cardNode, Runnable action) {
+        if (cardNode == null || action == null) {
+            return;
+        }
+
+        cardNode.setCursor(Cursor.HAND);
+        cardNode.setOnMouseClicked(event -> {
+            if (shouldIgnoreCardClick(event.getTarget())) {
+                return;
+            }
+            action.run();
+        });
+    }
+
+    private boolean shouldIgnoreCardClick(Object eventTarget) {
+        Node current = eventTarget instanceof Node node ? node : null;
+        while (current != null) {
+            if (current instanceof Button || current instanceof ComboBox<?> || current instanceof TextField) {
+                return true;
+            }
+            current = current.getParent();
+        }
+        return false;
     }
 
     private void initUsageMiniChart() {
@@ -496,7 +559,7 @@ public class DashboardController {
         if (dashboardUsageHelperLabel != null) {
             dashboardUsageHelperLabel.setText(usageSnapshot.todayRecordCount() == 0
                     ? "Usage totals will appear once live simulation data starts flowing."
-                    : "Click the graph to open the full statistics page.");
+                    : "Click anywhere on this card to open the full statistics page.");
         }
     }
 
@@ -529,8 +592,8 @@ public class DashboardController {
             dashboardEcoStatusLabel.getStyleClass().setAll("eco-hour-pill", "eco-hour-moderate");
             dashboardEcoStatusLabel.setText("Awaiting live eco signal");
             dashboardEcoIntensityLabel.setText("Grid intensity will appear when live data arrives.");
-            dashboardEcoRecommendationLabel.setText("Eco recommendations adapt to the current grid intensity and solar share.");
-            dashboardEcoSummaryLabel.setText("Today's source mix will appear as usage data builds.");
+            dashboardEcoRecommendationLabel.setText("We will highlight the cleanest moments to run flexible devices once the simulation is live.");
+            dashboardEcoSummaryLabel.setText("Today's clean share and source mix will appear here as usage data builds.");
             return;
         }
 
@@ -550,7 +613,7 @@ public class DashboardController {
         );
         dashboardEcoSummaryLabel.setText(String.format(
                 Locale.UK,
-                "Clean share now: %.0f%% • Today so far: %d%% solar, %d%% battery, %d%% grid.",
+                "Clean energy is covering %.0f%% of load right now. Today so far: %d%% solar, %d%% battery, %d%% grid.",
                 cleanShareNow,
                 sourceBreakdown.solarPercentDisplay(),
                 sourceBreakdown.batteryPercentDisplay(),
@@ -561,7 +624,6 @@ public class DashboardController {
     private void refreshForecastSummary(EnergyRecord currentRecord) {
         if (dashboardForecastHeadlineLabel == null
                 || dashboardForecastStatusLabel == null
-                || dashboardQuickForecastBarHBox == null
                 || dashboardForecastHighlightsVBox == null) {
             return;
         }
@@ -575,131 +637,54 @@ public class DashboardController {
                     forecastOverviewService.buildTomorrowSummary(overview);
 
             dashboardForecastHeadlineLabel.setText(tomorrowSummary.headline());
-            dashboardForecastStatusLabel.setText("Next forecast windows");
-            renderForecastBars(overview.upcomingWindows());
-            renderSimpleBullets(
+            dashboardForecastStatusLabel.setText(buildForecastStatusLine(overview, tomorrowSummary));
+            renderForecastHighlights(
                     dashboardForecastHighlightsVBox,
                     tomorrowSummary.items(),
                     "Forecast details will appear once cached forecast data is ready."
             );
         } catch (RuntimeException ex) {
             dashboardForecastHeadlineLabel.setText("Forecast data is still loading.");
-            dashboardForecastStatusLabel.setText("We’ll show tomorrow’s best windows once the cache refreshes.");
-            dashboardQuickForecastBarHBox.getChildren().clear();
-            Label fallbackLabel = new Label("No forecast windows available yet.");
-            fallbackLabel.getStyleClass().add("recommendation-empty-state");
-            dashboardQuickForecastBarHBox.getChildren().add(fallbackLabel);
-            dashboardForecastHighlightsVBox.getChildren().clear();
-        }
-    }
-
-    private void renderForecastBars(List<ForecastWindowRecord> upcomingWindows) {
-        if (dashboardQuickForecastBarHBox == null) {
-            return;
-        }
-
-        dashboardQuickForecastBarHBox.getChildren().clear();
-
-        List<ForecastWindowRecord> windows = upcomingWindows == null ? List.of() : upcomingWindows.stream()
-                .filter(window -> window.windowStart() != null)
-                .limit(HOME_FORECAST_WINDOWS)
-                .toList();
-
-        if (windows.isEmpty()) {
-            Label fallbackLabel = new Label("No forecast windows available yet.");
-            fallbackLabel.getStyleClass().add("recommendation-empty-state");
-            dashboardQuickForecastBarHBox.getChildren().add(fallbackLabel);
-            return;
-        }
-
-        double maxSolar = windows.stream()
-                .map(ForecastWindowRecord::solarShortwaveWm2)
-                .filter(value -> value != null)
-                .mapToDouble(Double::doubleValue)
-                .max()
-                .orElse(0.0);
-        double minTariff = windows.stream()
-                .map(ForecastWindowRecord::tariffPPerKwh)
-                .filter(value -> value != null)
-                .mapToDouble(Double::doubleValue)
-                .min()
-                .orElse(0.0);
-        double maxTariff = windows.stream()
-                .map(ForecastWindowRecord::tariffPPerKwh)
-                .filter(value -> value != null)
-                .mapToDouble(Double::doubleValue)
-                .max()
-                .orElse(minTariff);
-
-        for (ForecastWindowRecord window : windows) {
-            dashboardQuickForecastBarHBox.getChildren().add(
-                    createForecastBar(window, maxSolar, minTariff, maxTariff)
+            dashboardForecastStatusLabel.setText("We will show tomorrow's best planning windows once the cache refreshes.");
+            renderForecastHighlights(
+                    dashboardForecastHighlightsVBox,
+                    List.of("No forecast details are available yet."),
+                    "No forecast details are available yet."
             );
         }
     }
 
-    private VBox createForecastBar(
-            ForecastWindowRecord window,
-            double maxSolar,
-            double minTariff,
-            double maxTariff
+    private String buildForecastStatusLine(
+            ForecastOverviewService.ForecastOverviewSnapshot overview,
+            ForecastOverviewService.TomorrowSummarySnapshot tomorrowSummary
     ) {
-        VBox container = new VBox(6);
-        container.getStyleClass().add("dashboard-forecast-column");
-        container.setFillWidth(true);
-        HBox.setHgrow(container, Priority.ALWAYS);
-
-        Label timeLabel = new Label(window.windowStart().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
-        timeLabel.getStyleClass().add("dashboard-forecast-time");
-
-        StackPane barFrame = new StackPane();
-        barFrame.getStyleClass().add("dashboard-forecast-bar-frame");
-        barFrame.setPrefHeight(84);
-
-        Region bar = new Region();
-        bar.getStyleClass().add("dashboard-forecast-bar");
-        double barHeight = computeForecastBarHeight(window, maxSolar, minTariff, maxTariff);
-        bar.setPrefHeight(barHeight);
-        StackPane.setAlignment(bar, javafx.geometry.Pos.BOTTOM_CENTER);
-        barFrame.getChildren().add(bar);
-
-        Label detailLabel = new Label(buildForecastDetail(window));
-        detailLabel.setWrapText(true);
-        detailLabel.getStyleClass().add("dashboard-forecast-detail");
-
-        container.getChildren().addAll(timeLabel, barFrame, detailLabel);
-        VBox.setVgrow(barFrame, Priority.ALWAYS);
-        return container;
+        int tomorrowWindowCount = overview.tomorrowWindows().size();
+        if (tomorrowWindowCount == 0) {
+            return "Tomorrow's forecast cache is still refreshing.";
+        }
+        if (tomorrowSummary.items().isEmpty()) {
+            return "Forecast data is available, but the strongest planning signals are still smoothing out.";
+        }
+        return String.format(
+                Locale.UK,
+                "Using %d forecast windows to highlight the strongest solar, cheapest import, and cleanest grid moments.",
+                tomorrowWindowCount
+        );
     }
 
-    private double computeForecastBarHeight(
-            ForecastWindowRecord window,
-            double maxSolar,
-            double minTariff,
-            double maxTariff
-    ) {
-        double solarScore = 0.0;
-        if (window.solarShortwaveWm2() != null && maxSolar > 0.0) {
-            solarScore = window.solarShortwaveWm2() / maxSolar;
+    private void renderForecastHighlights(VBox container, List<String> items, String fallbackText) {
+        if (container == null) {
+            return;
         }
 
-        double priceScore = 0.4;
-        if (window.tariffPPerKwh() != null && maxTariff > minTariff) {
-            priceScore = 1.0 - ((window.tariffPPerKwh() - minTariff) / (maxTariff - minTariff));
+        container.getChildren().clear();
+        List<String> content = (items == null || items.isEmpty()) ? List.of(fallbackText) : items.stream().limit(3).toList();
+        for (String item : content) {
+            Label label = new Label(item);
+            label.setWrapText(true);
+            label.getStyleClass().add("dashboard-forecast-callout");
+            container.getChildren().add(label);
         }
-
-        double combinedScore = Math.max(solarScore, priceScore * 0.85);
-        return 18 + (Math.max(0.15, Math.min(combinedScore, 1.0)) * 54);
-    }
-
-    private String buildForecastDetail(ForecastWindowRecord window) {
-        if (window.solarShortwaveWm2() != null && window.solarShortwaveWm2() > 0.0) {
-            return String.format(Locale.UK, "%.0f W/m2", window.solarShortwaveWm2());
-        }
-        if (window.tariffPPerKwh() != null) {
-            return String.format(Locale.UK, "%.1fp/kWh", window.tariffPPerKwh());
-        }
-        return "Forecast";
     }
 
     private void refreshDeviceSummary(EnergyRecord currentRecord) {
@@ -749,6 +734,8 @@ public class DashboardController {
             return;
         }
 
+        double preservedScroll = captureDashboardScrollPosition();
+
         List<Recommendation> allRecommendations = feedUpdate.getVisibleRecommendations();
         List<Recommendation> recommendations = allRecommendations.size() <= HOME_VISIBLE_RECOMMENDATIONS
                 ? allRecommendations
@@ -761,11 +748,12 @@ public class DashboardController {
             emptyState.getStyleClass().add("recommendation-empty-state");
             emptyState.setWrapText(true);
             dashboardQuickRecommendationsList.getChildren().add(emptyState);
+            restoreDashboardScrollPosition(preservedScroll);
             return;
         }
 
         if (dashboardQuickRecommendationsList.getChildren().isEmpty() || feedUpdate.insertedCount() != 1) {
-            replaceRecommendationCards(recommendations);
+            replaceRecommendationCards(recommendations, preservedScroll);
             return;
         }
 
@@ -775,24 +763,25 @@ public class DashboardController {
                 .orElse(null);
 
         if (insertedRecommendation == null) {
-            replaceRecommendationCards(recommendations);
+            replaceRecommendationCards(recommendations, preservedScroll);
             return;
         }
 
         if (dashboardQuickRecommendationsList.getChildren().size() < HOME_VISIBLE_RECOMMENDATIONS) {
             Region cardNode = createRecommendationCard(insertedRecommendation);
-            animateNewTopCard(cardNode);
+            animateNewTopCard(cardNode, preservedScroll);
             return;
         }
 
-        animatePushDownTransition(insertedRecommendation, recommendations);
+        animatePushDownTransition(insertedRecommendation, recommendations, preservedScroll);
     }
 
-    private void replaceRecommendationCards(List<Recommendation> recommendations) {
+    private void replaceRecommendationCards(List<Recommendation> recommendations, double preservedScroll) {
         dashboardQuickRecommendationsList.getChildren().clear();
         for (int index = 0; index < recommendations.size(); index++) {
             dashboardQuickRecommendationsList.getChildren().add(createRecommendationCard(recommendations.get(index), index == 0));
         }
+        restoreDashboardScrollPosition(preservedScroll);
     }
 
     private Region createRecommendationCard(Recommendation recommendation) {
@@ -821,7 +810,7 @@ public class DashboardController {
         }
     }
 
-    private void animateNewTopCard(Region cardNode) {
+    private void animateNewTopCard(Region cardNode, double preservedScroll) {
         dashboardQuickRecommendationsList.getChildren().add(0, cardNode);
         cardNode.applyCss();
         cardNode.layout();
@@ -836,10 +825,16 @@ public class DashboardController {
         slide.setFromY(-18);
         slide.setToY(0);
 
-        new ParallelTransition(fade, slide).play();
+        ParallelTransition transition = new ParallelTransition(fade, slide);
+        transition.setOnFinished(event -> restoreDashboardScrollPosition(preservedScroll));
+        transition.play();
     }
 
-    private void animatePushDownTransition(Recommendation insertedRecommendation, List<Recommendation> finalRecommendations) {
+    private void animatePushDownTransition(
+            Recommendation insertedRecommendation,
+            List<Recommendation> finalRecommendations,
+            double preservedScroll
+    ) {
         Region newCard = createRecommendationCard(insertedRecommendation, true);
         dashboardQuickRecommendationsList.getChildren().add(0, newCard);
         dashboardQuickRecommendationsList.applyCss();
@@ -862,9 +857,20 @@ public class DashboardController {
         ParallelTransition transition = new ParallelTransition(fadeBottom, pushDown);
         transition.setOnFinished(event -> {
             dashboardQuickRecommendationsList.setTranslateY(0);
-            replaceRecommendationCards(finalRecommendations);
+            replaceRecommendationCards(finalRecommendations, preservedScroll);
         });
         transition.play();
+    }
+
+    private double captureDashboardScrollPosition() {
+        return dashboardScrollPane == null ? -1.0 : dashboardScrollPane.getVvalue();
+    }
+
+    private void restoreDashboardScrollPosition(double vValue) {
+        if (dashboardScrollPane == null || vValue < 0.0) {
+            return;
+        }
+        Platform.runLater(() -> dashboardScrollPane.setVvalue(vValue));
     }
 
     private List<Recommendation> newestFirst(List<Recommendation> recommendations) {

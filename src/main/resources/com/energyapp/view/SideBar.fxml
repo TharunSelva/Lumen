@@ -27,13 +27,16 @@
         </VBox>
     </HBox>
 
-    <HBox alignment="CENTER_LEFT" spacing="8" id="sidebar-auto-4">
-        <padding>
-            <Insets bottom="8" left="10" right="10" top="8" />
-        </padding>
-        <Label text="&#x1F50E;" id="sidebar-auto-5" />
-        <TextField fx:id="sidebarSearchField" onAction="#handleSidebarSearch" promptText="Search pages and actions" HBox.hgrow="ALWAYS" id="sidebar-auto-6" />
-    </HBox>
+    <VBox spacing="6" styleClass="sidebar-search-shell">
+        <HBox alignment="CENTER_LEFT" spacing="8" id="sidebar-auto-4" styleClass="sidebar-search-row">
+            <padding>
+                <Insets bottom="8" left="10" right="10" top="8" />
+            </padding>
+            <Label text="&#x1F50E;" id="sidebar-auto-5" />
+            <TextField fx:id="sidebarSearchField" onAction="#handleSidebarSearch" promptText="Search pages and actions" HBox.hgrow="ALWAYS" id="sidebar-auto-6" styleClass="sidebar-search-field" />
+        </HBox>
+        <VBox fx:id="sidebarSearchSuggestionsBox" managed="false" spacing="6" styleClass="sidebar-search-suggestions" visible="false" />
+    </VBox>
 
     <VBox spacing="8">
         <Button onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-7">

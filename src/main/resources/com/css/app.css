@@ -1281,6 +1281,15 @@
     -fx-border-width: 2;
 }
 
+.app-root.dark #ecostatistics-auto-9 .label,
+.app-root.dark #ecostatistics-auto-12 .label {
+    -fx-text-fill: #0f172a;
+}
+
+.app-root.dark #carbonSavedLabel {
+    -fx-text-fill: #10b981;
+}
+
 /* Forecasts.fxml */
 #forecasts-auto-1 {
     -fx-background-color: white;
@@ -4074,4 +4083,284 @@
 
 .app-root.high-contrast .dashboard-forecast-bar {
     -fx-background-color: #ffffff;
+}
+
+/* Dashboard polish overrides */
+.dashboard-card-title {
+    -fx-font-size: 19px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0f172a;
+}
+
+.dashboard-overview-card {
+    -fx-spacing: 14;
+}
+
+.dashboard-overview-card:hover,
+#dashboardDevicesSummaryVBox:hover {
+    -fx-border-color: #9fb8d2;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.14), 18, 0.2, 0, 6);
+}
+
+.dashboard-zoom-control {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-color: #dbe6f0;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 8 10 8 12;
+}
+
+.dashboard-zoom-label {
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.dashboard-zoom-combo {
+    -fx-background-color: #f8fbff;
+    -fx-border-color: #d2dce8;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+.dashboard-zoom-combo .list-cell {
+    -fx-text-fill: #0f172a;
+    -fx-font-weight: bold;
+}
+
+.dashboard-usage-hero-card {
+    -fx-background-color: linear-gradient(to bottom right, rgba(230, 240, 252, 0.95), rgba(241, 245, 249, 0.92));
+    -fx-border-color: #cfddea;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 16 18 16 18;
+}
+
+.dashboard-usage-hero-title {
+    -fx-font-size: 20px;
+}
+
+.dashboard-usage-hero-copy {
+    -fx-font-size: 14px;
+}
+
+.dashboard-eco-panel {
+    -fx-background-color: linear-gradient(to bottom right, rgba(237, 250, 243, 0.96), rgba(241, 245, 249, 0.86));
+    -fx-border-color: #cde7d6;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 16 18 16 18;
+}
+
+.dashboard-eco-intensity {
+    -fx-font-size: 15px;
+}
+
+.dashboard-eco-recommendation {
+    -fx-font-size: 20px;
+}
+
+.dashboard-eco-summary {
+    -fx-font-size: 14px;
+}
+
+.dashboard-forecast-headline {
+    -fx-font-size: 23px;
+    -fx-line-spacing: 2px;
+}
+
+.dashboard-forecast-support {
+    -fx-font-size: 15px;
+}
+
+.dashboard-forecast-callout {
+    -fx-background-color: rgba(241, 245, 249, 0.92);
+    -fx-border-color: #dbe6f0;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 14 16 14 16;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #17324d;
+}
+
+.dashboard-bullet-label {
+    -fx-font-size: 14px;
+}
+
+.dashboard-metric-tile {
+    -fx-padding: 14 16 14 16;
+}
+
+.app-root.dark .dashboard-card-title {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .dashboard-overview-card:hover,
+.app-root.dark #dashboardDevicesSummaryVBox:hover {
+    -fx-border-color: #4d6b8d;
+}
+
+.app-root.dark .dashboard-zoom-control {
+    -fx-background-color: #1b2b41;
+    -fx-border-color: #334c68;
+}
+
+.app-root.dark .dashboard-zoom-label {
+    -fx-text-fill: #c7d5e5;
+}
+
+.app-root.dark .dashboard-zoom-combo {
+    -fx-background-color: #0f1a28;
+    -fx-border-color: #415a77;
+}
+
+.app-root.dark .dashboard-zoom-combo .list-cell {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .dashboard-usage-hero-card,
+.app-root.dark .dashboard-eco-panel,
+.app-root.dark .dashboard-forecast-callout {
+    -fx-background-color: #1b2b41;
+    -fx-border-color: #334c68;
+}
+
+.app-root.dark .dashboard-forecast-callout {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.high-contrast .dashboard-card-title,
+.app-root.high-contrast .dashboard-zoom-label,
+.app-root.high-contrast .dashboard-forecast-callout {
+    -fx-text-fill: #ffffff;
+}
+
+.app-root.high-contrast .dashboard-zoom-control,
+.app-root.high-contrast .dashboard-zoom-combo,
+.app-root.high-contrast .dashboard-usage-hero-card,
+.app-root.high-contrast .dashboard-eco-panel,
+.app-root.high-contrast .dashboard-forecast-callout {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+/* Recommendations dark-mode visibility */
+.app-root.dark #recommendations-auto-11,
+.app-root.dark #recommendations-auto-12 {
+    -fx-background-color: #223247;
+    -fx-border-color: #355171;
+}
+
+.app-root.dark .recommendation-card-title,
+.app-root.dark .recommendation-card-body,
+.app-root.dark .recommendation-card-timestamp,
+.app-root.dark .recommendation-empty-state {
+    -fx-text-fill: #f8fafc;
+}
+
+/* Sidebar search polish */
+.sidebar-search-shell {
+    -fx-spacing: 6;
+}
+
+.sidebar-search-row {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-border-color: #dbe6f0;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+}
+
+.sidebar-search-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-prompt-text-fill: #8aa0b7;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 13px;
+}
+
+.sidebar-search-suggestions {
+    -fx-background-color: rgba(255, 255, 255, 0.98);
+    -fx-border-color: #dbe6f0;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 8;
+}
+
+.sidebar-search-suggestion {
+    -fx-alignment: center-left;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 10 12 10 12;
+    -fx-cursor: hand;
+}
+
+.sidebar-search-suggestion:hover {
+    -fx-background-color: #eef3fb;
+}
+
+.sidebar-search-suggestion-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #13243c;
+}
+
+.sidebar-search-suggestion-copy {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+}
+
+.app-root.dark .sidebar-search-row,
+.app-root.dark .sidebar-search-suggestions {
+    -fx-background-color: #152133;
+    -fx-border-color: #2b4059;
+}
+
+.app-root.dark .sidebar-search-field {
+    -fx-text-fill: #f8fafc;
+    -fx-prompt-text-fill: #9fb1c7;
+}
+
+.app-root.dark .sidebar-search-suggestion:hover {
+    -fx-background-color: #1f3148;
+}
+
+.app-root.dark .sidebar-search-suggestion-title {
+    -fx-text-fill: #f8fafc;
+}
+
+.app-root.dark .sidebar-search-suggestion-copy {
+    -fx-text-fill: #9fb1c7;
+}
+
+.app-root.high-contrast .sidebar-search-row,
+.app-root.high-contrast .sidebar-search-suggestions,
+.app-root.high-contrast .sidebar-search-suggestion {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+}
+
+.app-root.high-contrast .sidebar-search-suggestion-title,
+.app-root.high-contrast .sidebar-search-suggestion-copy,
+.app-root.high-contrast .sidebar-search-field {
+    -fx-text-fill: #ffffff;
+}
+
+/* Devices add button polish */
+.devices-hero-button {
+    -fx-padding: 10 18 10 18;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.18), 10, 0.18, 0, 2);
+}
+
+.app-root.dark .devices-hero-button {
+    -fx-effect: dropshadow(gaussian, rgba(2,8,23,0.42), 12, 0.2, 0, 3);
 }

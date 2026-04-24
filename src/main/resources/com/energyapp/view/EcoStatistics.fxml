@@ -4,8 +4,6 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -34,13 +32,6 @@
                                 <Label id="ecostatistics-auto-5" text="Today - Updated 1 hr ago" />
                             </VBox>
 
-                            <ComboBox prefWidth="90" promptText="Day" />
-
-                            <Button id="ecostatistics-auto-6" mnemonicParsing="false">
-                                <graphic>
-                                    <Label id="ecostatistics-auto-7" text="Settings" />
-                                </graphic>
-                            </Button>
                         </HBox>
 
                         <GridPane hgap="16" maxHeight="160" maxWidth="Infinity" prefHeight="160" vgap="0">

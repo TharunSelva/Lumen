@@ -36,7 +36,7 @@
                                         <Label fx:id="greenEnergyNowLabel" styleClass="devices-live-indicator devices-live-indicator-neutral" text="Standard grid" />
                                     </children>
                                 </HBox>
-                                <Button fx:id="btnForAdd" mnemonicParsing="false" styleClass="devices-inline-button devices-inline-button-primary" text="Add device" />
+                                <Button fx:id="btnForAdd" mnemonicParsing="false" styleClass="devices-inline-button devices-inline-button-primary devices-hero-button" text="+ Add device" />
                             </children>
                         </HBox>
 

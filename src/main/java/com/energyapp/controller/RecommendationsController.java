@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,8 @@ public class RecommendationsController {
 
     private static final int PAGE_VISIBLE_RECOMMENDATIONS = 5;
 
+    @FXML
+    private ScrollPane recommendationsScrollPane;
     @FXML
     private VBox recommendationsContainer;
     @FXML
@@ -84,6 +87,8 @@ public class RecommendationsController {
                 return;
             }
 
+            double preservedScroll = captureScrollPosition();
+
             renderTopSections(recommendationTopSectionService.build(currentRecord));
 
             RecommendationFeedService.FeedUpdate feedUpdate = recommendationFeedService.updateRecommendations(currentRecord);
@@ -99,11 +104,12 @@ public class RecommendationsController {
                 emptyState.getStyleClass().add("recommendation-empty-state");
                 emptyState.setWrapText(true);
                 recommendationsContainer.getChildren().add(emptyState);
+                restoreScrollPosition(preservedScroll);
                 return;
             }
 
             if (recommendationsContainer.getChildren().isEmpty() || feedUpdate.insertedCount() != 1) {
-                replaceRecommendationCards(activeRecommendations);
+                replaceRecommendationCards(activeRecommendations, preservedScroll);
                 return;
             }
 
@@ -113,17 +119,17 @@ public class RecommendationsController {
                     .orElse(null);
 
             if (insertedRecommendation == null) {
-                replaceRecommendationCards(activeRecommendations);
+                replaceRecommendationCards(activeRecommendations, preservedScroll);
                 return;
             }
 
             if (recommendationsContainer.getChildren().size() < RecommendationFeedService.MAX_VISIBLE_RECOMMENDATIONS) {
                 Region cardNode = createRecommendationCard(insertedRecommendation);
-                animateNewTopCard(cardNode);
+                animateNewTopCard(cardNode, preservedScroll);
                 return;
             }
 
-            animatePushDownTransition(insertedRecommendation, activeRecommendations);
+            animatePushDownTransition(insertedRecommendation, activeRecommendations, preservedScroll);
         });
     }
 
@@ -167,11 +173,12 @@ public class RecommendationsController {
         }
     }
 
-    private void replaceRecommendationCards(List<Recommendation> recommendations) {
+    private void replaceRecommendationCards(List<Recommendation> recommendations, double preservedScroll) {
         recommendationsContainer.getChildren().clear();
         for (int i = 0; i < recommendations.size(); i++) {
             recommendationsContainer.getChildren().add(createRecommendationCard(recommendations.get(i), i == 0));
         }
+        restoreScrollPosition(preservedScroll);
     }
 
     private Region createRecommendationCard(Recommendation recommendation) {
@@ -196,7 +203,7 @@ public class RecommendationsController {
         }
     }
 
-    private void animateNewTopCard(Region cardNode) {
+    private void animateNewTopCard(Region cardNode, double preservedScroll) {
         recommendationsContainer.getChildren().add(0, cardNode);
         cardNode.applyCss();
         cardNode.layout();
@@ -211,10 +218,16 @@ public class RecommendationsController {
         slide.setFromY(-16);
         slide.setToY(0);
 
-        new ParallelTransition(fade, slide).play();
+        ParallelTransition transition = new ParallelTransition(fade, slide);
+        transition.setOnFinished(event -> restoreScrollPosition(preservedScroll));
+        transition.play();
     }
 
-    private void animatePushDownTransition(Recommendation insertedRecommendation, List<Recommendation> finalRecommendations) {
+    private void animatePushDownTransition(
+            Recommendation insertedRecommendation,
+            List<Recommendation> finalRecommendations,
+            double preservedScroll
+    ) {
         Region newCard = createRecommendationCard(insertedRecommendation, true);
         recommendationsContainer.getChildren().add(0, newCard);
         recommendationsContainer.applyCss();
@@ -236,9 +249,20 @@ public class RecommendationsController {
         ParallelTransition transition = new ParallelTransition(fadeBottom, pushDown);
         transition.setOnFinished(event -> {
             recommendationsContainer.setTranslateY(0);
-            replaceRecommendationCards(finalRecommendations);
+            replaceRecommendationCards(finalRecommendations, preservedScroll);
         });
         transition.play();
+    }
+
+    private double captureScrollPosition() {
+        return recommendationsScrollPane == null ? -1.0 : recommendationsScrollPane.getVvalue();
+    }
+
+    private void restoreScrollPosition(double vValue) {
+        if (recommendationsScrollPane == null || vValue < 0.0) {
+            return;
+        }
+        Platform.runLater(() -> recommendationsScrollPane.setVvalue(vValue));
     }
 
     private List<Recommendation> newestFirst(List<Recommendation> recommendations) {
