@@ -1,7 +1,6 @@
 package com.energyapp.controller;
 
 import com.energyapp.db.HomeProfileRepository;
-import com.energyapp.model.Geocode;
 import com.energyapp.model.ViewType;
 import com.energyapp.service.AccessibilityManager;
 import com.energyapp.service.SimulationService;
@@ -23,6 +22,8 @@ import java.util.Objects;
 import static javafx.application.Platform.runLater;
 
 public class MainLayoutController {
+    private static final String HOME_ID = "HOME_1";
+
     @FXML private BorderPane rootLayout;
     @FXML private SideBarController mainSideBarController;
 
@@ -34,6 +35,9 @@ public class MainLayoutController {
     public void initialize() {
         if (mainSideBarController != null) {
             mainSideBarController.setMainController(this);
+            if (simulationService != null) {
+                mainSideBarController.setSimulationService(simulationService);
+            }
         }
 
         AccessibilityManager.isLargeText().addListener((obs, wasLarge, isLarge) -> {
@@ -140,6 +144,9 @@ public class MainLayoutController {
 
     public void setSimService (SimulationService simulationService) {
         this.simulationService = simulationService;
+        if (mainSideBarController != null) {
+            mainSideBarController.setSimulationService(simulationService);
+        }
     }
 
     public void handleShowForecasting() {
@@ -249,8 +256,8 @@ public class MainLayoutController {
     }
 
     private void checkAndShowSetup() {
-        Geocode homeProfileCode = homeProfileRepository.getHomeLocation("HOME_1");
-        if (homeProfileCode == null) {
+        HomeProfileRepository.HomeProfileSnapshot profile = homeProfileRepository.getProfile(HOME_ID);
+        if (profile == null || !profile.isSetupComplete()) {
             Stage setupModalStage = new Stage();
             setupModalStage.initModality(Modality.APPLICATION_MODAL);
 
@@ -262,8 +269,8 @@ public class MainLayoutController {
                 throw new RuntimeException(e);
             }
 
-            setupModalStage.setTitle("Location Setup");
-            Scene setupScene = new Scene(setupModalRoot, 400, 250);
+            setupModalStage.setTitle("Welcome to Lumen");
+            Scene setupScene = new Scene(setupModalRoot, 560, 420);
             ThemeController.applyTheme(setupScene);
             setupModalStage.setScene(setupScene);
 

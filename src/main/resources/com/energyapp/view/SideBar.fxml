@@ -5,76 +5,83 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<!-- LEFT SIDEBAR -->
+<VBox fx:controller="com.energyapp.controller.SideBarController" fx:id="sideBarContainer" prefWidth="230" spacing="18" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" id="sideBarContainer">
+    <padding>
+        <Insets bottom="18" left="16" right="16" top="18" />
+    </padding>
 
-
-    <!-- LEFT SIDEBAR -->
-        <VBox fx:controller="com.energyapp.controller.SideBarController" fx:id="sideBarContainer" prefWidth="230" spacing="18" stylesheets="@../../css/app.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" id="sideBarContainer">
-            <padding>
-                <Insets bottom="18" left="16" right="16" top="18" />
-            </padding>
-
-            <!-- logo row -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <StackPane prefHeight="36" prefWidth="36" id="sidebar-auto-1">
-                    <Label text="Logo"  id="sidebar-auto-2"/>
-                </StackPane>
-                <Label text="Energy Tool"  id="sidebar-auto-3"/>
-            </HBox>
-
-            <!-- search -->
-            <HBox alignment="CENTER_LEFT" spacing="8" id="sidebar-auto-4">
-                <padding>
-                    <Insets bottom="8" left="10" right="10" top="8" />
-                </padding>
-                <Label text="🔎"  id="sidebar-auto-5"/>
-                <TextField promptText="Search for anything" HBox.hgrow="ALWAYS"  id="sidebar-auto-6"/>
-            </HBox>
-
-            <VBox spacing="8">
-                <Button onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-7">
-                    <graphic><Label text="🏠"  id="sidebar-auto-8"/></graphic>
-                    <text>Home</text>
-                </Button>
-
-                <Button onAction="#handleShowStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-9">
-                    <graphic><Label text="📊"  id="sidebar-auto-10"/></graphic>
-                    <text>Statistics</text>
-                </Button>
-
-                <Button onAction="#handleShowDevices" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-11">
-                    <graphic><Label text="📱"  id="sidebar-auto-12"/></graphic>
-                    <text>Devices</text>
-                </Button>
-
-                <Button onAction="#handleShowRecommendations" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-13">
-                    <graphic><Label text="💡"  id="sidebar-auto-14"/></graphic>
-                    <text>Recommendations</text>
-                </Button>
-
-                <Button onAction="#handleShowForecasting" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-15">
-                    <graphic><Label text="📈"  id="sidebar-auto-16"/></graphic>
-                    <text>Forecasts</text>
-                </Button>
-
-                <Button onAction="#handleShowEcoStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-17">
-                    <graphic><Label text="🌿"  id="sidebar-auto-18"/></graphic>
-                    <text>Eco statistics</text>
-                </Button>
-            </VBox>
-
-            <Region VBox.vgrow="ALWAYS" />
-
-            <Separator />
-
-            <Button onAction="#handleShowSettings" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-19">
-                <graphic><Label text="⚙"  id="sidebar-auto-20"/></graphic>
-                <text>Settings</text>
-            </Button>
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <StackPane prefHeight="36" prefWidth="36" id="sidebar-auto-1">
+            <Label text="&#x26A1;" id="sidebar-auto-2" />
+        </StackPane>
+        <VBox spacing="1">
+            <Label text="Lumen" id="sidebar-auto-3" />
+            <Label text="home energy dashboard" styleClass="sidebar-brand-copy" />
         </VBox>
+    </HBox>
 
+    <HBox alignment="CENTER_LEFT" spacing="8" id="sidebar-auto-4">
+        <padding>
+            <Insets bottom="8" left="10" right="10" top="8" />
+        </padding>
+        <Label text="&#x1F50E;" id="sidebar-auto-5" />
+        <TextField fx:id="sidebarSearchField" onAction="#handleSidebarSearch" promptText="Search pages and actions" HBox.hgrow="ALWAYS" id="sidebar-auto-6" />
+    </HBox>
+
+    <VBox spacing="8">
+        <Button onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-7">
+            <graphic><Label text="&#x1F3E0;" id="sidebar-auto-8" /></graphic>
+            <text>Home</text>
+        </Button>
+
+        <Button onAction="#handleShowStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-9">
+            <graphic><Label text="&#x1F4CA;" id="sidebar-auto-10" /></graphic>
+            <text>Statistics</text>
+        </Button>
+
+        <Button onAction="#handleShowEcoStatistics" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-17">
+            <graphic><Label text="&#x1F33F;" id="sidebar-auto-18" /></graphic>
+            <text>Eco stats</text>
+        </Button>
+
+        <Button onAction="#handleShowForecasting" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-15">
+            <graphic><Label text="&#x1F4C8;" id="sidebar-auto-16" /></graphic>
+            <text>Forecasts</text>
+        </Button>
+
+        <Button onAction="#handleShowRecommendations" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-13">
+            <graphic><Label text="&#x1F4A1;" id="sidebar-auto-14" /></graphic>
+            <text>Recommendations</text>
+        </Button>
+
+        <Button onAction="#handleShowDevices" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-11">
+            <graphic><Label text="&#x1F4F1;" id="sidebar-auto-12" /></graphic>
+            <text>Devices</text>
+        </Button>
+    </VBox>
+
+    <Region VBox.vgrow="ALWAYS" />
+
+    <VBox spacing="4" styleClass="sidebar-sim-clock">
+        <Label text="Simulation time" styleClass="sidebar-sim-clock-kicker" />
+        <Label fx:id="simulationTimeLabel" id="sidebar-sim-time" text="--:--" styleClass="sidebar-sim-clock-time" />
+        <Label fx:id="simulationDateLabel" id="sidebar-sim-date" text="Waiting for simulation data" wrapText="true" styleClass="sidebar-sim-clock-date" />
+    </VBox>
+
+    <Separator />
+
+    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="sidebar-footer-row">
+        <Button onAction="#handleShowSettings" maxWidth="1.7976931348623157E308" mnemonicParsing="false" id="sidebar-auto-19" HBox.hgrow="ALWAYS">
+            <graphic><Label text="&#x2699;" id="sidebar-auto-20" /></graphic>
+            <text>Settings</text>
+        </Button>
+        <ToggleButton fx:id="sidebarDarkModeToggle" mnemonicParsing="false" text="Dark" styleClass="sidebar-theme-toggle" />
+    </HBox>
+</VBox>
