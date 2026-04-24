@@ -1,0 +1,38 @@
+package com.energyapp.db;
+
+public record CanonicalDeviceRecord(
+        String deviceId,
+        String homeId,
+        String displayName,
+        String deviceType,
+        String category,
+        String iconKey,
+        Double typicalPowerW,
+        Double typicalCycleKwh,
+        Integer typicalDurationMins,
+        String powerState,
+        String status,
+        Double currentDrawW,
+        boolean greenEnergyOnly,
+        String readyByTime,
+        String scheduleTime,
+        Double priceCutoffPPerKwh,
+        String policy,
+        String nextRunWindowStart,
+        String nextRunWindowEnd,
+        Double nextRunEstCostGbp,
+        Double nextRunEstCo2Kg,
+        Double nextRunSourceSolarPct,
+        Double nextRunSourceGridPct,
+        String activeRunUntil,
+        String runMode,
+        String lastRunStartedAt,
+        String lastRunEndedAt,
+        String lastScheduledRunDate,
+        boolean skipNextRun,
+        String locationLabel,
+        String createdAt,
+        String updatedAt,
+        String deletedAt
+) {
+}

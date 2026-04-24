@@ -4,6 +4,7 @@ import com.energyapp.model.Device;
 import com.energyapp.model.DeviceType;
 import com.energyapp.model.ScheduledDevice;
 import com.energyapp.model.SmartPlug;
+import com.energyapp.utils.DeviceFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -118,16 +119,19 @@ public final class UiDeviceRepository {
             return null;
         }
 
-        Device device;
-        if (type == DeviceType.SMART_PLUG) {
-            SmartPlug smartPlug = new SmartPlug(name, type);
+        Device device = DeviceFactory.createDevice(name, type);
+        if (device == null) {
+            return null;
+        }
+
+        if (device instanceof SmartPlug smartPlug) {
             double cutoff = rs.getDouble("price_cutoff");
             if (!rs.wasNull()) {
                 smartPlug.setPriceCutoff(cutoff);
             }
-            device = smartPlug;
-        } else {
-            ScheduledDevice scheduled = new ScheduledDevice(name, type);
+        }
+
+        if (device instanceof ScheduledDevice scheduled) {
             String scheduleText = rs.getString("schedule_time");
             if (scheduleText != null && !scheduleText.isBlank()) {
                 try {
@@ -136,7 +140,6 @@ public final class UiDeviceRepository {
                     scheduled.setSchedule(null);
                 }
             }
-            device = scheduled;
         }
 
         device.setPersistedId(rs.getLong("id"));

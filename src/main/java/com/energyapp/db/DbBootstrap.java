@@ -37,10 +37,23 @@ public final class DbBootstrap {
     private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final ZoneId DEFAULT_HOME_ZONE = ZoneId.of("Europe/London");
     private static final double DEFAULT_SOLAR_CAPACITY_KW = 4.0;
+    private static final List<DeviceColumnMigration> DEVICE_COLUMN_MIGRATIONS = List.of(
+            new DeviceColumnMigration("device_type", "TEXT"),
+            new DeviceColumnMigration("schedule_time", "TEXT"),
+            new DeviceColumnMigration("price_cutoff_p_per_kwh", "REAL"),
+            new DeviceColumnMigration("active_run_until", "TEXT"),
+            new DeviceColumnMigration("run_mode", "TEXT"),
+            new DeviceColumnMigration("last_run_started_at", "TEXT"),
+            new DeviceColumnMigration("last_run_ended_at", "TEXT"),
+            new DeviceColumnMigration("last_scheduled_run_date", "TEXT"),
+            new DeviceColumnMigration("skip_next_run", "INTEGER NOT NULL DEFAULT 0"),
+            new DeviceColumnMigration("location_label", "TEXT"),
+            new DeviceColumnMigration("deleted_at", "TEXT")
+    );
 
     private DbBootstrap() {}
     private static final String TEMPLATE_DB_RESOURCE = "/com/energy_template_db.sqlite";
-    private static final String APP_SCHEMA_VERSION = "2";
+    private static final String APP_SCHEMA_VERSION = "4";
     private static final String TEMPLATE_DB_NAME = "energy_template_db";
     private static final String TEMPLATE_DB_VERSION = "2";
 
@@ -61,26 +74,24 @@ public final class DbBootstrap {
             try (Connection conn = Sqlite.openConnection()) {
                 // safety: keeps schema creation idempotent
                 SqlScriptRunner.runResource(conn, "/com/schema.sql");
+                ensureCityNameColumn(conn);
                 ensureWeeklyBudgetColumn(conn);
                 ensureSolarCapacityColumn(conn);
+                ensureDeviceTableColumns(conn);
                 ensureVersionMetaIfMissing(conn);
                 verifyInstalledDbVersion(conn);
 
-            // Keep UI devices available on first run and after schema upgrades.
-            seedUiDevicesIfEmpty(conn);
+                // Keep UI devices available on first run and after schema upgrades.
+                seedUiDevicesIfEmpty(conn);
 
-            // 2) Seed only once
-            if (!metaEquals(conn, "seed_applied", "true")) {
-                SqlScriptRunner.runResource(conn, "/com/seed.sql");
-                upsertMeta(conn, "seed_applied", "true");
-            }
+                // 2) Seed only once
+                if (!metaEquals(conn, "seed_applied", "true")) {
+                    SqlScriptRunner.runResource(conn, "/com/seed.sql");
+                    upsertMeta(conn, "seed_applied", "true");
+                }
+                migrateUiDevicesToCanonicalDevices(conn);
                 // Mark installed-from-template once
                 upsertMeta(conn, "template_installed", "true");
-
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate("UPDATE home_profile SET lat = NULL, lon = NULL WHERE home_id = 'HOME_1'");
-                }
-
                 // Run API caching for current carbon and mix
                 try {
                     cacheCurrentCarbonAndMix(conn);
@@ -121,6 +132,16 @@ public final class DbBootstrap {
         }
     }
 
+    private static void ensureCityNameColumn(Connection conn) throws SQLException {
+        if (hasColumn(conn, "home_profile", "city_name")) {
+            return;
+        }
+
+        try (Statement statement = conn.createStatement()) {
+            statement.execute("ALTER TABLE home_profile ADD COLUMN city_name TEXT");
+        }
+    }
+
     private static void ensureSolarCapacityColumn(Connection conn) throws SQLException {
         if (!hasColumn(conn, "home_energy_assets", "solar_capacity_kw")) {
             try (Statement statement = conn.createStatement()) {
@@ -136,6 +157,19 @@ public final class DbBootstrap {
             ps.setDouble(1, DEFAULT_SOLAR_CAPACITY_KW);
             ps.setString(2, HOME_ID);
             ps.executeUpdate();
+        }
+    }
+
+    private static void ensureDeviceTableColumns(Connection conn) throws SQLException {
+        for (DeviceColumnMigration migration : DEVICE_COLUMN_MIGRATIONS) {
+            if (hasColumn(conn, "device", migration.columnName())) {
+                continue;
+            }
+
+            try (Statement statement = conn.createStatement()) {
+                statement.execute("ALTER TABLE device ADD COLUMN "
+                        + migration.columnName() + " " + migration.columnDefinition());
+            }
         }
     }
 
@@ -601,6 +635,136 @@ public final class DbBootstrap {
         ps.addBatch();
     }
 
+    private static void migrateUiDevicesToCanonicalDevices(Connection conn) throws SQLException {
+        String selectSql = """
+            SELECT id, home_id, device_name, device_type, price_cutoff, schedule_time, is_on, created_at, updated_at
+            FROM ui_device
+            ORDER BY id
+            """;
+        String insertSql = """
+            INSERT INTO device(
+              device_id, home_id, display_name, device_type, category, icon_key,
+              typical_power_w, typical_cycle_kwh, typical_duration_mins,
+              power_state, status, current_draw_w,
+              green_energy_only, ready_by_time, schedule_time, price_cutoff_p_per_kwh, policy,
+              next_run_window_start, next_run_window_end,
+              next_run_est_cost_gbp, next_run_est_co2_kg,
+              next_run_source_solar_pct, next_run_source_grid_pct,
+              active_run_until, run_mode, last_run_started_at, last_run_ended_at,
+              last_scheduled_run_date, skip_next_run, location_label,
+              created_at, updated_at, deleted_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """;
+
+        try (PreparedStatement select = conn.prepareStatement(selectSql);
+             ResultSet rs = select.executeQuery();
+             PreparedStatement insert = conn.prepareStatement(insertSql)) {
+            while (rs.next()) {
+                String homeId = rs.getString("home_id");
+                String deviceName = rs.getString("device_name");
+                String deviceType = rs.getString("device_type");
+
+                if (canonicalDeviceExistsForLegacy(conn, homeId, deviceName, deviceType)) {
+                    continue;
+                }
+
+                int idx = 1;
+                insert.setString(idx++, "USR_UI_" + rs.getLong("id"));
+                insert.setString(idx++, homeId);
+                insert.setString(idx++, deviceName);
+                insert.setString(idx++, deviceType);
+                insert.setString(idx++, mapCategoryFromDeviceType(deviceType));
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.REAL);
+                insert.setNull(idx++, Types.REAL);
+                insert.setNull(idx++, Types.INTEGER);
+                boolean isOn = rs.getInt("is_on") == 1;
+                insert.setString(idx++, isOn ? "ON" : "OFF");
+                insert.setString(idx++, isOn ? "IDLE" : "OFF");
+                insert.setNull(idx++, Types.REAL);
+                insert.setInt(idx++, 0);
+                insert.setNull(idx++, Types.VARCHAR);
+                setNullableString(insert, idx++, rs.getString("schedule_time"));
+                double cutoff = rs.getDouble("price_cutoff");
+                if (rs.wasNull()) {
+                    insert.setNull(idx++, Types.REAL);
+                } else {
+                    insert.setDouble(idx++, cutoff);
+                }
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.REAL);
+                insert.setNull(idx++, Types.REAL);
+                insert.setNull(idx++, Types.REAL);
+                insert.setNull(idx++, Types.REAL);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setInt(idx++, 0);
+                insert.setNull(idx++, Types.VARCHAR);
+                insert.setString(idx++, rs.getString("created_at"));
+                insert.setString(idx++, rs.getString("updated_at"));
+                insert.setNull(idx, Types.VARCHAR);
+                insert.executeUpdate();
+            }
+        }
+    }
+
+    private static boolean canonicalDeviceExistsForLegacy(
+            Connection conn,
+            String homeId,
+            String deviceName,
+            String deviceType
+    ) throws SQLException {
+        String sql = """
+            SELECT 1
+            FROM device
+            WHERE home_id = ?
+              AND lower(trim(display_name)) = ?
+              AND (device_type = ? OR device_type IS NULL)
+            LIMIT 1
+            """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, homeId);
+            ps.setString(2, normalizeDeviceName(deviceName));
+            ps.setString(3, deviceType);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    private static String normalizeDeviceName(String deviceName) {
+        return deviceName == null ? "" : deviceName.trim().toLowerCase();
+    }
+
+    private static String mapCategoryFromDeviceType(String deviceType) {
+        if (deviceType == null || deviceType.isBlank()) {
+            return "UNKNOWN";
+        }
+
+        return switch (deviceType) {
+            case "WASHING_MACHINE" -> "LAUNDRY";
+            case "EV_CHARGER" -> "EV";
+            case "HEATING" -> "HEATING";
+            case "DISHWASHER", "FRIDGE" -> "KITCHEN";
+            case "SMART_PLUG" -> "SMART_PLUG";
+            default -> deviceType;
+        };
+    }
+
+    private static void setNullableString(PreparedStatement ps, int index, String value) throws SQLException {
+        if (value == null || value.isBlank()) {
+            ps.setNull(index, Types.VARCHAR);
+        } else {
+            ps.setString(index, value);
+        }
+    }
+
     // ------------------------
     // DTOs (Gson)
     // ------------------------
@@ -742,5 +906,7 @@ public final class DbBootstrap {
     public static void refreshSolar(Connection conn) throws Exception {
         cacheOpenMeteoSolar(conn);
     }
+
+    private record DeviceColumnMigration(String columnName, String columnDefinition) { }
 
 }

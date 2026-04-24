@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS app_meta (
 CREATE TABLE IF NOT EXISTS home_profile (
     home_id          TEXT PRIMARY KEY,
     first_name       TEXT NOT NULL,
+    city_name        TEXT,
     timezone         TEXT NOT NULL,
     postcode_outcode TEXT,
     lat              REAL,
@@ -60,6 +61,7 @@ CREATE TABLE IF NOT EXISTS device (
     device_id                 TEXT PRIMARY KEY,
     home_id                   TEXT NOT NULL,
     display_name              TEXT NOT NULL,
+    device_type               TEXT,
     category                  TEXT NOT NULL,
     icon_key                  TEXT,
     typical_power_w           REAL,
@@ -72,6 +74,8 @@ CREATE TABLE IF NOT EXISTS device (
 
     green_energy_only         INTEGER NOT NULL DEFAULT 0,
     ready_by_time             TEXT,     -- "07:00"
+    schedule_time             TEXT,     -- "07:00"
+    price_cutoff_p_per_kwh    REAL,
     policy                    TEXT,     -- MIN_COST/MIN_CO2/MAX_SOLAR/BALANCED
 
     next_run_window_start     TEXT,
@@ -80,9 +84,17 @@ CREATE TABLE IF NOT EXISTS device (
     next_run_est_co2_kg       REAL,
     next_run_source_solar_pct REAL,
     next_run_source_grid_pct  REAL,
+    active_run_until          TEXT,
+    run_mode                  TEXT,
+    last_run_started_at       TEXT,
+    last_run_ended_at         TEXT,
+    last_scheduled_run_date   TEXT,
+    skip_next_run             INTEGER NOT NULL DEFAULT 0,
+    location_label            TEXT,
 
     created_at                TEXT NOT NULL,
     updated_at                TEXT NOT NULL,
+    deleted_at                TEXT,
 
     FOREIGN KEY (home_id) REFERENCES home_profile(home_id)
 );
